@@ -15,7 +15,7 @@ SELECT
 FROM burials b
 JOIN sites s
 ON s.site_id = b.site_id
-WHERE temp = 'late napatan' AND b.site_id IN (1,2)
+WHERE temp = '25th dyn.' AND b.site_id IN (1,2)
 GROUP BY 1,2,3,4
 """
 
@@ -31,18 +31,20 @@ fig = px.bar(
     facet_col="site_name",
     facet_row="sub",
     text="total_burials",
-    title="Late Napatan tomb structure",
-    labels={"total_burials": "Total Burials", "super": "superstructure", "sub": "substructure", "site_name": "site"},
+    title="25th Dynasty tomb structure",
+    labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
 
-fig.update_layout(xaxis={'categoryorder': 'total descending'}, legend=dict(
-    orientation="h",
-    yanchor="bottom",
-    y=-0.20,
-    xanchor="center",
-    x=0.40),
+fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=-0.15,
+        xanchor="center",
+        x=0.40,
+        traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -51,7 +53,7 @@ fig.update_layout(xaxis={'categoryorder': 'total descending'}, legend=dict(
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
-    margin=dict(l=5, r=10, t=40, b=5),
+    margin=dict(l=0, r=10, t=50, b=0),
     autosize=True,
     title_font=dict(size=10)
 )
@@ -60,4 +62,4 @@ fig.update_traces(textposition='auto')
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'phd_final/images/hierarchylate.png',scale=3, width=450, height=400)
+pio.write_image(fig, 'images/tomb_25.png',scale=3, width=450, height=400)
