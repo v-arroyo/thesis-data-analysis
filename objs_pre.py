@@ -16,7 +16,7 @@ JOIN sites s
 ON s.site_id = b.site_id
 JOIN artifacts a
 ON a.burial_id = b.burial_id
-WHERE temp = 'pre-25th dyn.' AND b.site_id IN (1) AND artifact_type NOT IN ('beads', 'shabtis')
+WHERE temp = 'pre-25th dyn.' AND b.site_id IN (1,2) AND artifact_type NOT IN ('beads', 'shabtis')
 GROUP BY 1,2,3
 """
 
@@ -30,36 +30,37 @@ fig = px.bar(
     y="artifact_type",
     color="owner",
     facet_col="site_name",
+    #text='count',
     barmode='group',
     title="Pre-25th Dynasty object types",
-    labels={"count": "total", "owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
+    labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
 
 fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
     legend=dict(
-        orientation="v",
-        yanchor="middle",
-        y=0.50,
+        orientation="h",
+        yanchor="bottom",
+        y=-0.20,
         xanchor="center",
-        x=0.80,
+        x=0.40,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
         size=8),
     legend_title_text='',
-    xaxis=dict(
-        tickmode='linear',
-        dtick=100),
-    margin=dict(l=5, r=10, t=40, b=0),
+    #yaxis=dict(
+        #tickmode='linear',
+        #dtick=1),
+    margin=dict(l=0, r=10, t=50, b=0),
     autosize=True,
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='auto')
+fig.update_traces(textposition='outside')
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'phd_final/images/objects_pre_kurru.png',scale=3, width=450, height=300)
+pio.write_image(fig, 'images/objs_pre.png',scale=3, width=450, height=350)

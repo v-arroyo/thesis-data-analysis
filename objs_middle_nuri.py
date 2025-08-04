@@ -16,7 +16,7 @@ JOIN sites s
 ON s.site_id = b.site_id
 JOIN artifacts a
 ON a.burial_id = b.burial_id
-WHERE temp = 'late napatan' AND b.site_id IN (1)
+WHERE temp = 'middle napatan' AND b.site_id IN (2) AND artifact_type NOT IN ('shabtis')
 GROUP BY 1,2,3
 """
 
@@ -32,7 +32,7 @@ fig = px.bar(
     facet_col="site_name",
     #text='count',
     barmode='group',
-    title="Late Napatan object types",
+    title="Middle Napatan object types",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
@@ -63,4 +63,4 @@ fig.update_traces(textposition='outside')
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/objs_late_kurru.png',scale=3, width=500, height=350)
+pio.write_image(fig, 'images/objs_middle_nuri.png',scale=3, width=500, height=400)
