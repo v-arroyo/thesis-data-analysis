@@ -3,6 +3,8 @@ import plotly.express as px
 from sqlalchemy import create_engine
 import plotly.io as pio
 
+pio.defaults.chromium_executable = '/usr/bin/chromium'
+
 engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 query = """
@@ -22,7 +24,7 @@ JOIN sites s
 ON s.site_id = b.site_id
 JOIN artifacts a
 ON a.burial_id = b.burial_id
-WHERE temp = 'early napatan' AND b.site_id IN (1,2) AND a.artifact_material IS NOT NULL
+WHERE temp = 'early napatan' AND b.site_id IN (1) AND a.artifact_material IS NOT NULL
 GROUP BY 1,2,3
 """
 
@@ -46,17 +48,17 @@ fig = px.scatter(
 fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
     legend=dict(
         orientation="h",
-        yanchor="top",
-        y=-0.03,
-        xanchor="right",
-        x=0.90,
+        yanchor="bottom",
+        y=-0.25,
+        xanchor="center",
+        x=0.40,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
         size=8),
     legend_title_text='',
-    margin=dict(l=0, r=5, t=40, b=0),
+    margin=dict(l=0, r=10, t=50, b=0),
     autosize=True,
     title_font=dict(size=8)
 )
@@ -64,4 +66,4 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'phd_final/images/objects_mat_early_kurru.png',scale=3, width=450, height=450)
+pio.write_image(fig, 'images/obj_mat_early_kurru.png',scale=3, width=300, height=200)

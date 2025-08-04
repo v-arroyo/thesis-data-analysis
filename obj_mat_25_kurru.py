@@ -39,7 +39,7 @@ fig = px.scatter(
     color="owner",
     symbol="owner",
     facet_col='site_name',
-    title="25th dynasty object materials",
+    title="25th Dynasty object materials",
     labels={"owner": "owner", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
@@ -48,17 +48,17 @@ fig = px.scatter(
 fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
     legend=dict(
         orientation="h",
-        yanchor="top",
-        y=-0.03,
-        xanchor="right",
-        x=0.90,
+        yanchor="bottom",
+        y=-0.11,
+        xanchor="center",
+        x=0.40,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
         size=8),
     legend_title_text='',
-    margin=dict(l=0, r=5, t=40, b=0),
+    margin=dict(l=0, r=10, t=50, b=0),
     autosize=True,
     title_font=dict(size=8)
 )
@@ -66,4 +66,4 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'phd_final/images/objects_mat_25_kurru.png',scale=3, width=450, height=450)
+pio.write_image(fig, 'images/obj_mat_25_kurru.png',scale=3, width=400, height=450)
