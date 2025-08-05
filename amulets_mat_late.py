@@ -9,14 +9,14 @@ query = """
 SELECT 
     s.site_name,
     b.owner,
-    a.artifact_type,
-    COUNT(artifact_id) as count
+    a.material,
+    COUNT(amulet_id) as count
 FROM burials b
 JOIN sites s
 ON s.site_id = b.site_id
-JOIN artifacts a
+JOIN amulets a
 ON a.burial_id = b.burial_id
-WHERE temp = 'early napatan' AND b.site_id IN (1)
+WHERE temp = 'late napatan' AND b.site_id IN (1,2) AND a.material IS NOT NULL
 GROUP BY 1,2,3
 """
 
@@ -27,12 +27,12 @@ custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 fig = px.bar(
     df,
     x="count",
-    y="artifact_type",
+    y="material",
     color="owner",
     facet_col="site_name",
-    #text='count',
+    text='count',
     barmode='group',
-    title="Early Napatan object types",
+    title="Late Napatan amulet materials",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
@@ -42,7 +42,7 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.40,
+        y=-0.30,
         xanchor="center",
         x=0.40,
         traceorder='reversed'),
@@ -63,4 +63,4 @@ fig.update_traces(textposition='outside')
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/objs_early_kurru.png',scale=3, width=450, height=200)
+pio.write_image(fig, 'images/amulets_mat_late.png',scale=3, width=400, height=250)
