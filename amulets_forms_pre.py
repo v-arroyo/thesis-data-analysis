@@ -6,17 +6,56 @@ import plotly.io as pio
 engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 query = """
+WITH expanded_forms AS (
+    SELECT 
+        s.site_name,
+        b.owner,
+        a.form AS form,
+        a.amulet_id
+    FROM amulets a
+    JOIN burials b ON b.burial_id = a.burial_id
+    JOIN sites s ON s.site_id = b.site_id
+    WHERE 
+        b.temp = 'pre-25th dyn.' 
+        AND s.site_id IN (1,2)
+        AND a.form IS NOT NULL
+
+    UNION ALL
+
+    SELECT 
+        s.site_name,
+        b.owner,
+        a.form2 AS form,
+        a.amulet_id
+    FROM amulets a
+    JOIN burials b ON b.burial_id = a.burial_id
+    JOIN sites s ON s.site_id = b.site_id
+    WHERE 
+        b.temp = 'pre-25th dyn.' 
+        AND s.site_id IN (1,2)
+        AND a.form2 IS NOT NULL
+
+    UNION ALL
+
+    SELECT 
+        s.site_name,
+        b.owner,
+        a.form3 AS form,
+        a.amulet_id
+    FROM amulets a
+    JOIN burials b ON b.burial_id = a.burial_id
+    JOIN sites s ON s.site_id = b.site_id
+    WHERE 
+        b.temp = 'pre-25th dyn.' 
+        AND s.site_id IN (1,2)
+        AND a.form3 IS NOT NULL
+)
 SELECT 
-    s.site_name,
-    b.owner,
-    a.form,
-    COUNT(amulet_id) as count
-FROM burials b
-JOIN sites s
-ON s.site_id = b.site_id
-JOIN amulets a
-ON a.burial_id = b.burial_id
-WHERE temp = 'pre-25th dyn.' AND b.site_id IN (1,2)
+    site_name,
+    owner,
+    form,
+    COUNT(amulet_id) AS total
+FROM expanded_forms
 GROUP BY 1,2,3
 """
 
