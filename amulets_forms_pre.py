@@ -65,11 +65,11 @@ custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.bar(
     df,
-    x="count",
+    x="total",
     y="form",
     color="owner",
     facet_col="site_name",
-    text='count',
+    text='total',
     barmode='group',
     title="Pre-25th Dynasty amulet motifs",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
@@ -81,7 +81,7 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.20,
+        y=-0.37,
         xanchor="center",
         x=0.40,
         traceorder='reversed'),
@@ -102,4 +102,4 @@ fig.update_traces(textposition='outside')
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/amulets_forms_pre.png',scale=3, width=450, height=300)
+pio.write_image(fig, 'images/amulets_forms_pre.png',scale=3, width=500, height=200)
