@@ -31,7 +31,7 @@ fig = px.bar(
     color="owner",
     facet_col="site_name",
     text='count',
-    barmode='group',
+    barmode='stack',
     title="25th Dynasty amulet types",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
@@ -42,25 +42,25 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.20,
+        y=-0.35,
         xanchor="center",
-        x=0.40,
+        x=0.45,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=10),
+        size=8),
     legend_title_text='',
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
     margin=dict(l=0, r=10, t=50, b=0),
     autosize=True,
-    title_font=dict(size=10)
+    title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='outside')
-fig.update_xaxes(title_text='')
+fig.update_traces(textposition='outside', textfont_size=6)
+fig.update_xaxes(title_text='', matches=None)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/amulets_types_25.png',scale=3, width=750, height=300)
+pio.write_image(fig, 'images/amulets_types_25_nuri.png',scale=3, width=550, height=200)

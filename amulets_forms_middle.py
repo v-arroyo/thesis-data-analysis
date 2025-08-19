@@ -65,41 +65,41 @@ custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.bar(
     df,
-    x="count",
-    y="form",
+    x="form",
+    y="total",
     color="owner",
     facet_col="site_name",
-    text='count',
-    barmode='group',
+    text='total',
+    barmode='stack',
     title="Middle Napatan amulet motifs",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
 
-fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
+fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
     legend=dict(
-        orientation="h",
-        yanchor="bottom",
-        y=-0.20,
-        xanchor="center",
-        x=0.40,
+        #orientation="h",
+        yanchor="top",
+        y=0.80,
+        xanchor="right",
+        x=0.93,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=10),
+        size=8),
     legend_title_text='',
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
     margin=dict(l=0, r=10, t=50, b=0),
     autosize=True,
-    title_font=dict(size=10)
+    title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='outside', textfont_size=12)
-fig.update_xaxes(title_text='')
+fig.update_traces(textposition='outside', textfont_size=6)
+fig.update_xaxes(title_text='', tickangle=45)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/amulets_forms_middle.png',scale=3, width=450, height=400)
+pio.write_image(fig, 'images/amulets_forms_middle.png',scale=3, width=450, height=300)

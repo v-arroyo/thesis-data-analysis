@@ -16,7 +16,7 @@ JOIN sites s
 ON s.site_id = b.site_id
 JOIN artifacts a
 ON a.burial_id = b.burial_id
-WHERE temp = 'middle napatan' AND b.site_id IN (2) AND artifact_type NOT IN ('shabtis')
+WHERE temp = 'middle napatan' AND b.site_id IN (2) AND artifact_type NOT IN ('shabtis', 'ceramic vessels')
 GROUP BY 1,2,3
 """
 
@@ -26,25 +26,25 @@ custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.bar(
     df,
-    x="count",
-    y="artifact_type",
+    x="artifact_type",
+    y="count",
     color="owner",
     facet_col="site_name",
     #text='count',
-    barmode='group',
+    barmode='stack',
     title="Middle Napatan object types",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
 
-fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
+fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
     legend=dict(
-        orientation="h",
-        yanchor="bottom",
-        y=-0.20,
-        xanchor="center",
-        x=0.40,
+        #orientation="h",
+        yanchor="top",
+        y=0.83,
+        xanchor="right",
+        x=0.93,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -63,4 +63,4 @@ fig.update_traces(textposition='outside')
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/objs_middle_nuri.png',scale=3, width=500, height=400)
+pio.write_image(fig, 'images/objs_middle.png',scale=3, width=500, height=350)

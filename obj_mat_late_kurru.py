@@ -24,7 +24,7 @@ JOIN sites s
 ON s.site_id = b.site_id
 JOIN artifacts a
 ON a.burial_id = b.burial_id
-WHERE temp = 'late napatan' AND b.site_id IN (1) AND a.artifact_material IS NOT NULL
+WHERE temp = 'late napatan' AND b.site_id IN (1,2) AND a.artifact_material IS NOT NULL
 GROUP BY 1,2,3
 """
 
@@ -49,7 +49,7 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.45,
+        y=-0.20,
         xanchor="center",
         x=0.40,
         traceorder='reversed'),
@@ -66,4 +66,4 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/obj_mat_late_kurru.png',scale=3, width=300, height=150)
+pio.write_image(fig, 'images/obj_mat_late_kurru.png',scale=3, width=500, height=330)

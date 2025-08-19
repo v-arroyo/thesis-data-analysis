@@ -59,11 +59,13 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
         size=8),
     legend_title_text='',
     margin=dict(l=0, r=10, t=50, b=0),
-    autosize=True,
-    title_font=dict(size=8)
+    autosize=False,
+    title_font=dict(size=8),
+    width=600,
+    height=600,
 )
 
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/obj_mat_early_kurru.png',scale=3, width=300, height=200)
+pio.write_image(fig, 'images/obj_mat_early_kurru.png',scale=3, width=600, height=600)

@@ -31,7 +31,7 @@ fig = px.bar(
     color="owner",
     facet_col="site_name",
     #text='count',
-    barmode='group',
+    barmode='stack',
     title="Early Napatan object types",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
@@ -40,23 +40,25 @@ fig = px.bar(
 
 fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
     legend=dict(
-        orientation="h",
         yanchor="bottom",
-        y=-0.40,
+        y=-0.35,
         xanchor="center",
-        x=0.40,
-        traceorder='reversed'),
+        x=0.45,
+        traceorder='reversed',
+        bgcolor='rgba(0,0,0,0)',
+        bordercolor='rgba(0,0,0,0)',
+        borderwidth=0),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=10),
+        size=8),
     legend_title_text='',
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
     margin=dict(l=0, r=10, t=50, b=0),
-    autosize=True,
-    title_font=dict(size=10)
+    autosize=False,
+    title_font=dict(size=8)
 )
 
 fig.update_traces(textposition='outside')

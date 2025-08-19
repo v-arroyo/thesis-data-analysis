@@ -31,7 +31,7 @@ fig = px.bar(
     color="owner",
     facet_col="site_name",
     #text='count',
-    barmode='group',
+    barmode='stack',
     title="Late Napatan object types",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
@@ -42,7 +42,7 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.20,
+        y=-0.70,
         xanchor="center",
         x=0.40,
         traceorder='reversed'),
@@ -63,4 +63,4 @@ fig.update_traces(textposition='outside')
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/objs_late_kurru.png',scale=3, width=500, height=350)
+pio.write_image(fig, 'images/objs_late_kurru.png',scale=3, width=350, height=150)
