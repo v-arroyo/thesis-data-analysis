@@ -11,14 +11,16 @@ WITH expanded_forms AS (
         s.site_name,
         b.owner,
         a.form AS form,
-        a.amulet_id
+        a.amulet_id,
+        a.type
     FROM amulets a
     JOIN burials b ON b.burial_id = a.burial_id
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
-        b.temp = 'early napatan' 
+        b.temp = '25th dyn.' 
         AND s.site_id IN (1,2)
         AND a.form IS NOT NULL
+        AND a.type = 'symbol'
 
     UNION ALL
 
@@ -26,14 +28,16 @@ WITH expanded_forms AS (
         s.site_name,
         b.owner,
         a.form2 AS form,
-        a.amulet_id
+        a.amulet_id,
+        a.type
     FROM amulets a
     JOIN burials b ON b.burial_id = a.burial_id
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
-        b.temp = 'early napatan' 
+        b.temp = '25th dyn.' 
         AND s.site_id IN (1,2)
         AND a.form2 IS NOT NULL
+        AND a.type = 'symbol'
 
     UNION ALL
 
@@ -41,54 +45,53 @@ WITH expanded_forms AS (
         s.site_name,
         b.owner,
         a.form3 AS form,
-        a.amulet_id
+        a.amulet_id,
+        a.type
     FROM amulets a
     JOIN burials b ON b.burial_id = a.burial_id
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
-        b.temp = 'early napatan' 
+        b.temp = '25th dyn.' 
         AND s.site_id IN (1,2)
         AND a.form3 IS NOT NULL
+        AND a.type = 'symbol'
 )
 SELECT 
     site_name,
     owner,
-    CASE 
-        WHEN form = 'deity' THEN 'unknown deity'
-        WHEN form = 'deities' THEN 'group of deities'
-        ELSE form
-    END AS form,
+    form,
+    type,
     COUNT(amulet_id) AS total
 FROM expanded_forms
-GROUP BY 1,2,3
+GROUP BY 1,2,3,4
 """
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#e9724d','#92cad1','#d6d727','#92cad1','#e9724d']
 
 fig = px.bar(
     df,
-    x="total",
-    y="form",
+    x="form",
+    y="total",
     color="owner",
     facet_col="site_name",
     text='total',
     barmode='stack',
-    title="Early Napatan amulet motifs",
+    title="25th Dynasty symbol amulets",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
 
-fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
+fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
     legend=dict(
-        orientation="h",
-        yanchor="bottom",
-        y=-0.15,
-        xanchor="center",
-        x=0.40),
-        #traceorder='reversed'),
+        #orientation="h",
+        yanchor="top",
+        y=0.90,
+        xanchor="right",
+        x=0.93,
+        traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -102,8 +105,8 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='outside', textfont_size=5)
-fig.update_xaxes(title_text='')
+fig.update_traces(textposition='auto', textfont_size=5)
+fig.update_xaxes(title_text='', matches=None)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/amulets_forms_early.png',scale=3, width=500, height=350)
+pio.write_image(fig, 'images/amulets_forms_25_symbols.png',scale=3, width=450, height=300)
