@@ -9,7 +9,10 @@ query = """
 SELECT 
     s.site_name,
     b.owner,
-    a.material,
+    CASE
+        WHEN a.material = 'lapis' THEN 'lapis lazuli'
+        ELSE a.material
+    END AS material,
     COUNT(amulet_id) as count
 FROM burials b
 JOIN sites s

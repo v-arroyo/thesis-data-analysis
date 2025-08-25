@@ -9,7 +9,10 @@ query = """
 SELECT 
     s.site_name,
     b.owner,
-    a.material,
+    CASE
+        WHEN a.material = 'lapis' THEN 'lapis lazuli'
+        ELSE a.material
+    END AS material,
     COUNT(amulet_id) as count
 FROM burials b
 JOIN sites s
@@ -22,7 +25,7 @@ GROUP BY 1,2,3
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#92cad1', '#e9724d', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.bar(
     df,
