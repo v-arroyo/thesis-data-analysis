@@ -22,7 +22,7 @@ GROUP BY 1,2,3
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#92cad1','#e9724d', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.bar(
     df,
@@ -31,7 +31,7 @@ fig = px.bar(
     color="owner",
     facet_col="site_name",
     text='count',
-    barmode='group',
+    barmode='stack',
     title="Late Napatan amulet types",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
@@ -42,7 +42,7 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.40,
+        y=-0.64,
         xanchor="center",
         x=0.40,
         traceorder='reversed'),
