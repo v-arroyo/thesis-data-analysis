@@ -15,7 +15,7 @@ SELECT
 FROM burials b
 JOIN sites s
 ON s.site_id = b.site_id
-WHERE temp = 'late napatan' AND b.site_id IN (1,2)
+WHERE temp = 'LN' AND b.site_id IN (1,2)
 GROUP BY 1,2,3,4
 """
 

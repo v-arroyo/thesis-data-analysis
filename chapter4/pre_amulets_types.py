@@ -17,7 +17,7 @@ JOIN sites s
 ON s.site_id = b.site_id
 JOIN amulets a
 ON a.burial_id = b.burial_id
-WHERE temp = 'pre-25th dyn.' AND b.site_id IN (1,2)
+WHERE temp = 'pre-25th' AND b.site_id IN (1,2)
 GROUP BY 1,2,3,4
 """
 

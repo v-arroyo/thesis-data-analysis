@@ -17,7 +17,7 @@ WITH expanded_forms AS (
     JOIN burials b ON b.burial_id = a.burial_id
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
-        b.temp = '25th dyn.' 
+        b.temp = '25th' 
         AND s.site_id IN (1)
         AND a.form IS NOT NULL
         AND a.type = 'deity'
@@ -35,7 +35,7 @@ WITH expanded_forms AS (
     JOIN burials b ON b.burial_id = a.burial_id
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
-        b.temp = '25th dyn.' 
+        b.temp = '25th' 
         AND s.site_id IN (1)
         AND a.form2 IS NOT NULL
         AND a.type = 'deity'
@@ -53,7 +53,7 @@ WITH expanded_forms AS (
     JOIN burials b ON b.burial_id = a.burial_id
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
-        b.temp = '25th dyn.' 
+        b.temp = '25th' 
         AND s.site_id IN (1)
         AND a.form3 IS NOT NULL
         AND a.type = 'deity'

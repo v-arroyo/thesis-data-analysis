@@ -16,7 +16,7 @@ WITH expanded_forms AS (
     JOIN burials b ON b.burial_id = a.burial_id
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
-        b.temp = 'early napatan' 
+        b.temp = 'EN' 
         AND s.site_id IN (1,2)
         AND a.form IS NOT NULL
 
@@ -31,7 +31,7 @@ WITH expanded_forms AS (
     JOIN burials b ON b.burial_id = a.burial_id
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
-        b.temp = 'early napatan' 
+        b.temp = 'EN' 
         AND s.site_id IN (1,2)
         AND a.form2 IS NOT NULL
 
@@ -46,7 +46,7 @@ WITH expanded_forms AS (
     JOIN burials b ON b.burial_id = a.burial_id
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
-        b.temp = 'early napatan' 
+        b.temp = 'EN' 
         AND s.site_id IN (1,2)
         AND a.form3 IS NOT NULL
 )

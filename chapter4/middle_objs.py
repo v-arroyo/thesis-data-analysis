@@ -16,7 +16,7 @@ JOIN sites s
 ON s.site_id = b.site_id
 JOIN artifacts a
 ON a.burial_id = b.burial_id
-WHERE temp = 'middle napatan' AND b.site_id IN (2) AND artifact_type NOT IN ('shabtis', 'ceramic vessels')
+WHERE temp = 'MN' AND b.site_id IN (2) AND artifact_type NOT IN ('shabtis', 'ceramic vessels')
 GROUP BY 1,2,3
 """
 

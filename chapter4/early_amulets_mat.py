@@ -19,7 +19,7 @@ JOIN sites s
 ON s.site_id = b.site_id
 JOIN amulets a
 ON a.burial_id = b.burial_id
-WHERE temp = 'early napatan' AND b.site_id IN (1,2) AND a.material IS NOT NULL
+WHERE temp = 'EN' AND b.site_id IN (1,2) AND a.material IS NOT NULL
 GROUP BY 1,2,3
 """
 
