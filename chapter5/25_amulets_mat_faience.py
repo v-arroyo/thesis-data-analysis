@@ -7,15 +7,14 @@ engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PA
 
 query = """
 select 
-	temp,
-    artifact_type,
-    count(artifact_id) as total
+	site_name,
+    material,
+    count(amulet_id) as total
 from burials b
 join sites s on s.site_id = b.site_id
-join artifacts a on a.burial_id = b.burial_id
-where dating = 'napatan' and b.site_id in (8,4,5) 
-    AND (super = 'pyramid' OR sub IN ('chambers', 'cave tomb'))
-    and artifact_type != 'beads'
+join amulets a on a.burial_id = b.burial_id
+where dating = 'napatan' and b.site_id in (8,4,5) and super != 'pyramid' 
+    and sub not in ('chambers', 'cave tomb') and material = 'faience'
 group by 1,2
 """
 
@@ -25,18 +24,17 @@ custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.bar(
     df,
-    x="total",
-    y="artifact_type",
-    color="temp",
-    #text="total",
-    barmode='stack',
-    title="Elite object types",
-    labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
+    x="material",
+    y="total",
+    color="site_name",
+    text="total",
+    barmode='group',
+    title="25th Dynasty amulet materials",
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
 
-fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
+fig.update_layout(yaxis=dict(categoryorder='total descending', automargin=True, title_standoff=0), 
     legend=dict(
         #orientation="h",
         yanchor="bottom",
@@ -47,18 +45,18 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=8),
+        size=6),
     legend_title_text='',
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
-    margin=dict(l=0, r=10, t=50, b=0),
+    margin=dict(l=0, r=0, t=15, b=0),
     autosize=True,
-    title_font=dict(size=8)
+    title_font=dict(size=6)
 )
 
-fig.update_traces(textposition='auto', textfont_size=6)
+fig.update_traces(textposition='outside', textfont_size=6, width=0.2)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/elite_objects_temp.png',scale=3, width=450, height=350)
+pio.write_image(fig, 'images/chapter5/25_amulets_mat_faience.png',scale=4, width=200, height=200)

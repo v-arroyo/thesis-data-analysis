@@ -83,8 +83,7 @@ fig = px.bar(
     color="site_name",
     text="total",
     barmode='group',
-    title="25th Dynasty non-elite amulet symbol and animal motifs",
-    labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
+    title="25th Dynasty non-elite amulet motifs (excl. deities)",
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
