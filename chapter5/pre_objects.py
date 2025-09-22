@@ -62,4 +62,4 @@ fig.update_traces(textposition='auto', textfont_size=6)
 fig.update_xaxes(title_text='', tickangle=45)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/pre_objects.png',scale=3, width=450, height=250)
+pio.write_image(fig, 'images/chapter5/pre_objects.png',scale=3, width=500, height=250)

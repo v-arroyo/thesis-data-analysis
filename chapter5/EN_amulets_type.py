@@ -6,30 +6,31 @@ import plotly.io as pio
 engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 query = """
-SELECT 
-    s.site_name,
-    super,
-    sub,
-    COUNT(burial_id) as total_burials
-FROM burials b
-JOIN sites s
-ON s.site_id = b.site_id
-WHERE dating = 'napatan' AND b.site_id = 7 AND sub != 'deposit'
-GROUP BY 1,2,3
+select 
+	site_name,
+    type,
+    count(amulet_id) as total
+from burials b
+join sites s on s.site_id = b.site_id
+join amulets a on a.burial_id = b.burial_id
+where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and temp = 'EN'
+    and super != 'pyramid' 
+    and sub not in ('chambers', 'cave tomb')
+group by 1,2
 """
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#D3D3D3']
+custom_colors = ['#C0C0C0']
 
 fig = px.bar(
     df,
-    x="super",
-    y="total_burials",
-    facet_col="site_name",
-    facet_row="sub",
-    text="total_burials",
-    title="Mirgissa tomb structures",
+    x="type",
+    y="total",
+    color="site_name",
+    text="total",
+    barmode='stack',
+    title="Early Napatan non-elite amulet types",
     labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
@@ -39,25 +40,25 @@ fig.update_layout(xaxis={'categoryorder': 'total descending'},
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.20,
+        y=0.50,
         xanchor="center",
-        x=0.50,
+        x=0.75,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=10),
+        size=8),
     legend_title_text='',
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
-    margin=dict(l=0, r=10, t=50, b=0),
+    margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
-    title_font=dict(size=10)
+    title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='auto')
+fig.update_traces(textposition='auto', textfont_size=6)
 fig.update_xaxes(title_text='')
-fig.update_yaxes(title_text='', matches=None)
+fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/mirgissa_tomb.png',scale=3, width=450, height=400)
+pio.write_image(fig, 'images/chapter5/EN_amulets_type.png',scale=3, width=550, height=200)

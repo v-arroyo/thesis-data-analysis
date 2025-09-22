@@ -8,15 +8,14 @@ engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PA
 query = """
 select 
 	site_name,
-    super,
-    sub,
-    count(burial_id) as total_burials
+    material,
+    count(amulet_id) as total
 from burials b
 join sites s on s.site_id = b.site_id
-where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and temp = 'EN'
-   and super != 'pyramid' 
-   and sub not in ('chambers', 'cave tomb')
-group by 1,2,3
+join amulets a on a.burial_id = b.burial_id
+where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and material IS NOT NULL
+    and super != 'pyramid' and sub not in ('chambers', 'cave tomb')
+group by 1,2
 """
 
 df = pd.read_sql(query, engine)
@@ -25,26 +24,24 @@ custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.bar(
     df,
-    x="super",
-    y="total_burials",
+    x="material",
+    y="total",
     color="site_name",
-    barmode='group',
-    facet_col='sub',
-    text="total_burials",
-    title="Early Napatan non-elite tomb structures",
-    labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
+    text="total",
+    barmode='stack',
+    title="25th Dynasty amulet materials",
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
 
-fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
+fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, title_standoff=0), 
     legend=dict(
-        orientation="h",
+        #orientation="h",
         yanchor="bottom",
-        y=-0.43,
+        y=0.40,
         xanchor="center",
-        x=0.50),
-        #traceorder='reversed'),
+        x=0.80,
+        traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -53,13 +50,13 @@ fig.update_layout(xaxis={'categoryorder': 'total descending'},
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
-    margin=dict(l=0, r=10, t=50, b=0),
+    margin=dict(l=0, r=0, t=15, b=0),
     autosize=True,
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='auto', textfont_size=6)
+fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_xaxes(title_text='')
-fig.update_yaxes(title_text='', matches=None)
+fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/early_tombs.png',scale=3, width=400, height=200)
+pio.write_image(fig, 'images/chapter5/25_amulets_mat.png',scale=3, width=550, height=300)

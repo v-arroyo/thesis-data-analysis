@@ -13,14 +13,14 @@ select
 from burials b
 join sites s on s.site_id = b.site_id
 join amulets a on a.burial_id = b.burial_id
-where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and super != 'pyramid' 
-    and sub not in ('chambers', 'cave tomb') and material = 'faience'
+where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and material IS NOT NULL and temp = '25th-MN'
+    and super != 'pyramid' and sub not in ('chambers', 'cave tomb')
 group by 1,2
 """
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#C0C0C0']
 
 fig = px.bar(
     df,
@@ -28,35 +28,35 @@ fig = px.bar(
     y="total",
     color="site_name",
     text="total",
-    barmode='group',
-    title="25th Dynasty amulet materials",
+    barmode='stack',
+    title="25th Dynasty-Middle Napatan non-elite amulet materials",
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
 
-fig.update_layout(yaxis=dict(categoryorder='total descending', automargin=True, title_standoff=0), 
+fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, title_standoff=0), 
     legend=dict(
         #orientation="h",
         yanchor="bottom",
-        y=0.40,
+        y=0.43,
         xanchor="center",
         x=0.80,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=6),
+        size=8),
     legend_title_text='',
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
-    margin=dict(l=0, r=0, t=15, b=0),
+    margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
-    title_font=dict(size=6)
+    title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='outside', textfont_size=6, width=0.2)
+fig.update_traces(textposition='auto', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25_amulets_mat_faience.png',scale=4, width=200, height=200)
+pio.write_image(fig, 'images/chapter5/25-MN_amulets_mat.png',scale=3, width=450, height=200)

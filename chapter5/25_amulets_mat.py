@@ -13,8 +13,8 @@ select
 from burials b
 join sites s on s.site_id = b.site_id
 join amulets a on a.burial_id = b.burial_id
-where dating = 'napatan' and b.site_id in (8,4,5) and material IS NOT NULL
-    and super != 'pyramid' and sub not in ('chambers', 'cave tomb')
+where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and material IS NOT NULL
+    and super != 'pyramid' and sub not in ('chambers', 'cave tomb') and temp = '25th'
 group by 1,2
 """
 
