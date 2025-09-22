@@ -10,13 +10,12 @@ engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PA
 query = """
 select 
 	temp,
-    artifact_type,
-    count(artifact_id) as total
+    type,
+    count(amulet_id) as total
 from burials b
-join artifacts a on a.burial_id = b.burial_id
+join amulets a on a.burial_id = b.burial_id
 where dating = 'napatan' and b.site_id in (8,4,5) 
     AND (super = 'pyramid' OR sub IN ('chambers', 'cave tomb'))
-    and artifact_type != 'beads'
 group by 1,2
 """
 
@@ -25,20 +24,21 @@ df = pd.read_sql(query, engine)
 custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686', '#2c3e50', '#a85d3a', '#9b8fd4', '#8a9a5b', '#d4a5a5', '#4a4a4a']
 
 phase_order = [
-    "25th", "25th-EN", "25th-MN", "EN",
+    "25th", "25th-EN", "EN",
     "EN-MN", "MN", "MN-LN", "LN"
 ]
 
-pivot_df = df.pivot(index='artifact_type', columns='temp', values='total').fillna(0)
-df_stacked = pivot_df.reset_index().melt(id_vars='artifact_type', var_name='temp', value_name='total')
+pivot_df = df.pivot(index='type', columns='temp', values='total').fillna(0)
+df_stacked = pivot_df.reset_index().melt(id_vars='type', var_name='temp', value_name='total')
 
 fig = px.scatter(
     df,
-    x="artifact_type",
+    x="type",
     y="temp",
-    color="total",                   
+    color="total",
+    text='total',                 
     color_continuous_scale='Sunset',
-    title="Elite object types by chronological phase",
+    title="Elite amulet types by chronological phase",
     labels={"total": "Total"},
     size_max=20,
     template='plotly_white'                     
@@ -46,11 +46,6 @@ fig = px.scatter(
 
 fig.update_layout(
     xaxis={'categoryorder': 'total descending'},
-    font=dict(
-        family="Verdana, sans-serif",
-        color='black',
-        size=8
-    ),
     legend=dict(
         orientation="h",
         yanchor="bottom",
@@ -59,6 +54,12 @@ fig.update_layout(
         x=0.50,
         traceorder='reversed'
     ),
+    font=dict(
+        family="Verdana, sans-serif",
+        color='black',
+        size=8
+    ),
+    legend_title_text='',
     margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
     title_font=dict(size=8),
@@ -70,7 +71,8 @@ fig.update_layout(
     )
 )
 
+fig.update_traces(textposition='top right', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', categoryorder='array', categoryarray=phase_order[::-1])
 
-pio.write_image(fig, 'images/chapter5/elite_objects_temp.png',scale=4, width=450, height=250)
+pio.write_image(fig, 'images/chapter5/elite_amulets_type_temp.png',scale=4, width=450, height=200)
