@@ -16,7 +16,7 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         dating = 'napatan'
-        AND temp = 'EN'
+        AND temp = 'EN-MN'
         AND s.site_id IN (4,5,6,7,8,9,10)
         AND a.form IS NOT NULL
         and super != 'pyramid' 
@@ -33,7 +33,7 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         dating = 'napatan'
-        AND temp = 'EN'
+        AND temp = 'EN-MN'
         AND s.site_id IN (4,5,6,7,8,9,10)
         AND a.form2 IS NOT NULL
         and super != 'pyramid' 
@@ -50,7 +50,7 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         dating = 'napatan'
-        AND temp = 'EN'
+        AND temp = 'EN-MN'
         AND s.site_id IN (4,5,6,7,8,9,10)
         AND a.form3 IS NOT NULL
         and super != 'pyramid' 

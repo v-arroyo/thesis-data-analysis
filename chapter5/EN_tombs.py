@@ -13,7 +13,7 @@ select
     count(burial_id) as total
 from burials b
 join sites s on s.site_id = b.site_id
-where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and temp = 'EN'
+where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and temp = 'EN-MN'
    and super != 'pyramid' 
    and sub not in ('chambers', 'cave tomb')
 group by 1,2,3
