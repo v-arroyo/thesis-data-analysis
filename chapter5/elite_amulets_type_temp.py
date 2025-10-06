@@ -21,7 +21,14 @@ group by 1,2
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686', '#2c3e50', '#a85d3a', '#9b8fd4', '#8a9a5b', '#d4a5a5', '#4a4a4a']
+grey_smooth = [
+    [0.0, '#e0e0e0'],  # Light grey
+    [0.3, '#c8c8c8'],   # Medium light grey
+    [0.5, '#a0a0a0'],   # Medium grey
+    [0.7, '#787878'],   # Medium dark grey
+    [0.85, '#505050'],  # Dark grey
+    [1.0, '#282828']    # Very dark grey
+]
 
 phase_order = [
     "25th", "25th-EN", "EN",
@@ -31,13 +38,15 @@ phase_order = [
 pivot_df = df.pivot(index='type', columns='temp', values='total').fillna(0)
 df_stacked = pivot_df.reset_index().melt(id_vars='type', var_name='temp', value_name='total')
 
+
+
 fig = px.scatter(
     df,
     x="type",
     y="temp",
     color="total",
     text='total',                 
-    color_continuous_scale='Sunset',
+    color_continuous_scale=grey_smooth,
     title="Elite amulet types by chronological phase",
     labels={"total": "Total"},
     size_max=20,

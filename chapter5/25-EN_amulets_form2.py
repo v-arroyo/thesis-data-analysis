@@ -2,8 +2,6 @@ import pandas as pd
 import plotly.express as px
 from sqlalchemy import create_engine
 import plotly.io as pio
-import plotly.graph_objects as go
-import numpy as np
 
 engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
@@ -18,9 +16,12 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         dating = 'napatan'
-        AND s.site_id IN (4,5,8)
+        AND temp = '25th-EN'
+        AND s.site_id IN (4,5,6,7,8,9,10)
         AND a.form IS NOT NULL
-        AND (super = 'pyramid' OR sub IN ('chambers', 'cave tomb'))
+        and super != 'pyramid' 
+        and sub not in ('chambers', 'cave tomb')
+        AND type IN ('deity')
 
     UNION ALL
 
@@ -33,9 +34,12 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         dating = 'napatan'
-        AND s.site_id IN (4,5,8)
+        AND temp = '25th-EN'
+        AND s.site_id IN (4,5,6,7,8,9,10)
         AND a.form2 IS NOT NULL
-        AND (super = 'pyramid' OR sub IN ('chambers', 'cave tomb'))
+        and super != 'pyramid' 
+        and sub not in ('chambers', 'cave tomb')
+        AND type IN ('deity')
 
     UNION ALL
 
@@ -48,9 +52,12 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         dating = 'napatan'
-        AND s.site_id IN (4,5,8)
+        AND temp = '25th-EN'
+        AND s.site_id IN (4,5,6,7,8,9,10)
         AND a.form3 IS NOT NULL
-        AND (super = 'pyramid' OR sub IN ('chambers', 'cave tomb'))
+        and super != 'pyramid' 
+        and sub not in ('chambers', 'cave tomb')
+        AND type IN ('deity')
 )
 SELECT 
     site_name,
@@ -66,51 +73,44 @@ GROUP BY 1,2
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686', '#2c3e50', '#a85d3a', '#9b8fd4', '#8a9a5b', '#d4a5a5', '#4a4a4a']
+custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 
-phase_order = [
-    "pre-25th", "25th", "25th-EN", "25th-MN", "EN",
-    "EN-MN", "EN-LN", "MN", "MN-LN", "LN"
-]
-
-pivot_df = df.pivot(index='form', columns='temp', values='total').fillna(0)
-df_stacked = pivot_df.reset_index().melt(id_vars='form', var_name='temp', value_name='total')
-
-fig = px.scatter(
+fig = px.bar(
     df,
     x="form",
-    y="temp",
-    color="total",
-    text='total',                 
-    color_continuous_scale='Sunset',
-    title="Elite amulet types by chronological phase",
-    size_max=20,
-    template='plotly_white'                     
+    y="total",
+    color="site_name",
+    text="total",
+    barmode='stack',
+    title="25th Dynasty-Early Napatan non-elite amulet motifs",
+    labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
+    color_discrete_sequence=custom_colors,
+    template="plotly_white"
 )
 
-fig.update_layout(
-    xaxis={'categoryorder': 'total descending'},
+fig.update_layout(yaxis=dict(categoryorder='total ascending', automargin=True, title_standoff=0), 
     legend=dict(
-        orientation="h",
+        #orientation="h",
         yanchor="bottom",
-        y=-0.15,
+        y=0.48,
         xanchor="center",
-        x=0.50,
-        traceorder='reversed'
-    ),
+        x=0.80,
+        traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=7
-    ),
+        size=8),
     legend_title_text='',
-    margin=dict(l=0, r=10, t=20, b=0),
+    #yaxis=dict(
+        #tickmode='linear',
+        #dtick=1),
+    margin=dict(l=0, r=0, t=20, b=0),
     autosize=True,
-    title_font=dict(size=7)
+    title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='top center', textfont_size=6)
+fig.update_traces(textposition='outside', textfont_size=6, width=0.9)
 fig.update_xaxes(title_text='')
-fig.update_yaxes(title_text='', categoryorder='array', categoryarray=phase_order[::-1])
+fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/elite_amulets_form_temp.png',scale=4, width=550, height=300)
+pio.write_image(fig, 'images/chapter5/25-EN_amulets_form_1.png',scale=3, width=550, height=350)

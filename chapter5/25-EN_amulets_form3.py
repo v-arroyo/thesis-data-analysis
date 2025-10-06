@@ -16,11 +16,12 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         dating = 'napatan'
-        AND temp IN ('EN', 'EN-MN')
+        AND temp = '25th-EN'
         AND s.site_id IN (4,5,6,7,8,9,10)
         AND a.form IS NOT NULL
         and super != 'pyramid' 
         and sub not in ('chambers', 'cave tomb')
+        AND type IN ('deity')
 
     UNION ALL
 
@@ -33,11 +34,12 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         dating = 'napatan'
-        AND temp IN ('EN', 'EN-MN')
+        AND temp = '25th-EN'
         AND s.site_id IN (4,5,6,7,8,9,10)
         AND a.form2 IS NOT NULL
         and super != 'pyramid' 
         and sub not in ('chambers', 'cave tomb')
+        AND type IN ('deity')
 
     UNION ALL
 
@@ -50,11 +52,12 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         dating = 'napatan'
-        AND temp IN ('EN', 'EN-MN')
+        AND temp = '25th-EN'
         AND s.site_id IN (4,5,6,7,8,9,10)
         AND a.form3 IS NOT NULL
         and super != 'pyramid' 
         and sub not in ('chambers', 'cave tomb')
+        AND type IN ('deity')
 )
 SELECT 
     site_name,
@@ -70,7 +73,7 @@ GROUP BY 1,2
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#C0C0C0']
+custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.bar(
     df,
@@ -78,20 +81,20 @@ fig = px.bar(
     y="total",
     color="site_name",
     text="total",
-    barmode='group',
-    title="Early Napatan non-elite amulet motifs",
+    barmode='stack',
+    title="25th Dynasty-Early Napatan non-elite amulet motifs",
     labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
 
-fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, title_standoff=0),
+fig.update_layout(yaxis=dict(categoryorder='total ascending', automargin=True, title_standoff=0), 
     legend=dict(
         #orientation="h",
         yanchor="bottom",
-        y=0.52,
+        y=0.48,
         xanchor="center",
-        x=0.70,
+        x=0.80,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -101,13 +104,13 @@ fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, 
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
-    margin=dict(l=0, r=0, t=30, b=0),
+    margin=dict(l=0, r=0, t=20, b=0),
     autosize=True,
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='auto', textfont_size=6)
+fig.update_traces(textposition='outside', textfont_size=6, width=0.9)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/EN_amulets_form.png',scale=3, width=450, height=200)
+pio.write_image(fig, 'images/chapter5/25-EN_amulets_form_1.png',scale=3, width=550, height=350)
