@@ -13,8 +13,11 @@ select
 from burials b
 join sites s on s.site_id = b.site_id
 join amulets a on a.burial_id = b.burial_id
-where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and super != 'pyramid' 
-    and sub not in ('chambers', 'cave tomb') and material = 'faience'
+where dating = 'napatan' 
+    and b.site_id in (4,5,6,7,8,9,10) 
+    and social_group = 'non-elite'
+    and material = 'faience'
+    and temp = '25th'
 group by 1,2
 """
 
@@ -29,7 +32,7 @@ fig = px.bar(
     color="site_name",
     text="total",
     barmode='group',
-    title="25th Dynasty amulet materials",
+    title="25th Dynasty faience amulets",
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
@@ -59,4 +62,4 @@ fig.update_traces(textposition='outside', textfont_size=6, width=0.2)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25_amulets_mat_faience.png',scale=4, width=200, height=200)
+pio.write_image(fig, 'images/chapter5/25_amulets_mat_faience.png',scale=4, width=200, height=250)

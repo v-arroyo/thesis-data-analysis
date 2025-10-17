@@ -19,8 +19,7 @@ WITH expanded_forms AS (
         AND temp = '25th'
         AND s.site_id IN (4,5,6,7,8,9,10)
         AND a.form IS NOT NULL
-        and super != 'pyramid' 
-        and sub not in ('chambers', 'cave tomb')
+        and social_group = 'non-elite'
         and type != 'deity'
 
     UNION ALL
@@ -37,8 +36,7 @@ WITH expanded_forms AS (
         AND temp = '25th'
         AND s.site_id IN (4,5,6,7,8,9,10)
         AND a.form2 IS NOT NULL
-        and super != 'pyramid' 
-        and sub not in ('chambers', 'cave tomb')
+        and social_group = 'non-elite'
         and type != 'deity'
 
     UNION ALL
@@ -55,8 +53,7 @@ WITH expanded_forms AS (
         AND temp = '25th'
         AND s.site_id IN (4,5,6,7,8,9,10)
         AND a.form3 IS NOT NULL
-        and super != 'pyramid' 
-        and sub not in ('chambers', 'cave tomb')
+        and social_group = 'non-elite'
         and type != 'deity'
 )
 SELECT 

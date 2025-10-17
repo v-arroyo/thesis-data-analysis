@@ -83,7 +83,7 @@ fig = px.bar(
     color="site_name",
     text="total",
     barmode='group',
-    title="25th Dynasty non-elite amulet motifs (excl. deities)",
+    title="25th Dynasty non-elite udjat amulets",
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )

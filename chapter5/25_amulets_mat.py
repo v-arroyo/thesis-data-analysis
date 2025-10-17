@@ -13,8 +13,12 @@ select
 from burials b
 join sites s on s.site_id = b.site_id
 join amulets a on a.burial_id = b.burial_id
-where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and material IS NOT NULL
-    and super != 'pyramid' and sub not in ('chambers', 'cave tomb') and temp = '25th'
+where dating = 'napatan' 
+    and b.site_id in (4,5,6,7,8,9,10) 
+    and material IS NOT NULL
+    and social_group = 'non-elite'
+    and material != 'faience'
+    and temp = '25th'
 group by 1,2
 """
 
@@ -29,7 +33,7 @@ fig = px.bar(
     color="site_name",
     text="total",
     barmode='stack',
-    title="25th Dynasty amulet materials",
+    title="25th Dynasty amulet materials (excl. faience)",
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
