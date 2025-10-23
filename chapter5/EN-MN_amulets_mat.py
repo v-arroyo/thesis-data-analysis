@@ -16,7 +16,7 @@ join amulets a on a.burial_id = b.burial_id
 where dating = 'napatan' 
     and b.site_id in (4,5,6,7,8,9,10) 
     and material IS NOT NULL 
-    and temp = 'EN'
+    AND temp = 'EN-MN'
     and social_group = 'non-elite'
 group by 1,2
 """
@@ -62,4 +62,4 @@ fig.update_traces(textposition='auto', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/EN_amulets_mat.png',scale=3, width=450, height=200)
+pio.write_image(fig, 'images/chapter5/EN-MN_amulets_mat.png',scale=3, width=450, height=200)

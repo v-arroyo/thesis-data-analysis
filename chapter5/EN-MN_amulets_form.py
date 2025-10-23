@@ -16,7 +16,7 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         dating = 'napatan'
-        AND temp = 'EN'
+        AND temp = 'EN-MN'
         AND s.site_id IN (4,5,6,7,8,9,10)
         AND a.form IS NOT NULL
         and social_group = 'non-elite'
@@ -32,7 +32,7 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         dating = 'napatan'
-        AND temp = 'EN'
+        AND temp = 'EN-MN'
         AND s.site_id IN (4,5,6,7,8,9,10)
         AND a.form2 IS NOT NULL
         and social_group = 'non-elite'
@@ -48,7 +48,7 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         dating = 'napatan'
-        AND temp = 'EN'
+        AND temp = 'EN-MN'
         AND s.site_id IN (4,5,6,7,8,9,10)
         AND a.form3 IS NOT NULL
         and social_group = 'non-elite'
@@ -107,4 +107,4 @@ fig.update_traces(textposition='auto', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/EN_amulets_form.png',scale=3, width=450, height=200)
+pio.write_image(fig, 'images/chapter5/EN-MN_amulets_form.png',scale=3, width=450, height=200)

@@ -15,7 +15,7 @@ join sites s on s.site_id = b.site_id
 join artifacts a on a.burial_id = b.burial_id
 where dating = 'napatan' 
     and b.site_id in (4,5,6,7,8,9,10) 
-    and temp = 'EN'
+    AND temp = 'EN-MN'
     and social_group = 'non-elite'
 group by 1,2
 """
@@ -62,4 +62,4 @@ fig.update_traces(textposition='auto', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/EN_objects.png',scale=3, width=450, height=250)
+pio.write_image(fig, 'images/chapter5/EN-MN_objects.png',scale=3, width=450, height=250)

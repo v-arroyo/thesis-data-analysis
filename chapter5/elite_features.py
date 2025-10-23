@@ -56,7 +56,7 @@ fig = px.scatter(
     text='percentage',
     size_max=20,
     title="Percentage of elite tombs with certain features (%)",
-    labels={"total": "Total"},
+    labels={"percentage": "Percentage"},
     color_continuous_scale='Sunset',
     template="plotly_white"
 )

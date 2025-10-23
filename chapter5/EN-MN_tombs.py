@@ -15,7 +15,7 @@ from burials b
 join sites s on s.site_id = b.site_id
 where dating = 'napatan' 
     and b.site_id in (4,5,6,7,8,9,10) 
-    and temp = 'EN'
+    AND temp = 'EN-MN'
     and social_group = 'non-elite'
 group by 1,2,3
 """
@@ -63,4 +63,4 @@ fig.update_traces(textposition='auto', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', matches=None)
 
-pio.write_image(fig, 'images/chapter5/EN_tombs.png',scale=3, width=400, height=200)
+pio.write_image(fig, 'images/chapter5/EN-MN_tombs.png',scale=3, width=400, height=200)
