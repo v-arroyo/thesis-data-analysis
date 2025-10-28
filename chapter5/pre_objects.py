@@ -17,7 +17,6 @@ where dating = 'napatan'
     and b.site_id in (4,5,6,7,8,9,10) 
     and temp = 'pre-25th'
     and social_group = 'non-elite'
-    and artifact_type != 'beads'
 group by 1,2
 """
 
@@ -25,24 +24,23 @@ df = pd.read_sql(query, engine)
 
 custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 
-fig = px.bar(
+fig = px.scatter(
     df,
-    x="artifact_type",
-    y="total",
-    color="site_name",
+    x="site_name",
+    y="artifact_type",
+    color="total",
     text="total",
-    barmode='group',
     title="Pre-25th Dynasty non-elite object types",
-    labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
-    color_discrete_sequence=custom_colors,
+    labels={"total": "Total"},
+    color_continuous_scale='Sunset',
     template="plotly_white"
 )
 
-fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
+fig.update_layout( 
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.68,
+        y=-0.70,
         xanchor="center",
         x=0.45,
         traceorder='reversed'),
@@ -54,13 +52,13 @@ fig.update_layout(xaxis={'categoryorder': 'total descending'},
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
-    margin=dict(l=0, r=10, t=50, b=0),
+    margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='auto', textfont_size=6)
-fig.update_xaxes(title_text='', tickangle=45)
-fig.update_yaxes(title_text='')
+fig.update_traces(textposition='top right', textfont_size=6)
+fig.update_xaxes(title_text='', categoryorder='category ascending')
+fig.update_yaxes(title_text='', categoryorder='category descending')
 
-pio.write_image(fig, 'images/chapter5/pre_objects.png',scale=3, width=500, height=250)
+pio.write_image(fig, 'images/chapter5/pre_objects.png',scale=3, width=430, height=250)

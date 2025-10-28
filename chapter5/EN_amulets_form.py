@@ -6,89 +6,53 @@ import plotly.io as pio
 engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 query = """
-WITH expanded_forms AS (
-    SELECT 
-        s.site_name,
-        a.form AS form,
-        a.amulet_id
-    FROM amulets a
-    JOIN burials b ON b.burial_id = a.burial_id
-    JOIN sites s ON s.site_id = b.site_id
-    WHERE 
-        dating = 'napatan'
-        AND temp = 'EN'
-        AND s.site_id IN (4,5,6,7,8,9,10)
-        AND a.form IS NOT NULL
-        and social_group = 'non-elite'
-
-    UNION ALL
-
-    SELECT 
-        s.site_name,
-        a.form2 AS form,
-        a.amulet_id
-    FROM amulets a
-    JOIN burials b ON b.burial_id = a.burial_id
-    JOIN sites s ON s.site_id = b.site_id
-    WHERE 
-        dating = 'napatan'
-        AND temp = 'EN'
-        AND s.site_id IN (4,5,6,7,8,9,10)
-        AND a.form2 IS NOT NULL
-        and social_group = 'non-elite'
-
-    UNION ALL
-
-    SELECT 
-        s.site_name,
-        a.form3 AS form,
-        a.amulet_id
-    FROM amulets a
-    JOIN burials b ON b.burial_id = a.burial_id
-    JOIN sites s ON s.site_id = b.site_id
-    WHERE 
-        dating = 'napatan'
-        AND temp = 'EN'
-        AND s.site_id IN (4,5,6,7,8,9,10)
-        AND a.form3 IS NOT NULL
-        and social_group = 'non-elite'
-)
 SELECT 
     site_name,
-    CASE 
-        WHEN form = 'deity' THEN 'unknown deity'
-        WHEN form = 'deities' THEN 'group of deities'
-        ELSE form
-    END AS form,
+    temp,
+    form,
     COUNT(amulet_id) AS total
-FROM expanded_forms
-GROUP BY 1,2
+FROM amulets a
+    JOIN burials b ON b.burial_id = a.burial_id
+    JOIN sites s ON s.site_id = b.site_id
+WHERE 
+    dating = 'napatan'
+    AND temp IN ('EN', 'EN-MN')
+    AND s.site_id IN (4,5,6,7,8,9,10)
+    and social_group = 'non-elite'
+GROUP BY 1,2,3
 """
 
 df = pd.read_sql(query, engine)
 
 custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#C0C0C0']
 
-fig = px.bar(
-    df,
-    x="form",
-    y="total",
-    color="site_name",
+custom_order = ['EN', 'EN-MN']
+
+order_mapping = {temp: idx for idx, temp in enumerate(custom_order)}
+df['temp_order'] = df['temp'].map(order_mapping)
+
+df_sorted = df.sort_values('temp_order')
+
+fig = px.scatter(
+    df_sorted,
+    x="temp",
+    y="form",
+    color="total",
     text="total",
-    barmode='group',
-    title="Early Napatan non-elite amulet motifs",
-    labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
-    color_discrete_sequence=custom_colors,
+    facet_col='site_name',
+    title="Early Napatan and Early-Middle Napatan non-elite amulet motifs",
+    labels={"site_name": "site", "temp": "phase", "total": "Total"},
+    color_continuous_scale='Sunset',
     template="plotly_white"
 )
 
-fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, title_standoff=0),
+fig.update_layout(
     legend=dict(
         #orientation="h",
-        yanchor="bottom",
-        y=0.52,
+        yanchor="middle",
+        y=0.60,
         xanchor="center",
-        x=0.70,
+        x=0.75,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -98,13 +62,13 @@ fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, 
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
-    margin=dict(l=0, r=0, t=30, b=0),
+    margin=dict(l=0, r=10, t=50, b=0),
     autosize=True,
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='auto', textfont_size=6)
-fig.update_xaxes(title_text='')
+fig.update_traces(textposition='top right', textfont_size=6)
+fig.update_xaxes(title_text='', matches=None)
 fig.update_yaxes(title_text='')
 
 pio.write_image(fig, 'images/chapter5/EN_amulets_form.png',scale=3, width=450, height=200)
