@@ -31,7 +31,7 @@ fig = px.bar(
     facet_col="site_name",
     facet_row="sub",
     text="total_burials",
-    title="Early Napatan tomb structure",
+    title="Early Napatan royal tomb structure",
     labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
@@ -62,4 +62,4 @@ fig.update_traces(textposition='auto')
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/early_tomb.png',scale=3, width=450, height=350)
+pio.write_image(fig, 'images/chapter4/early_tomb.png',scale=3, width=450, height=350)

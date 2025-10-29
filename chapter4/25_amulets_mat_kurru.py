@@ -35,7 +35,7 @@ fig = px.bar(
     facet_col="site_name",
     text='count',
     barmode='stack',
-    title="25th Dynasty amulet materials",
+    title="25th Dynasty royal amulet materials",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
@@ -66,4 +66,4 @@ fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/25_amulets_mat_kurru.png',scale=3, width=500, height=250)
+pio.write_image(fig, 'images/chapter4/25_amulets_mat_kurru.png',scale=3, width=500, height=250)

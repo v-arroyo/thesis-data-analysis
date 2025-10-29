@@ -16,13 +16,11 @@ JOIN sites s
 ON s.site_id = b.site_id
 JOIN artifacts a
 ON a.burial_id = b.burial_id
-WHERE temp = 'EN' AND b.site_id IN (2)
+WHERE temp = '25th' AND b.site_id IN (1,2)
 GROUP BY 1,2,3
 """
 
 df = pd.read_sql(query, engine)
-
-custom_colors = ['#92cad1', '#e9724d','#d6d727', '#79ccb3', '#868686']
 
 fig = px.scatter(
     df,
@@ -31,8 +29,8 @@ fig = px.scatter(
     color="count",
     text="count",
     facet_col="site_name",
-    title="Early Napatan royal object types",
-    labels={"count": "Total", "site_name": "Site"},
+    title="25th Dynasty royal object types",
+    labels={"count": "Total"},
     color_continuous_scale='Sunset',
     template="plotly_white"
 )
@@ -59,14 +57,7 @@ fig.update_layout(
 )
 
 fig.update_traces(textposition='middle right', textfont_size=6)
-fig.update_xaxes(title_text='')
+fig.update_xaxes(title_text='', categoryorder='category ascending')
 fig.update_yaxes(title_text='', categoryorder='category descending')
-fig.update_xaxes(
-    title_text='',
-    categoryorder='category ascending',
-    range=[-0.5, len(df['owner'].unique())-0.5],  # Tight range
-    showgrid=True
-)
 
-
-pio.write_image(fig, 'images/chapter4/early_objs_nuri.png',scale=3, width=350, height=350)
+pio.write_image(fig, 'images/chapter4/25_objs.png',scale=3, width=550, height=450)

@@ -31,7 +31,7 @@ fig = px.bar(
     facet_col="site_name",
     facet_row="sub",
     text="total_burials",
-    title="Pre-25th Dynasty tomb structure",
+    title="Pre-25th Dynasty royal tomb structure",
     labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
@@ -62,4 +62,4 @@ fig.update_traces(textposition='auto')
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/pre_tomb.png',scale=3, width=400, height=300)
+pio.write_image(fig, 'images/chapter4/pre_tomb.png',scale=3, width=400, height=300)

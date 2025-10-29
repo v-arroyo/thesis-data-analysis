@@ -32,7 +32,7 @@ fig = px.bar(
     facet_col="site_name",
     text='count',
     barmode='stack',
-    title="Middle Napatan amulet materials",
+    title="Middle Napatan royal amulet materials",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
@@ -63,4 +63,4 @@ fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/middle_amulets_mat.png',scale=3, width=400, height=200)
+pio.write_image(fig, 'images/chapter4/middle_amulets_mat.png',scale=3, width=400, height=200)

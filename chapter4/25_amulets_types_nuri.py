@@ -16,13 +16,13 @@ JOIN sites s
 ON s.site_id = b.site_id
 JOIN amulets a
 ON a.burial_id = b.burial_id
-WHERE temp = 'EN' AND b.site_id IN (1,2)
+WHERE temp = '25th' AND b.site_id IN (2)
 GROUP BY 1,2,3
 """
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#92cad1', '#e9724d', '#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#92cad1','#e9724d','#d6d727', '#92cad1', '#79ccb3', '#868686']
 
 fig = px.bar(
     df,
@@ -32,7 +32,7 @@ fig = px.bar(
     facet_col="site_name",
     text='count',
     barmode='stack',
-    title="Early Napatan royal amulet types",
+    title="25th Dynasty royal amulet types",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
@@ -42,10 +42,10 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.35,
+        y=-0.20,
         xanchor="center",
-        x=0.40,
-        traceorder='reversed'),
+        x=0.45),
+        #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -60,7 +60,7 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
 )
 
 fig.update_traces(textposition='outside', textfont_size=6)
-fig.update_xaxes(title_text='')
+fig.update_xaxes(title_text='', matches=None)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter4/early_amulets_types.png',scale=3, width=450, height=200)
+pio.write_image(fig, 'images/chapter4/25_amulets_types_nuri.png',scale=3, width=300, height=300)

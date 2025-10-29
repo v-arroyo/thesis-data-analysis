@@ -16,7 +16,7 @@ JOIN sites s
 ON s.site_id = b.site_id
 JOIN artifacts a
 ON a.burial_id = b.burial_id
-WHERE temp = 'MN' AND b.site_id IN (2) AND artifact_type NOT IN ('shabtis', 'ceramic vessels')
+WHERE temp = 'MN' AND b.site_id IN (2)
 GROUP BY 1,2,3
 """
 
@@ -24,27 +24,26 @@ df = pd.read_sql(query, engine)
 
 custom_colors = ['#92cad1', '#e9724d','#d6d727', '#79ccb3', '#868686']
 
-fig = px.bar(
+fig = px.scatter(
     df,
-    x="artifact_type",
-    y="count",
-    color="owner",
+    x="owner",
+    y="artifact_type",
+    color="count",
+    text="count",
     facet_col="site_name",
-    #text='count',
-    barmode='stack',
-    title="Middle Napatan object types",
-    labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
-    color_discrete_sequence=custom_colors,
+    title="Middle Napatan royal object types",
+    labels={"count": "Total"},
+    color_continuous_scale='Sunset',
     template="plotly_white"
 )
 
-fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
+fig.update_layout( 
     legend=dict(
-        #orientation="h",
-        yanchor="top",
-        y=0.83,
-        xanchor="right",
-        x=0.93,
+        orientation="h",
+        yanchor="bottom",
+        y=-0.70,
+        xanchor="center",
+        x=0.45,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -54,13 +53,13 @@ fig.update_layout(xaxis={'categoryorder': 'total descending'},
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
-    margin=dict(l=0, r=10, t=50, b=0),
+    margin=dict(l=0, r=10, t=40, b=0),
     autosize=True,
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='outside')
-fig.update_xaxes(title_text='')
-fig.update_yaxes(title_text='')
+fig.update_traces(textposition='middle right', textfont_size=6)
+fig.update_xaxes(title_text='', categoryorder='category ascending')
+fig.update_yaxes(title_text='', categoryorder='category descending')
 
-pio.write_image(fig, 'images/middle_objs.png',scale=3, width=500, height=350)
+pio.write_image(fig, 'images/chapter4/middle_objs.png',scale=3, width=500, height=350)

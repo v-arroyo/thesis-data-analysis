@@ -85,7 +85,7 @@ fig = px.bar(
     facet_col="site_name",
     text='total',
     barmode='stack',
-    title="25th Dynasty deity amulets",
+    title="25th Dynasty royal deity amulets",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
@@ -116,4 +116,4 @@ fig.update_traces(textposition='outside', textfont_size=5)
 fig.update_xaxes(title_text='', matches=None, tickangle=45)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/25_amulets_forms_deities.png',scale=3, width=450, height=320)
+pio.write_image(fig, 'images/chapter4/25_amulets_forms_deities.png',scale=3, width=450, height=320)

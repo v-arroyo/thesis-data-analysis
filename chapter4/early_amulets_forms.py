@@ -75,7 +75,7 @@ fig = px.bar(
     facet_col="site_name",
     text='total',
     barmode='stack',
-    title="Early Napatan amulet motifs",
+    title="Early Napatan royal amulet motifs",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
@@ -106,4 +106,4 @@ fig.update_traces(textposition='outside', textfont_size=5)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/early_amulets_forms.png',scale=3, width=500, height=350)
+pio.write_image(fig, 'images/chapter4/early_amulets_forms.png',scale=3, width=500, height=350)

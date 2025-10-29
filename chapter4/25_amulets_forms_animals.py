@@ -78,7 +78,7 @@ fig = px.bar(
     facet_col="site_name",
     text='total',
     barmode='stack',
-    title="25th Dynasty animal amulets",
+    title="25th Dynasty royal animal amulets",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
@@ -109,4 +109,4 @@ fig.update_traces(textposition='inside', textfont_size=6)
 fig.update_xaxes(title_text='', matches=None)
 fig.update_yaxes(title_text='', dtick=1)
 
-pio.write_image(fig, 'images/25_amulets_forms_animals.png',scale=3, width=450, height=220)
+pio.write_image(fig, 'images/chapter4/25_amulets_forms_animals.png',scale=3, width=450, height=220)

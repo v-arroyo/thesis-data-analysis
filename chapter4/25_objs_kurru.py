@@ -16,7 +16,7 @@ JOIN sites s
 ON s.site_id = b.site_id
 JOIN artifacts a
 ON a.burial_id = b.burial_id
-WHERE temp = '25th' AND b.site_id IN (1) AND artifact_type NOT IN ('beads', 'shabtis')
+WHERE temp = '25th' AND b.site_id IN (1)
 GROUP BY 1,2,3
 """
 
@@ -24,46 +24,38 @@ df = pd.read_sql(query, engine)
 
 custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 
-fig = px.bar(
+fig = px.scatter(
     df,
-    x="artifact_type",
-    y="count",
-    color="owner",
+    x="owner",
+    y="artifact_type",
+    color="count",
+    text="count",
     facet_col="site_name",
-    #text='count',
-    barmode='stack',
-    title="25th Dynasty object types",
-    labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
-    color_discrete_sequence=custom_colors,
+    title="25th Dynasty royal object types",
+    labels={"count": "Total", "site_name": "site"},
+    color_continuous_scale='Sunset',
     template="plotly_white"
 )
 
-fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
-    legend=dict(
-        #orientation="h",
-        yanchor="top",
-        y=0.80,
-        xanchor="right",
-        x=0.93,
-        traceorder='reversed',
-        bgcolor='rgba(0,0,0,0)',
-        bordercolor='rgba(0,0,0,0)',
-        borderwidth=0),
+fig.update_layout( 
     font=dict(
         family="Verdana, sans-serif",
         color='black',
         size=8),
     legend_title_text='',
-    #yaxis=dict(
-        #tickmode='linear',
-        #dtick=1),
-    margin=dict(l=0, r=10, t=30, b=0),
-    autosize=True,
+    margin=dict(l=0, r=10, t=40, b=0),
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='outside')
-fig.update_xaxes(title_text='', tickangle=45)
-fig.update_yaxes(title_text='')
+fig.update_xaxes(
+    title_text='',
+    categoryorder='category ascending',
+    range=[-0.2, len(df['owner'].unique())-0.1],  # Tight range
+    showgrid=True
+)
 
-pio.write_image(fig, 'images/25_objs_kurru.png',scale=3, width=500, height=320)
+fig.update_traces(textposition='middle right', textfont_size=6)
+fig.update_xaxes(title_text='', categoryorder='category ascending')
+fig.update_yaxes(title_text='', categoryorder='category descending')
+
+pio.write_image(fig, 'images/chapter4/25_objs_kurru.png',scale=3, width=400, height=400)

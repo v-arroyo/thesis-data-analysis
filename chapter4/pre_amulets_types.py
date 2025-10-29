@@ -33,7 +33,7 @@ fig = px.bar(
     facet_col="site_name",
     text='count',
     barmode='group',
-    title="Pre-25th Dynasty amulet types",
+    title="Pre-25th Dynasty royal amulet types",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
@@ -64,4 +64,4 @@ fig.update_traces(textposition='outside')
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/pre_amulets_types.png',scale=3, width=450, height=300)
+pio.write_image(fig, 'images/chapter4/pre_amulets_types.png',scale=3, width=450, height=300)
