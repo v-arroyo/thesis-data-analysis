@@ -16,34 +16,32 @@ join artifacts a on a.burial_id = b.burial_id
 where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and temp = '25th-MN'
     and super != 'pyramid' 
     and sub not in ('chambers', 'cave tomb')
-    and artifact_type not in ('beads', 'scarabs')
 group by 1,2
 """
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#C0C0C0']
 
-fig = px.bar(
+fig = px.scatter(
     df,
-    x="artifact_type",
-    y="total",
-    color="site_name",
-    #text="total",
-    barmode='group',
+    x="site_name",
+    y="artifact_type",
+    color="total",
+    text="total",
     title="25th Dynasty-Middle Napatan non-elite object types",
-    labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
-    color_discrete_sequence=custom_colors,
+    labels={"total": "Total"},
+    color_continuous_scale='Sunset',
     template="plotly_white"
 )
 
-fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
+fig.update_layout( 
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=0.52,
+        y=-0.70,
         xanchor="center",
-        x=0.75,
+        x=0.45,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -58,8 +56,8 @@ fig.update_layout(xaxis={'categoryorder': 'total descending'},
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='auto', textfont_size=6)
-fig.update_xaxes(title_text='')
-fig.update_yaxes(title_text='')
+fig.update_traces(textposition='middle right', textfont_size=6)
+fig.update_xaxes(title_text='', categoryorder='category ascending')
+fig.update_yaxes(title_text='', categoryorder='category descending')
 
-pio.write_image(fig, 'images/chapter5/25-MN_objects.png',scale=3, width=450, height=230)
+pio.write_image(fig, 'images/chapter5/25-MN_objects.png',scale=3, width=450, height=260)

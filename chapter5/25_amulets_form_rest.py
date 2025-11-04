@@ -18,7 +18,7 @@ WHERE
     AND temp = '25th'
     AND s.site_id IN (4,5,6,7,8,9,10)
     and social_group = 'non-elite'
-    and form = 'udjat'
+    and type in ('human', 'other', 'object')
 GROUP BY 1,2
 """
 
@@ -32,8 +32,9 @@ fig = px.bar(
     y="total",
     color="site_name",
     text="total",
-    barmode='group',
-    title="25th Dynasty non-elite udjat amulets",
+    barmode='stack',
+    title="25th Dynasty non-elite nature, object, human and other amulet motifs",
+    labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
@@ -44,8 +45,8 @@ fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, 
         yanchor="bottom",
         y=0.40,
         xanchor="center",
-        x=0.80),
-        #traceorder='reversed'),
+        x=0.80,
+        traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -59,8 +60,8 @@ fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, 
     title_font=dict(size=6)
 )
 
-fig.update_traces(textposition='outside', textfont_size=6, width=0.1)
+fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25_amulets_form_udjat.png',scale=4, width=200, height=200)
+pio.write_image(fig, 'images/chapter5/25_amulets_form_rest.png',scale=3, width=500, height=230)

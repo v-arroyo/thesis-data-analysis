@@ -21,7 +21,7 @@ group by 1,2
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#C0C0C0']
 
 fig = px.bar(
     df,

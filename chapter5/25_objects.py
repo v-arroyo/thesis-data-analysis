@@ -25,24 +25,23 @@ df = pd.read_sql(query, engine)
 
 custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 
-fig = px.bar(
+fig = px.scatter(
     df,
-    x="total",
+    x="site_name",
     y="artifact_type",
-    color="site_name",
-    #text="total",
-    barmode='group',
+    color="total",
+    text="total",
     title="25th Dynasty non-elite object types",
-    labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
-    color_discrete_sequence=custom_colors,
+    labels={"total": "Total"},
+    color_continuous_scale='Sunset',
     template="plotly_white"
 )
 
-fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
+fig.update_layout( 
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.20,
+        y=-0.70,
         xanchor="center",
         x=0.45,
         traceorder='reversed'),
@@ -54,13 +53,13 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
-    margin=dict(l=0, r=10, t=50, b=0),
+    margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='auto', textfont_size=6)
-fig.update_xaxes(title_text='')
-fig.update_yaxes(title_text='')
+fig.update_traces(textposition='top right', textfont_size=6)
+fig.update_xaxes(title_text='', categoryorder='category ascending')
+fig.update_yaxes(title_text='', categoryorder='category descending')
 
 pio.write_image(fig, 'images/chapter5/25_objects.png',scale=3, width=450, height=350)

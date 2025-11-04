@@ -33,7 +33,7 @@ fig = px.bar(
     color="site_name",
     text="total",
     barmode='stack',
-    title="25th Dynasty amulet materials (excl. faience)",
+    title="25th Dynasty non-elite amulet materials (excl. faience)",
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )

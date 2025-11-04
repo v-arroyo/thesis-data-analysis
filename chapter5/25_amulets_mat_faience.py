@@ -32,7 +32,7 @@ fig = px.bar(
     color="site_name",
     text="total",
     barmode='group',
-    title="25th Dynasty faience amulets",
+    title="25th Dynasty non-elite faience amulets",
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
