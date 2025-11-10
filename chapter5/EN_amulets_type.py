@@ -66,7 +66,7 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='top right', textfont_size=6)
+fig.update_traces(textposition='middle right', textfont_size=6)
 fig.update_xaxes(title_text='', matches=None)
 fig.update_yaxes(title_text='')
 

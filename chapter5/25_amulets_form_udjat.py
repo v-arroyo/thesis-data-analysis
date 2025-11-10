@@ -28,8 +28,8 @@ custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.bar(
     df,
-    x="form",
-    y="total",
+    x="total",
+    y="form",
     color="site_name",
     text="total",
     barmode='group',
@@ -44,8 +44,8 @@ fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, 
         yanchor="bottom",
         y=0.40,
         xanchor="center",
-        x=0.80),
-        #traceorder='reversed'),
+        x=0.80,
+        traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -63,4 +63,4 @@ fig.update_traces(textposition='outside', textfont_size=6, width=0.1)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25_amulets_form_udjat.png',scale=4, width=200, height=200)
+pio.write_image(fig, 'images/chapter5/25_amulets_form_udjat.png',scale=4, width=500, height=150)

@@ -68,6 +68,6 @@ fig.update_layout(
 
 fig.update_traces(textposition='top right', textfont_size=6)
 fig.update_xaxes(title_text='', matches=None)
-fig.update_yaxes(title_text='')
+fig.update_yaxes(title_text='', categoryorder='category descending')
 
-pio.write_image(fig, 'images/chapter5/EN_objects.png',scale=3, width=450, height=300)
+pio.write_image(fig, 'images/chapter5/EN_objects.png',scale=3, width=500, height=300)

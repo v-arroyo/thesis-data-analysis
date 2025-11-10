@@ -13,9 +13,7 @@ select
 from burials b
 join sites s on s.site_id = b.site_id
 join amulets a on a.burial_id = b.burial_id
-where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and temp = '25th'
-    and super != 'pyramid' 
-    and sub not in ('chambers', 'cave tomb')
+where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and temp = '25th-EN' and social_group = 'non-elite'
 group by 1,2
 """
 
@@ -23,16 +21,15 @@ df = pd.read_sql(query, engine)
 
 custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 
-fig = px.bar(
+fig = px.scatter(
     df,
-    x="total",
+    x="site_name",
     y="type",
-    color="site_name",
+    color="total",
     text="total",
-    barmode='stack',
-    title="25th Dynasty non-elite amulet types",
-    labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
-    color_discrete_sequence=custom_colors,
+    title="25th Dynasty-Early Napatan non-elite amulet types",
+    labels={"total": "Total"},
+    color_discrete_sequence='Sunset',
     template="plotly_white"
 )
 
@@ -49,16 +46,13 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
         color='black',
         size=8),
     legend_title_text='',
-    #yaxis=dict(
-        #tickmode='linear',
-        #dtick=1),
-    margin=dict(l=0, r=10, t=50, b=0),
+    margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='auto', textfont_size=5)
+fig.update_traces(textposition='middle right', textfont_size=5)
 fig.update_xaxes(title_text='')
-fig.update_yaxes(title_text='')
+fig.update_yaxes(title_text='', categoryorder='category descending')
 
-pio.write_image(fig, 'images/chapter5/25_amulets_type.png',scale=3, width=550, height=250)
+pio.write_image(fig, 'images/chapter5/25-EN_amulets_type.png',scale=3, width=500, height=220)

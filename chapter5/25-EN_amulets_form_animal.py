@@ -8,62 +8,67 @@ engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PA
 query = """
 SELECT 
     s.site_name,
-    a.form AS form,
+    CASE 
+        WHEN a.form = 'deity' THEN 'unknown deity'
+        WHEN a.form = 'deities' THEN 'group of deities'
+        ELSE a.form
+    END AS form,
     COUNT(a.amulet_id) AS total
 FROM amulets a
 JOIN burials b ON b.burial_id = a.burial_id
 JOIN sites s ON s.site_id = b.site_id
 WHERE 
     dating = 'napatan'
-    AND temp = '25th'
+    AND temp = '25th-EN'
     AND s.site_id IN (4,5,6,7,8,9,10)
-    and social_group = 'non-elite'
-    and type in ('human', 'other', 'object', 'nature')\
-    and form2 is null
-    and form3 is null
+    AND a.form IS NOT NULL
+    AND a.form2 IS NULL
+    AND a.form3 IS NULL
+    AND social_group = 'non-elite'
+    AND type IN ('animal')
 GROUP BY 1,2
 """
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#e9724d', '#b19cd9', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.bar(
     df,
-    x="form",
-    y="total",
+    x="total",
+    y="form",
     color="site_name",
     text="total",
     barmode='stack',
-    title="25th Dynasty non-elite nature, object, human and other amulet motifs",
+    title="25th Dynasty-Early Napatan non-elite animal amulet motifs",
     labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
 
-fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, title_standoff=0), 
+fig.update_layout(yaxis=dict(categoryorder='total ascending', automargin=True, title_standoff=0), 
     legend=dict(
         #orientation="h",
         yanchor="bottom",
-        y=0.40,
+        y=0.35,
         xanchor="center",
-        x=0.80,
-        traceorder='reversed'),
+        x=0.70),
+        #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=6),
+        size=8),
     legend_title_text='',
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
-    margin=dict(l=0, r=0, t=15, b=0),
+    margin=dict(l=0, r=0, t=20, b=0),
     autosize=True,
-    title_font=dict(size=6)
+    title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='outside', textfont_size=6)
+fig.update_traces(textposition='outside', textfont_size=5)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25_amulets_form_rest.png',scale=3, width=500, height=230)
+pio.write_image(fig, 'images/chapter5/25-EN_amulets_form_animal.png',scale=3, width=550, height=400)

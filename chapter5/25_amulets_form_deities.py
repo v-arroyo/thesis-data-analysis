@@ -8,7 +8,11 @@ engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PA
 query = """
 SELECT 
     s.site_name,
-    a.form AS form,
+    CASE 
+        WHEN form = 'deity' THEN 'unknown deity'
+        WHEN form = 'deities' THEN 'group of deities'
+        ELSE form
+    END AS form,
     COUNT(a.amulet_id) AS total
 FROM amulets a
 JOIN burials b ON b.burial_id = a.burial_id
@@ -19,6 +23,8 @@ WHERE
     AND s.site_id IN (4,5,6,7,8,9,10)
     and social_group = 'non-elite'
     and type = 'deity'
+    and form2 is null
+    and form3 is null
 GROUP BY 1,2
 """
 

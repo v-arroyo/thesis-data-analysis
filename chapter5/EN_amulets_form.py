@@ -9,7 +9,10 @@ query = """
 SELECT 
     site_name,
     temp,
-    form,
+    CASE 
+        WHEN form = 'deity' THEN 'unknown deity'
+        ELSE form
+    END AS form,
     COUNT(amulet_id) AS total
 FROM amulets a
     JOIN burials b ON b.burial_id = a.burial_id
@@ -67,7 +70,7 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='top right', textfont_size=6)
+fig.update_traces(textposition='middle right', textfont_size=6)
 fig.update_xaxes(title_text='', matches=None)
 fig.update_yaxes(title_text='')
 

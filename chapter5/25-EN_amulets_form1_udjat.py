@@ -24,8 +24,7 @@ WHERE
     AND a.form IS NOT NULL
     AND a.form2 IS NULL
     AND a.form3 IS NULL
-    AND super != 'pyramid' 
-    AND sub NOT IN ('chambers', 'cave tomb')
+    AND social_group = 'non-elite'
     AND form IN ('udjat', 'quadruple udjat')
 GROUP BY 1,2
 """
@@ -36,12 +35,12 @@ custom_colors = ['#e9724d', '#b19cd9', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.bar(
     df,
-    x="form",
-    y="total",
+    x="total",
+    y="form",
     color="site_name",
     text="total",
-    barmode='group',
-    title="25th Dynasty-Early Napatan non-elite udjat amulets",
+    barmode='stack',
+    title="25th Dynasty-Early Napatan non-elite udjat and quadruple udjat amulets",
     labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
@@ -53,7 +52,7 @@ fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, 
         yanchor="bottom",
         y=-0.21,
         xanchor="center",
-        x=0.50),
+        x=0.45),
         #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -68,8 +67,8 @@ fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, 
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='outside', textfont_size=6)
+fig.update_traces(textposition='outside', textfont_size=5)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25-EN_amulets_form1_udjat.png',scale=4, width=550, height=250)
+pio.write_image(fig, 'images/chapter5/25-EN_amulets_form_udjat.png',scale=4, width=550, height=250)

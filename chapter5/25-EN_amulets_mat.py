@@ -13,8 +13,12 @@ select
 from burials b
 join sites s on s.site_id = b.site_id
 join amulets a on a.burial_id = b.burial_id
-where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and material IS NOT NULL
-    and super != 'pyramid' and sub not in ('chambers', 'cave tomb')
+where dating = 'napatan' 
+    and b.site_id in (4,5,6,7,8,9,10) 
+    and material IS NOT NULL
+    and social_group = 'non-elite'
+    and material != 'faience'
+    and temp = '25th-EN'
 group by 1,2
 """
 
@@ -29,7 +33,7 @@ fig = px.bar(
     color="site_name",
     text="total",
     barmode='stack',
-    title="25th Dynasty amulet materials",
+    title="25th Dynasty-Early Napatan non-elite amulet materials (excl. faience)",
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
@@ -50,7 +54,7 @@ fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, 
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
-    margin=dict(l=0, r=0, t=15, b=0),
+    margin=dict(l=0, r=0, t=20, b=0),
     autosize=True,
     title_font=dict(size=8)
 )
@@ -59,4 +63,4 @@ fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25_amulets_mat.png',scale=3, width=550, height=300)
+pio.write_image(fig, 'images/chapter5/25-EN_amulets_mat.png',scale=3, width=550, height=300)
