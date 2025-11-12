@@ -66,8 +66,8 @@ fig.update_layout(
     title_font=dict(size=8),
     coloraxis=dict(
         colorbar=dict(
-            tickfont=dict(size=7),
-            title_font=dict(size=7)
+            tickfont=dict(size=8),
+            title_font=dict(size=8)
         )
     )
 )
@@ -79,8 +79,8 @@ fig.update_coloraxes(
     )
 )
 
-fig.update_traces(textposition='top right', textfont_size=6)
+fig.update_traces(textposition='top right', textfont_size=8)
 fig.update_xaxes(title_text='', tickangle=45)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25_with_2forms.png',scale=4, width=350, height=300)
+pio.write_image(fig, 'images/chapter5/25_with_2forms.png',scale=4, width=400, height=300)

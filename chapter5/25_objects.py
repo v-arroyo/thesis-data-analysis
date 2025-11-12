@@ -17,7 +17,6 @@ where dating = 'napatan'
     and b.site_id in (4,5,6,7,8,9,10) 
     and temp = '25th'
     and social_group = 'non-elite'
-    and artifact_type not in ('beads', 'scarabs')
 group by 1,2
 """
 
@@ -58,7 +57,7 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='top right', textfont_size=6)
+fig.update_traces(textposition='middle right', textfont_size=6)
 fig.update_xaxes(title_text='', categoryorder='category ascending')
 fig.update_yaxes(title_text='', categoryorder='category descending')
 

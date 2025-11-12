@@ -30,7 +30,7 @@ fig = px.scatter(
     text="total_burials",
     title="25th Dynasty-Early Napatan non-elite tomb structures",
     labels={"total_burials": "Total"},
-    color_discrete_sequence=custom_colors,
+    color_discrete_sequence='Sunset',
     template="plotly_white"
 )
 

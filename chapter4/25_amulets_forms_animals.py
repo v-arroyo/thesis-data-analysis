@@ -109,4 +109,4 @@ fig.update_traces(textposition='inside', textfont_size=6)
 fig.update_xaxes(title_text='', matches=None)
 fig.update_yaxes(title_text='', dtick=1)
 
-pio.write_image(fig, 'images/chapter4/25_amulets_forms_animals.png',scale=3, width=450, height=220)
+pio.write_image(fig, 'images/chapter4/25_amulets_forms_animals.png',scale=3, width=450, height=230)
