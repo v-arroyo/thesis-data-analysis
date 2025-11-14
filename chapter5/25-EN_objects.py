@@ -6,15 +6,38 @@ import plotly.io as pio
 engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 query = """
-select 
-	site_name,
-    artifact_type,
-    count(artifact_id) as total
-from burials b
-join sites s on s.site_id = b.site_id
-join artifacts a on a.burial_id = b.burial_id
-where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and temp = '25th-EN' and social_group = 'non-elite'
-group by 1,2
+WITH artifact_counts AS (
+    SELECT 
+        site_name,
+        artifact_type,
+        COUNT(artifact_id) as total
+    FROM burials b
+    JOIN sites s on s.site_id = b.site_id
+    JOIN artifacts a on a.burial_id = b.burial_id
+    WHERE dating = 'napatan' 
+      AND b.site_id in (4,5,6,7,8,9,10) 
+      AND temp = '25th-EN' 
+      AND social_group = 'non-elite'
+    GROUP BY 1,2
+),
+container_counts AS (
+    SELECT 
+        site_name,
+        'burial containers' as artifact_type,
+        COUNT(person_id) as total
+    FROM burials b
+    JOIN sites s on s.site_id = b.site_id
+    JOIN persons p on p.burial_id = b.burial_id
+    WHERE dating = 'napatan' 
+      AND b.site_id in (4,5,6,7,8,9,10) 
+      AND temp = '25th-EN' 
+      AND social_group = 'non-elite'
+      AND p.person_bed_coffin != 'N/A'
+    GROUP BY 1
+)
+SELECT * FROM artifact_counts
+UNION ALL
+SELECT * FROM container_counts
 """
 
 df = pd.read_sql(query, engine)

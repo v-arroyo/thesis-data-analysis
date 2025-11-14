@@ -53,7 +53,8 @@ fig.update_layout(
         #dtick=1),
     margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
-    title_font=dict(size=8)
+    title_font=dict(size=8),
+    bargap=0.05
 )
 
 fig.update_traces(textposition='middle right', textfont_size=6)
