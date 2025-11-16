@@ -9,16 +9,20 @@ engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PA
 query = """
 select 
     region,
-    type,
+    form,
     count(amulet_id) as total
 from burials b
 join amulets a on a.burial_id = b.burial_id
 join sites s on s.site_id = b.site_id
-where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and social_group = 'non-elite'
+where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and social_group = 'non-elite' and form = 'udjat'
 group by 1,2
 """
 
 df = pd.read_sql(query, engine)
+
+custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686',
+                 '#8b4513', '#2f4f4f', '#ff6b4a', '#20b2aa', '#daa520',
+                 '#cd5c5c', '#4682b4', '#e8ea7a', '#98fb98', '#696969']
 
 region_order = ["lower nubia", "north upper nubia", "4th cataract", "meroe region"]
 
@@ -26,26 +30,22 @@ df['region'] = pd.Categorical(df['region'], categories=region_order, ordered=Tru
 
 df = df.sort_values('region')
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686',
-                 '#8b4513', '#2f4f4f', '#ff6b4a', '#20b2aa', '#daa520',
-                 '#cd5c5c', '#4682b4', '#e8ea7a', '#98fb98', '#696969']
-
 fig = px.line(
     df,
     x='region',
     y='total',
-    color='type',
+    text='total',
+    color='form',
     markers=True,
-    title='Distribution of amulet types per region',
-    template="plotly_white",
-    color_discrete_sequence=custom_colors
+    title='Distribution of udjat amulets per region',
+    template="plotly_white"
 )
 
 fig.update_layout( 
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.15,
+        y=-0.25,
         xanchor="center",
         x=0.50,
         traceorder='reversed'),
@@ -66,4 +66,4 @@ fig.update_traces(textposition='top center', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', matches=None)
 
-pio.write_image(fig, 'images/chapter5/region_type.png',scale=3, width=550, height=400)
+pio.write_image(fig, 'images/chapter5/region_udjat.png',scale=3, width=350, height=250)

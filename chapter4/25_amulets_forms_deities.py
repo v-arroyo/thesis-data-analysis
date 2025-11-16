@@ -21,7 +21,6 @@ WITH expanded_forms AS (
         AND s.site_id IN (1)
         AND a.form IS NOT NULL
         AND a.type = 'deity'
-        AND a.form != 'animals'
 
     UNION ALL
 
@@ -39,7 +38,7 @@ WITH expanded_forms AS (
         AND s.site_id IN (1)
         AND a.form2 IS NOT NULL
         AND a.type = 'deity'
-        AND a.form2 != 'animals'
+        AND a.form2 != 'giraffe'
 
     UNION ALL
 
@@ -57,7 +56,7 @@ WITH expanded_forms AS (
         AND s.site_id IN (1)
         AND a.form3 IS NOT NULL
         AND a.type = 'deity'
-        AND a.form3 != 'animals'
+        AND a.form3 not in ('animals', 'tree')
 )
 SELECT 
     site_name,
@@ -116,4 +115,4 @@ fig.update_traces(textposition='outside', textfont_size=5)
 fig.update_xaxes(title_text='', matches=None, tickangle=45)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter4/25_amulets_forms_deities.png',scale=3, width=450, height=320)
+pio.write_image(fig, 'images/chapter4/25_amulets_forms_deities.png',scale=3, width=550, height=320)
