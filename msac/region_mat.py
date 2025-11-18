@@ -7,24 +7,18 @@ import plotly.graph_objects as go
 engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 query = """
-SELECT 
+select 
     region,
-    temp,
-    COUNT(DISTINCT b.burial_id) as tomb_count,
-    COUNT(amulet_id) as total_amulets,
-    ROUND(COUNT(amulet_id) * 1.0 / COUNT(DISTINCT b.burial_id), 0) as avg_amulets_per_tomb
-FROM burials b
-JOIN amulets a ON a.burial_id = b.burial_id
-JOIN sites s ON s.site_id = b.site_id
-WHERE dating = 'napatan' 
-    AND b.site_id IN (4,5,6,7,8,9,10) 
-    AND social_group = 'non-elite'
-GROUP BY 1,2
+    material,
+    count(amulet_id) as total
+from burials b
+join amulets a on a.burial_id = b.burial_id
+join sites s on s.site_id = b.site_id
+where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and social_group = 'non-elite' and material != 'faience'
+group by 1,2
 """
 
 df = pd.read_sql(query, engine)
-
-custom_colors = ['#C0C0C0']
 
 region_order = ["lower nubia", "north upper nubia", "4th cataract", "meroe region"]
 
@@ -32,26 +26,28 @@ df['region'] = pd.Categorical(df['region'], categories=region_order, ordered=Tru
 
 df = df.sort_values('region')
 
+custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
+
 fig = px.bar(
     df,
-    x='region',
-    y='avg_amulets_per_tomb',
-    color='temp',
+    x='material',
+    y='total',
+    text='total',
+    color='region',
     barmode='stack',
-    text='avg_amulets_per_tomb',
-    title='Average number of amulets per tomb by region and phase',
-    color_discrete_sequence=custom_colors,
-    template="plotly_white"
+    title='Distribution of amulet types per region',
+    template="plotly_white",
+    color_discrete_sequence=custom_colors
 )
 
-fig.update_layout( 
+fig.update_layout(xaxis={'categoryorder': 'total descending'},
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.10,
+        y=-0.25,
         xanchor="center",
-        x=0.50,
-        traceorder='reversed'),
+        x=0.50),
+        #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -65,8 +61,8 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='outside', textfont_size=7)
+fig.update_traces(textposition='auto', textfont_size=5)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', matches=None)
 
-pio.write_image(fig, 'images/chapter5/region_avg.png',scale=3, width=400, height=300)
+pio.write_image(fig, 'images/msac/region_mat.png',scale=3, width=550, height=500)

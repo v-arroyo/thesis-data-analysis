@@ -7,24 +7,22 @@ import plotly.graph_objects as go
 engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 query = """
-SELECT 
+select 
     region,
-    temp,
-    COUNT(DISTINCT b.burial_id) as tomb_count,
-    COUNT(amulet_id) as total_amulets,
-    ROUND(COUNT(amulet_id) * 1.0 / COUNT(DISTINCT b.burial_id), 0) as avg_amulets_per_tomb
-FROM burials b
-JOIN amulets a ON a.burial_id = b.burial_id
-JOIN sites s ON s.site_id = b.site_id
-WHERE dating = 'napatan' 
-    AND b.site_id IN (4,5,6,7,8,9,10) 
-    AND social_group = 'non-elite'
-GROUP BY 1,2
+    form,
+    count(amulet_id) as total
+from burials b
+join amulets a on a.burial_id = b.burial_id
+join sites s on s.site_id = b.site_id
+where dating = 'napatan' and b.site_id in (4,5,6,7,8,9,10) and social_group = 'non-elite' and form = 'udjat'
+group by 1,2
 """
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#C0C0C0']
+custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686',
+                 '#8b4513', '#2f4f4f', '#ff6b4a', '#20b2aa', '#daa520',
+                 '#cd5c5c', '#4682b4', '#e8ea7a', '#98fb98', '#696969']
 
 region_order = ["lower nubia", "north upper nubia", "4th cataract", "meroe region"]
 
@@ -32,15 +30,14 @@ df['region'] = pd.Categorical(df['region'], categories=region_order, ordered=Tru
 
 df = df.sort_values('region')
 
-fig = px.bar(
+fig = px.line(
     df,
     x='region',
-    y='avg_amulets_per_tomb',
-    color='temp',
-    barmode='stack',
-    text='avg_amulets_per_tomb',
-    title='Average number of amulets per tomb by region and phase',
-    color_discrete_sequence=custom_colors,
+    y='total',
+    text='total',
+    color='form',
+    markers=True,
+    title='Distribution of udjat amulets per region',
     template="plotly_white"
 )
 
@@ -48,7 +45,7 @@ fig.update_layout(
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.10,
+        y=-0.25,
         xanchor="center",
         x=0.50,
         traceorder='reversed'),
@@ -65,8 +62,8 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='outside', textfont_size=7)
+fig.update_traces(textposition='top center', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', matches=None)
 
-pio.write_image(fig, 'images/chapter5/region_avg.png',scale=3, width=400, height=300)
+pio.write_image(fig, 'images/msac/region_udjat.png',scale=3, width=350, height=250)
