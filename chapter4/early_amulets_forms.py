@@ -19,6 +19,7 @@ WITH expanded_forms AS (
         b.temp = 'EN' 
         AND s.site_id IN (1,2)
         AND a.form IS NOT NULL
+        and form != 'unknown'
 
     UNION ALL
 
@@ -34,6 +35,7 @@ WITH expanded_forms AS (
         b.temp = 'EN' 
         AND s.site_id IN (1,2)
         AND a.form2 IS NOT NULL
+        and form != 'unknown'
 
     UNION ALL
 
@@ -49,6 +51,7 @@ WITH expanded_forms AS (
         b.temp = 'EN' 
         AND s.site_id IN (1,2)
         AND a.form3 IS NOT NULL
+        and form != 'unknown'
 )
 SELECT 
     site_name,

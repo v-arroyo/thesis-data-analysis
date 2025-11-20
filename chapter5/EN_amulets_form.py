@@ -22,6 +22,7 @@ WHERE
     AND temp IN ('EN', 'EN-MN')
     AND s.site_id IN (4,5,6,7,8,9,10)
     and social_group = 'non-elite'
+    and form != 'unknown'
 GROUP BY 1,2,3
 """
 

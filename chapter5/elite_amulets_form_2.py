@@ -21,6 +21,7 @@ WITH expanded_forms AS (
         AND a.form IS NOT NULL
         AND (super = 'pyramid' OR sub IN ('chambers', 'cave tomb'))
         AND type NOT IN ('deity', 'symbol')
+        and form != 'unknown'
 
     UNION ALL
 
@@ -36,6 +37,7 @@ WITH expanded_forms AS (
         AND a.form2 IS NOT NULL
         AND (super = 'pyramid' OR sub IN ('chambers', 'cave tomb'))
         AND type NOT IN ('deity', 'symbol')
+        and form != 'unknown'
 
     UNION ALL
 
@@ -51,6 +53,7 @@ WITH expanded_forms AS (
         AND a.form3 IS NOT NULL
         AND (super = 'pyramid' OR sub IN ('chambers', 'cave tomb'))
         AND type NOT IN ('deity', 'symbol')
+        and form != 'unknown'
 )
 SELECT 
     temp,

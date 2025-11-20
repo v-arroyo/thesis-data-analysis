@@ -25,22 +25,12 @@ GROUP BY 1,2
 
 df = pd.read_sql(query, engine)
 
-grey_smooth = [
-    [0.0, '#e0e0e0'],  # Light grey
-    [0.3, '#c8c8c8'],   # Medium light grey
-    [0.5, '#a0a0a0'],   # Medium grey
-    [0.7, '#787878'],   # Medium dark grey
-    [0.85, '#505050'],  # Dark grey
-    [1.0, '#282828']    # Very dark grey
-]
-
 fig = px.scatter(
     df,
     x="form2",
     y="form",
-    color="total",
     text='total',                 
-    color_continuous_scale='Sunset',
+    color_discrete_sequence=['#cccccc'],
     title="25th Dynasty-Early Napatan amulets combining two motifs",
     labels={"total": "Total"},
     size_max=20,
@@ -65,17 +55,11 @@ fig.update_layout(
     legend_title_text='',
     margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
-    title_font=dict(size=8),
-    coloraxis=dict(
-        colorbar=dict(
-            tickfont=dict(size=7),
-            title_font=dict(size=7)
-        )
-    )
+    title_font=dict(size=8)
 )
 
 fig.update_traces(textposition='top right', textfont_size=6)
 fig.update_xaxes(title_text='', tickangle=45)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25-EN_with_2forms.png',scale=4, width=550, height=400)
+pio.write_image(fig, 'images/chapter5/25-EN_with_2forms.png',scale=3, width=550, height=400)

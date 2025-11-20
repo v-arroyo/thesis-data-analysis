@@ -26,6 +26,7 @@ WHERE
     AND a.form3 IS NULL
     AND social_group = 'non-elite'
     AND type IN ('nature', 'human', 'object', 'other')
+    and form != 'unknown'
 GROUP BY 1,2
 """
 

@@ -21,6 +21,7 @@ WITH expanded_forms AS (
         AND s.site_id IN (1,2)
         AND a.form IS NOT NULL
         AND a.type IN ('object', 'other', 'nature', 'human')
+        and form != 'unknown'
 
     UNION ALL
 
@@ -38,6 +39,7 @@ WITH expanded_forms AS (
         AND s.site_id IN (1,2)
         AND a.form2 IS NOT NULL
         AND a.type IN ('object', 'other', 'nature', 'human')
+        and form != 'unknown'
 
     UNION ALL
 
@@ -55,6 +57,7 @@ WITH expanded_forms AS (
         AND s.site_id IN (1,2)
         AND a.form3 IS NOT NULL
         AND a.type IN ('object', 'other', 'nature', 'human')
+        and form != 'unknown'
 )
 SELECT 
     site_name,
