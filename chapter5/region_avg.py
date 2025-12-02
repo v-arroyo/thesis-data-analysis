@@ -9,7 +9,6 @@ engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PA
 query = """
 SELECT 
     region,
-    temp,
     COUNT(DISTINCT b.burial_id) as tomb_count,
     COUNT(amulet_id) as total_amulets,
     ROUND(COUNT(amulet_id) * 1.0 / COUNT(DISTINCT b.burial_id), 0) as avg_amulets_per_tomb
@@ -19,7 +18,7 @@ JOIN sites s ON s.site_id = b.site_id
 WHERE dating = 'napatan' 
     AND b.site_id IN (4,5,6,7,8,9,10) 
     AND social_group = 'non-elite'
-GROUP BY 1,2
+GROUP BY 1
 """
 
 df = pd.read_sql(query, engine)
@@ -36,10 +35,9 @@ fig = px.bar(
     df,
     x='region',
     y='avg_amulets_per_tomb',
-    color='temp',
     barmode='stack',
     text='avg_amulets_per_tomb',
-    title='Average number of amulets per tomb by region and phase',
+    title='Average number of non-elite amulets per tomb by region',
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
@@ -55,18 +53,18 @@ fig.update_layout(
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=8),
+        size=10),
     legend_title_text='',
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
     margin=dict(l=0, r=10, t=50, b=0),
     autosize=True,
-    title_font=dict(size=8)
+    title_font=dict(size=10)
 )
 
-fig.update_traces(textposition='outside', textfont_size=7)
+fig.update_traces(textposition='outside', textfont_size=10)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', matches=None)
 
-pio.write_image(fig, 'images/chapter5/region_avg.png',scale=3, width=400, height=300)
+pio.write_image(fig, 'images/chapter5/region_avg.png',scale=3, width=450, height=330)

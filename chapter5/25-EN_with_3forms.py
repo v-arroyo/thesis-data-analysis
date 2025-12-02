@@ -55,7 +55,7 @@ fig.update_layout(
     margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
     title_font=dict(size=8),
-    treemapcolorway=px.colors.qualitative.Pastel1
+    treemapcolorway=px.colors.qualitative.Pastel
 )
 
 fig.update_traces(marker=dict(cornerradius=5))

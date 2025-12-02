@@ -33,39 +33,34 @@ ORDER BY 1,2
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#C0C0C0']
+custom_colors = ['#E4C8B8', '#E8D8B8', '#B8C8B4', '#D8D8F0']
 
 region_order = ["lower nubia", "north upper nubia", "4th cataract", "meroe region"]
-
 df['region'] = pd.Categorical(df['region'], categories=region_order, ordered=True)
+df_sorted = df.sort_values(['region', 'form'])
 
-df = df.sort_values('region')
+df_count = df_sorted.groupby(['region', 'form']).size().reset_index(name='count')
 
-df = df.reset_index(drop=True)
-
-pivot_df = df.groupby(['form', 'region']).size().unstack(fill_value=0)
-
-fig = px.imshow(
-    pivot_df,
-    #x='dummy',
-    #y='region',
-    #color='form',
-    title='Average number of amulets per tomb by region and phase',
-    #color_discrete_sequence=custom_colors,
-    template="plotly_white",
-    aspect='auto')
+fig = px.sunburst(
+    df_count,
+    path=['region', 'form'],
+    values='count',
+    color='region',
+    color_discrete_sequence=custom_colors,
+    title='Exclusive non-elite amulet motifs by region',
+    template="plotly_white"
+)
 
 fig.update_layout( 
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=8),
+        size=10),
     margin=dict(l=0, r=10, t=50, b=0),
-    title_font=dict(size=8)
+    title_font=dict(size=10)
 )
 
-#fig.update_traces(textposition='top right', textfont_size=7)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/region_forms.png',scale=3, width=400, height=300)
+pio.write_image(fig, 'images/chapter5/region_forms.png',scale=4, width=300, height=300)
