@@ -35,8 +35,8 @@ df = pd.read_sql(query, engine)
 
 fig = px.scatter(
     df,
-    x="form2",
-    y="form",
+    x="form",
+    y="form2",
     text='total',                 
     color_discrete_sequence=['#cccccc'],
     title="25th Dynasty amulets combining two motifs",
@@ -61,7 +61,7 @@ fig.update_layout(
         size=8
     ),
     legend_title_text='',
-    margin=dict(l=0, r=10, t=20, b=0),
+    margin=dict(l=0, r=20, t=20, b=0),
     autosize=True,
     title_font=dict(size=8),
     coloraxis=dict(
@@ -83,4 +83,4 @@ fig.update_traces(textposition='top right', textfont_size=8)
 fig.update_xaxes(title_text='', tickangle=45)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25_with_2forms.png',scale=4, width=400, height=300)
+pio.write_image(fig, 'images/chapter5/25_with_2forms.png',scale=4, width=450, height=300)
