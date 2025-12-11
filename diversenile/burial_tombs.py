@@ -29,7 +29,7 @@ fig = px.scatter(
     color='type',
     size='total',
     #text='total',
-    title='<b>Distribution of objects for the burial by tomb structure</b>',
+    title='<b>Distribution of burial-specific objects by tomb structure</b>',
     color_discrete_sequence=px.colors.qualitative.Plotly,
     template="plotly_white",
 )
@@ -45,16 +45,16 @@ fig.update_layout(
         yanchor="top",
         y=-0.10,
         xanchor="center",
-        x=0.50),
+        x=0.40),
         #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color="black",
         size=8),
     legend_title_text='',
-    margin=dict(l=0, r=10, t=50, b=0),
+    margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
-    title_font=dict(size=8)
+    title_font=dict(size=10)
     )
 
-pio.write_image(fig, 'diversenile/images/burial_tombs.png',scale=4, width=550, height=300)
+pio.write_image(fig, 'diversenile/images/burial_tombs.png',scale=4, width=550, height=250)

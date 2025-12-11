@@ -29,7 +29,7 @@ fig = px.scatter(
     color='material',
     size='total',
     #text='total',
-    title='<b>Distribution of selected object materials across tomb structures</b>',
+    title='<b>Distribution of "prestigious" object materials across tomb structures</b>',
     color_discrete_sequence=px.colors.qualitative.Plotly,
     template="plotly_white",
 )
@@ -52,9 +52,9 @@ fig.update_layout(
         color="black",
         size=8),
     legend_title_text='',
-    margin=dict(l=0, r=10, t=50, b=0),
+    margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
-    title_font=dict(size=8)
+    title_font=dict(size=10)
     )
 
-pio.write_image(fig, 'diversenile/images/materials_tomb.png',scale=3, width=450, height=280)
+pio.write_image(fig, 'diversenile/images/materials_tomb.png',scale=4, width=450, height=250)

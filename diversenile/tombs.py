@@ -23,11 +23,10 @@ fig = px.scatter(
     df,
     x='sub',
     y='super',
-    color='total',
     size='total',
     #text='total',
-    title='<b>Correlation of super- and substructures</b>',
-    color_continuous_scale='Sunset',
+    title='<b>Correlation of tomb super- and substructures</b>',
+    color_discrete_sequence=['#C0C0C0'],
     template="plotly_white",
 )
 
@@ -49,9 +48,9 @@ fig.update_layout(
         color="black",
         size=8),
     legend_title_text='',
-    margin=dict(l=0, r=10, t=50, b=0),
+    margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
-    title_font=dict(size=8)
+    title_font=dict(size=10)
     )
 
 pio.write_image(fig, 'diversenile/images/tombs.png',scale=4, width=400, height=280)
