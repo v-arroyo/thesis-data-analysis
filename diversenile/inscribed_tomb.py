@@ -55,9 +55,8 @@ fig = px.scatter(
     template="plotly_white",
 )
 
-#fig.update_traces(textposition='outside')
-fig.update_xaxes(title_text='')
-fig.update_yaxes(title_text='')
+fig.update_xaxes(title_text='substructures', title_font=dict(size=8))
+fig.update_yaxes(title_text='superstructures', title_font=dict(size=8))
 
 fig.update_layout(
     yaxis={'categoryorder': 'total ascending'}, 

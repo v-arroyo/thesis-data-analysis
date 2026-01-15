@@ -23,16 +23,14 @@ fig = px.scatter(
     df,
     x='sub',
     y='super',
-    size='total',
-    #text='total',
+    text='total',
     title='<b>Correlation of tomb super- and substructures</b>',
     color_discrete_sequence=['#C0C0C0'],
     template="plotly_white",
 )
 
-#fig.update_traces(textposition='outside')
-fig.update_xaxes(title_text='')
-fig.update_yaxes(title_text='')
+fig.update_xaxes(title_text='substructures', title_font=dict(size=8))
+fig.update_yaxes(title_text='superstructures', title_font=dict(size=8))
 
 fig.update_layout(
     yaxis={'categoryorder': 'total ascending'}, 
@@ -53,4 +51,6 @@ fig.update_layout(
     title_font=dict(size=10)
     )
 
-pio.write_image(fig, 'diversenile/images/tombs.png',scale=4, width=400, height=280)
+fig.update_traces(textposition='top right', textfont_size=6)
+
+pio.write_image(fig, 'diversenile/images/tombs.png',scale=4, width=450, height=250)

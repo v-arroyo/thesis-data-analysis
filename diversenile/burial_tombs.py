@@ -6,18 +6,41 @@ from sqlalchemy import create_engine
 engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 query = """
-SELECT
-    a.artifact_type AS type,
-    b.sub,
-    b.super,
-    COUNT(b.burial_id) AS total
-FROM burials b
-JOIN artifacts a ON a.burial_id = b.burial_id
-WHERE dating = 'napatan' 
-    AND sub != 'deposit'
-    AND b.site_id IN (1,2,4,5,6,7,8,9,10)
-    AND artifact_type IN ('bead nets', 'burial containers', 'canopics', 'heart scarabs', 'mummy trappings', 'offering tables', 'offering vessels', 'stelae')
-GROUP BY 1,2,3
+WITH combined_data AS (
+    SELECT b.sub, b.super, b.burial_id, a.artifact_id AS item_id, a.artifact_material AS material
+    FROM artifacts a
+    JOIN burials b ON b.burial_id = a.burial_id
+    WHERE b.dating = 'napatan' 
+        AND b.sub != 'deposit'
+        AND a.artifact_type IN ('bead nets', 'burial containers', 'canopics', 'heart scarabs', 'mummy trappings', 'offering tables', 'offering vessels', 'stelae')
+        AND b.site_id IN (1,2,4,5,6,7,8,9,10)
+),
+burial_totals AS (
+    SELECT 
+        sub, 
+        super, 
+        burial_id, 
+        COUNT(item_id) as total_items
+    FROM combined_data
+    GROUP BY sub, super, burial_id
+)
+SELECT 
+    sub, 
+    super, 
+    AVG(total_items) as median_total_items
+FROM (
+    SELECT
+        sub,
+        super,
+        burial_id,
+        total_items,
+        ROW_NUMBER() OVER (PARTITION BY sub, super ORDER BY total_items) as row_num,
+        COUNT(*) OVER (PARTITION BY sub, super) as total_count
+    FROM burial_totals
+) AS ranked
+WHERE row_num IN (FLOOR((total_count + 1) / 2), CEIL((total_count + 1) / 2))
+GROUP BY sub, super
+ORDER BY sub, super;
 """
 
 df = pd.read_sql(query, engine)
@@ -34,9 +57,8 @@ fig = px.scatter(
     template="plotly_white",
 )
 
-#fig.update_traces(textposition='outside')
-fig.update_xaxes(title_text='')
-fig.update_yaxes(title_text='')
+fig.update_xaxes(title_text='substructures', title_font=dict(size=8))
+fig.update_yaxes(title_text='superstructures', title_font=dict(size=8))
 
 fig.update_layout(
     yaxis={'categoryorder': 'total ascending'}, 
