@@ -67,6 +67,7 @@ fig.update_xaxes(
     range=[-0.5, len(df['owner'].unique())-0.5],  # Tight range
     showgrid=True
 )
+fig.update_coloraxes(showscale=False)
 
 
 pio.write_image(fig, 'images/chapter4/early_objs_nuri.png',scale=3, width=350, height=350)

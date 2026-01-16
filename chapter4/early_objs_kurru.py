@@ -61,5 +61,6 @@ fig.update_layout(
 fig.update_traces(textposition='middle right', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', categoryorder='category descending')
+fig.update_coloraxes(showscale=False)
 
-pio.write_image(fig, 'images/chapter4/early_objs_kurru.png',scale=3, width=300, height=250)
+pio.write_image(fig, 'images/chapter4/early_objs_kurru.png',scale=3, width=250, height=350)

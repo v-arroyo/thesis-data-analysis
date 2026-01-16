@@ -32,7 +32,7 @@ fig = px.scatter(
     text="count",
     facet_col="site_name",
     title="Middle Napatan royal object types",
-    labels={"count": "Total"},
+    labels={"count": "Total", "site_name": "site"},
     color_continuous_scale='Sunset',
     template="plotly_white"
 )
@@ -61,5 +61,6 @@ fig.update_layout(
 fig.update_traces(textposition='middle right', textfont_size=6)
 fig.update_xaxes(title_text='', categoryorder='category ascending')
 fig.update_yaxes(title_text='', categoryorder='category descending')
+fig.update_coloraxes(showscale=False)
 
 pio.write_image(fig, 'images/chapter4/middle_objs.png',scale=3, width=500, height=350)

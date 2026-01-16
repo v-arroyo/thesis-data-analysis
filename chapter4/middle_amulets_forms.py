@@ -68,8 +68,8 @@ custom_colors = [ '#92cad1','#e9724d', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.bar(
     df,
-    x="form",
-    y="total",
+    x="total",
+    y="form",
     color="owner",
     facet_col="site_name",
     text='total',
@@ -80,7 +80,7 @@ fig = px.bar(
     template="plotly_white"
 )
 
-fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
+fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
     legend=dict(
         #orientation="h",
         yanchor="top",
@@ -102,7 +102,7 @@ fig.update_layout(xaxis={'categoryorder': 'total descending'},
 )
 
 fig.update_traces(textposition='outside', textfont_size=6)
-fig.update_xaxes(title_text='', tickangle=45)
+fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter4/middle_amulets_forms.png',scale=3, width=450, height=300)
+pio.write_image(fig, 'images/chapter4/middle_amulets_forms.png',scale=3, width=550, height=270)

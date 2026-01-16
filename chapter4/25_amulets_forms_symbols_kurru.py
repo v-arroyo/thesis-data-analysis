@@ -18,9 +18,9 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         b.temp = '25th' 
-        AND s.site_id IN (2)
+        AND s.site_id IN (1)
         AND a.form IS NOT NULL
-        AND a.type = 'deity'
+        AND a.type = 'symbol'
 
     UNION ALL
 
@@ -35,9 +35,9 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         b.temp = '25th' 
-        AND s.site_id IN (2)
+        AND s.site_id IN (1)
         AND a.form2 IS NOT NULL
-        AND a.type = 'deity'
+        AND a.type = 'symbol'
 
     UNION ALL
 
@@ -52,9 +52,9 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         b.temp = '25th' 
-        AND s.site_id IN (2)
+        AND s.site_id IN (1)
         AND a.form3 IS NOT NULL
-        AND a.type = 'deity'
+        AND a.type = 'symbol'
 )
 SELECT 
     site_name,
@@ -68,29 +68,29 @@ GROUP BY 1,2,3,4
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d','#d6d727','#92cad1', '#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#e9724d','#92cad1','#d6d727','#92cad1','#e9724d']
 
 fig = px.bar(
     df,
-    x="form",
-    y="total",
+    x="total",
+    y="form",
     color="owner",
     facet_col="site_name",
     text='total',
     barmode='stack',
-    title="25th Dynasty royal deity amulets",
+    title="25th Dynasty royal symbol amulets",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
 
-fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
+fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
     legend=dict(
         #orientation="h",
-        yanchor="bottom",
-        y=0.30,
-        xanchor="center",
-        x=01.15,
+        yanchor="top",
+        y=0.60,
+        xanchor="right",
+        x=1.20,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -102,11 +102,12 @@ fig.update_layout(xaxis={'categoryorder': 'total descending'},
         #dtick=1),
     margin=dict(l=0, r=10, t=50, b=0),
     autosize=True,
-    title_font=dict(size=8)
+    title_font=dict(size=8),
+    showlegend=False
 )
 
-fig.update_traces(textposition='inside', textfont_size=6)
+fig.update_traces(textposition='auto', textfont_size=6)
 fig.update_xaxes(title_text='', matches=None)
-fig.update_yaxes(title_text='', dtick=1)
+fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter4/25_amulets_forms_deities_nuri.png',scale=3, width=500, height=200)
+pio.write_image(fig, 'images/chapter4/25_amulets_forms_symbols_kurru.png',scale=3, width=300, height=250)

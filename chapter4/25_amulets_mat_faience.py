@@ -9,42 +9,45 @@ query = """
 SELECT 
     s.site_name,
     b.owner,
-    a.type,
+    CASE
+        WHEN a.material = 'lapis' THEN 'lapis lazuli'
+        ELSE a.material
+    END AS material,
     COUNT(amulet_id) as count
 FROM burials b
 JOIN sites s
 ON s.site_id = b.site_id
 JOIN amulets a
 ON a.burial_id = b.burial_id
-WHERE temp = '25th' AND b.site_id IN (2)
+WHERE temp = '25th' AND b.site_id IN (1,2) AND a.material = 'faience'
 GROUP BY 1,2,3
 """
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#92cad1','#e9724d','#d6d727', '#92cad1', '#79ccb3', '#868686']
+custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.bar(
     df,
     x="count",
-    y="type",
+    y="material",
     color="owner",
     facet_col="site_name",
     text='count',
     barmode='stack',
-    title="25th Dynasty royal amulet types",
+    title="25th Dynasty royal faience amulets",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
 )
 
-fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
+fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
     legend=dict(
         #orientation="h",
         yanchor="bottom",
         y=0.30,
         xanchor="center",
-        x=1.30),
+        x=1.10),
         #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -60,7 +63,7 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
 )
 
 fig.update_traces(textposition='outside', textfont_size=6)
-fig.update_xaxes(title_text='', matches=None)
+fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter4/25_amulets_types_nuri.png',scale=3, width=300, height=200)
+pio.write_image(fig, 'images/chapter4/25_amulets_mat_faience.png',scale=3, width=500, height=250)

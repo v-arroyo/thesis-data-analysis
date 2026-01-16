@@ -51,4 +51,4 @@ fig.update_traces(textposition='middle right', textfont_size=6)
 fig.update_xaxes(title_text='', categoryorder='category ascending')
 fig.update_yaxes(title_text='', categoryorder='category descending')
 
-pio.write_image(fig, 'images/chapter4/pre_objs.png',scale=3, width=450, height=250)
+pio.write_image(fig, 'images/chapter4/pre_objs.png',scale=3, width=550, height=250)

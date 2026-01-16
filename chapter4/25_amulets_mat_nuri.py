@@ -49,18 +49,19 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=8),
+        size=10),
     legend_title_text='',
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
     margin=dict(l=0, r=10, t=50, b=0),
     autosize=True,
-    title_font=dict(size=8)
+    title_font=dict(size=8),
+    showlegend=False
 )
 
-fig.update_traces(textposition='outside', textfont_size=6)
+fig.update_traces(textposition='outside', textfont_size=8)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter4/25_amulets_mat_nuri.png',scale=3, width=500, height=270)
+pio.write_image(fig, 'images/chapter4/25_amulets_mat_nuri.png',scale=3, width=550, height=250)

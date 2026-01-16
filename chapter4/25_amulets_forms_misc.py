@@ -91,9 +91,9 @@ fig.update_layout(xaxis={'categoryorder': 'total descending'},
     legend=dict(
         #orientation="h",
         yanchor="bottom",
-        y=-0.26,
+        y=0.30,
         xanchor="center",
-        x=0.40,
+        x=1.10,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -112,4 +112,4 @@ fig.update_traces(textposition='inside', textfont_size=6)
 fig.update_xaxes(title_text='', matches=None)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter4/25_amulets_forms_misc.png',scale=3, width=450, height=250)
+pio.write_image(fig, 'images/chapter4/25_amulets_forms_misc.png',scale=3, width=500, height=200)

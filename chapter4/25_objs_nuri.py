@@ -54,8 +54,10 @@ fig.update_xaxes(
     showgrid=True
 )
 
+fig.update_coloraxes(showscale=False)
+
 fig.update_traces(textposition='middle right', textfont_size=6)
 fig.update_xaxes(title_text='', categoryorder='category ascending')
 fig.update_yaxes(title_text='', categoryorder='category descending')
 
-pio.write_image(fig, 'images/chapter4/25_objs_nuri.png',scale=3, width=350, height=350)
+pio.write_image(fig, 'images/chapter4/25_objs_nuri.png',scale=3, width=300, height=400)

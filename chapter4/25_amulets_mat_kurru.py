@@ -43,11 +43,11 @@ fig = px.bar(
 
 fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
     legend=dict(
-        orientation="h",
+        #orientation="h",
         yanchor="bottom",
-        y=-0.24,
+        y=0.30,
         xanchor="center",
-        x=0.40),
+        x=1.10),
         #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -66,4 +66,4 @@ fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter4/25_amulets_mat_kurru.png',scale=3, width=500, height=250)
+pio.write_image(fig, 'images/chapter4/25_amulets_mat_kurru.png',scale=3, width=550, height=250)

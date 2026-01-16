@@ -24,27 +24,26 @@ df = pd.read_sql(query, engine)
 
 custom_colors = ['#92cad1','#e9724d', '#d6d727', '#79ccb3', '#868686']
 
-fig = px.bar(
+fig = px.scatter(
     df,
-    x="artifact_type",
-    y="count",
-    color="owner",
+    x="owner",
+    y="artifact_type",
+    color="count",
+    text="count",
     facet_col="site_name",
-    #text='count',
-    barmode='stack',
-    title="Late Napatan object types",
-    labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
-    color_discrete_sequence=custom_colors,
+    title="Late Napatan royal object types",
+    labels={"count": "Total", "site_name": "Site"},
+    color_continuous_scale='Sunset',
     template="plotly_white"
 )
 
-fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
+fig.update_layout( 
     legend=dict(
-        #orientation="h",
-        yanchor="top",
-        y=0.83,
-        xanchor="right",
-        x=0.93,
+        orientation="h",
+        yanchor="bottom",
+        y=-0.70,
+        xanchor="center",
+        x=0.45,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -54,13 +53,21 @@ fig.update_layout(xaxis={'categoryorder': 'total descending'},
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
-    margin=dict(l=0, r=10, t=50, b=0),
+    margin=dict(l=0, r=10, t=40, b=0),
     autosize=True,
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='outside')
+fig.update_traces(textposition='middle right', textfont_size=6)
 fig.update_xaxes(title_text='')
-fig.update_yaxes(title_text='')
+fig.update_yaxes(title_text='', categoryorder='category descending')
+fig.update_xaxes(
+    title_text='',
+    categoryorder='category ascending',
+    range=[-0.5, len(df['owner'].unique())-0.5],  # Tight range
+    showgrid=True
+)
+fig.update_coloraxes(showscale=False)
 
-pio.write_image(fig, 'images/late_objs_nuri.png',scale=3, width=500, height=300)
+
+pio.write_image(fig, 'images/chapter4/late_objs_nuri.png',scale=3, width=350, height=350)

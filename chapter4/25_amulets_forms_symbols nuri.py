@@ -18,7 +18,7 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         b.temp = '25th' 
-        AND s.site_id IN (1,2)
+        AND s.site_id IN (2)
         AND a.form IS NOT NULL
         AND a.type = 'symbol'
 
@@ -35,7 +35,7 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         b.temp = '25th' 
-        AND s.site_id IN (1,2)
+        AND s.site_id IN (2)
         AND a.form2 IS NOT NULL
         AND a.type = 'symbol'
 
@@ -52,7 +52,7 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = b.site_id
     WHERE 
         b.temp = '25th' 
-        AND s.site_id IN (1,2)
+        AND s.site_id IN (2)
         AND a.form3 IS NOT NULL
         AND a.type = 'symbol'
 )
@@ -72,8 +72,8 @@ custom_colors = ['#e9724d','#92cad1','#d6d727','#92cad1','#e9724d']
 
 fig = px.bar(
     df,
-    x="form",
-    y="total",
+    x="total",
+    y="form",
     color="owner",
     facet_col="site_name",
     text='total',
@@ -84,13 +84,13 @@ fig = px.bar(
     template="plotly_white"
 )
 
-fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
+fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
     legend=dict(
         #orientation="h",
         yanchor="top",
-        y=0.90,
+        y=0.65,
         xanchor="right",
-        x=0.93,
+        x=1.50,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -105,8 +105,8 @@ fig.update_layout(xaxis={'categoryorder': 'total descending'},
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='auto', textfont_size=5)
+fig.update_traces(textposition='auto', textfont_size=6)
 fig.update_xaxes(title_text='', matches=None)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter4/25_amulets_forms_symbols.png',scale=3, width=450, height=300)
+pio.write_image(fig, 'images/chapter4/25_amulets_forms_symbols_nuri.png',scale=3, width=300, height=250)

@@ -56,11 +56,11 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
         #dtick=1),
     margin=dict(l=0, r=10, t=50, b=0),
     autosize=True,
-    title_font=dict(size=8)
-)
+    title_font=dict(size=8),
+    showlegend=False)
 
 fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_xaxes(title_text='', matches=None)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter4/25_amulets_types_kurru.png',scale=3, width=300, height=300)
+pio.write_image(fig, 'images/chapter4/25_amulets_types_kurru.png',scale=3, width=350, height=200)

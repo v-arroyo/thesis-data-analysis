@@ -42,9 +42,8 @@ fig.update_layout(
         family="Verdana, sans-serif",
         color='black',
         size=8),
-    legend_title_text='',
     margin=dict(l=0, r=10, t=40, b=0),
-    title_font=dict(size=8)
+    title_font=dict(size=8),
 )
 
 fig.update_xaxes(
@@ -54,8 +53,10 @@ fig.update_xaxes(
     showgrid=True
 )
 
+fig.update_coloraxes(showscale=False)
+
 fig.update_traces(textposition='middle right', textfont_size=6)
 fig.update_xaxes(title_text='', categoryorder='category ascending')
 fig.update_yaxes(title_text='', categoryorder='category descending')
 
-pio.write_image(fig, 'images/chapter4/25_objs_kurru.png',scale=3, width=400, height=400)
+pio.write_image(fig, 'images/chapter4/25_objs_kurru.png',scale=3, width=300, height=400)
