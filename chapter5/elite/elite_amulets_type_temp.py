@@ -4,8 +4,12 @@ from sqlalchemy import create_engine
 import plotly.io as pio
 import plotly.graph_objects as go
 import numpy as np
+import os
+from dotenv import load_dotenv
 
-engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
+load_dotenv()
+
+engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 query = """
 select 

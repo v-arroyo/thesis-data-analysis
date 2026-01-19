@@ -1,0 +1,71 @@
+import pandas as pd
+import plotly.express as px
+from sqlalchemy import create_engine
+import plotly.io as pio
+import plotly.graph_objects as go
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
+
+query = """
+select temp, s.site_name, count(amulet_id) as total
+from burials b
+join amulets a on a.burial_id = b.burial_id
+join sites s on s.site_id = b.site_id
+where dating = 'napatan' and social_group = 'non-elite'
+group by 1,2
+"""
+
+df = pd.read_sql(query, engine)
+
+custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686',
+                 '#8b4513', '#2f4f4f', '#ff6b4a', '#20b2aa', '#daa520',
+                 '#cd5c5c', '#4682b4', '#e8ea7a', '#98fb98', '#696969']
+
+temp_order = ["pre-25th", "25th", "25th-EN", "25th-MN", "EN", "MN"]
+temp_order.reverse()
+
+df['temp'] = pd.Categorical(df['temp'], categories=temp_order, ordered=True)
+
+df = df.sort_values('temp')
+
+fig = px.bar(
+    df,
+    x='total',
+    y='temp',
+    text='total',
+    color='site_name',
+    barmode='stack',
+    title='Distribution of amulets by chronological phase and site',
+    template="plotly_white"
+)
+
+fig.update_layout( 
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=-0.20,
+        xanchor="center",
+        x=0.45,
+        traceorder='reversed'),
+    font=dict(
+        family="Verdana, sans-serif",
+        color='black',
+        size=8),
+    legend_title_text='',
+    #yaxis=dict(
+        #tickmode='linear',
+        #dtick=1),
+    margin=dict(l=0, r=10, t=50, b=0),
+    autosize=True,
+    title_font=dict(size=8)
+)
+
+fig.update_traces(textposition='auto', textfont_size=5)
+fig.update_xaxes(title_text='')
+fig.update_yaxes(title_text='', categoryorder='array', categoryarray=temp_order)
+
+pio.write_image(fig, 'images/msac/temp_total.png',scale=3, width=550, height=400)
