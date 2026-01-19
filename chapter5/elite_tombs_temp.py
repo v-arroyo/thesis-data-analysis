@@ -46,11 +46,11 @@ fig = px.bar(
 fig.update_layout(
     xaxis={'categoryorder': 'total descending'},
     legend=dict(
-        orientation="h",
+        #orientation="h",
         yanchor="bottom",
-        y=-0.15,
+        y=0.30,
         xanchor="center",
-        x=0.50,
+        x=1.10,
         traceorder='reversed'
     ),
     font=dict(
@@ -68,4 +68,4 @@ fig.update_traces(textposition='auto', textfont_size=6)
 fig.update_xaxes(title_text='', categoryorder='array', categoryarray=phase_order)
 fig.update_yaxes(title_text='', matches=None)
 
-pio.write_image(fig, 'images/chapter5/elite_tombs_temp.png',scale=3, width=450, height=350)
+pio.write_image(fig, 'images/chapter5/elite_tombs_temp.png',scale=3, width=550, height=350)

@@ -24,8 +24,8 @@ custom_colors = ['#C0C0C0']
 
 fig = px.bar(
     df,
-    x="material",
-    y="total",
+    x="total",
+    y="material",
     color="site_name",
     text="total",
     barmode='stack',
@@ -34,7 +34,7 @@ fig = px.bar(
     template="plotly_white"
 )
 
-fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, title_standoff=0), 
+fig.update_layout(yaxis=dict(categoryorder='total ascending', automargin=True, title_standoff=0), 
     legend=dict(
         #orientation="h",
         yanchor="bottom",
@@ -52,11 +52,12 @@ fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, 
         #dtick=1),
     margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
-    title_font=dict(size=8)
+    title_font=dict(size=8),
+    showlegend=False
 )
 
 fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25-MN_amulets_mat.png',scale=3, width=450, height=210)
+pio.write_image(fig, 'images/chapter5/25-MN_amulets_mat.png',scale=3, width=550, height=150)

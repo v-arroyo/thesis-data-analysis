@@ -45,18 +45,18 @@ fig.update_layout(
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=10),
+        size=8),
     legend_title_text='',
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
     margin=dict(l=0, r=10, t=50, b=0),
     autosize=True,
-    title_font=dict(size=10)
+    title_font=dict(size=8)
 )
 
-fig.update_traces(textfont_size=8)
+fig.update_traces(textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', matches=None)
 
-pio.write_image(fig, 'images/chapter5/region_type.png',scale=3, width=550, height=400)
+pio.write_image(fig, 'images/chapter5/region_type.png',scale=3, width=600, height=350)

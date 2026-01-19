@@ -60,5 +60,6 @@ fig.update_layout(
 fig.update_traces(textposition='top right', textfont_size=6)
 fig.update_xaxes(title_text='', categoryorder='category ascending')
 fig.update_yaxes(title_text='', categoryorder='category descending')
+fig.update_coloraxes(showscale=False)
 
 pio.write_image(fig, 'images/chapter5/25_amulets_type.png',scale=3, width=550, height=200)

@@ -47,8 +47,9 @@ fig.update_layout(yaxis=dict(categoryorder='total ascending', automargin=True, t
         yanchor="bottom",
         y=0.40,
         xanchor="center",
-        x=0.80,
-        traceorder='reversed'),
+        x=1.10,
+        #traceorder='reversed'),
+    ),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -66,4 +67,4 @@ fig.update_traces(textposition='outside', textfont_size=6, width=0.9)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25_amulets_form_animals.png',scale=3, width=500, height=300)
+pio.write_image(fig, 'images/chapter5/25_amulets_form_animals.png',scale=3, width=550, height=300)

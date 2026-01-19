@@ -103,11 +103,12 @@ fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, 
         #dtick=1),
     margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
-    title_font=dict(size=8)
+    title_font=dict(size=8),
+    showlegend=False
 )
 
 fig.update_traces(textposition='auto', textfont_size=8)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25-MN_amulets_form.png',scale=3, width=550, height=220)
+pio.write_image(fig, 'images/chapter5/25-MN_amulets_form.png',scale=3, width=550, height=200)

@@ -42,9 +42,9 @@ fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, 
     legend=dict(
         #orientation="h",
         yanchor="bottom",
-        y=0.40,
+        y=0.15,
         xanchor="center",
-        x=0.80,
+        x=1.10,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",

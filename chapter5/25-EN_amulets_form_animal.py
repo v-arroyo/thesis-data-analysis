@@ -52,7 +52,7 @@ fig.update_layout(yaxis=dict(categoryorder='total ascending', automargin=True, t
         yanchor="bottom",
         y=0.35,
         xanchor="center",
-        x=0.70),
+        x=1.10),
         #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",

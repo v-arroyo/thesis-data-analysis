@@ -54,5 +54,6 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
 fig.update_traces(textposition='middle right', textfont_size=5)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', categoryorder='category descending')
+fig.update_coloraxes(showscale=False)
 
-pio.write_image(fig, 'images/chapter5/25-EN_amulets_type.png',scale=3, width=500, height=220)
+pio.write_image(fig, 'images/chapter5/25-EN_amulets_type.png',scale=3, width=550, height=220)

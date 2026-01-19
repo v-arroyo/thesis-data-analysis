@@ -40,11 +40,11 @@ fig = px.bar(
 
 fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
     legend=dict(
-        orientation="h",
+        #orientation="h",
         yanchor="bottom",
-        y=-0.40,
+        y=0.30,
         xanchor="center",
-        x=0.50),
+        x=1.10),
         #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -63,4 +63,4 @@ fig.update_traces(textposition='auto', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', matches=None)
 
-pio.write_image(fig, 'images/chapter5/25_tombs.png',scale=3, width=400, height=200)
+pio.write_image(fig, 'images/chapter5/25_tombs.png',scale=3, width=550, height=200)

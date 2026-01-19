@@ -16,7 +16,7 @@ join sites s on s.site_id = b.site_id
 join artifacts a on a.burial_id = b.burial_id
 where dating = 'napatan' 
     and b.site_id in (4,5,6,7,8,9,10) 
-    and temp IN ('EN', 'EN-MN')
+    and temp IN ('EN-MN')
     and social_group = 'non-elite'
 group by 1,2,3
 """
@@ -32,26 +32,25 @@ df['temp_order'] = df['temp'].map(order_mapping)
 
 df_sorted = df.sort_values('temp_order')
 
-fig = px.scatter(
+fig = px.bar(
     df_sorted,
-    x="temp",
+    x="total",
     y="artifact_type",
-    color="total",
+    color="site_name",
     text="total",
-    facet_col='site_name',
+    facet_col='temp',
     title="Early Napatan and Early-Middle Napatan non-elite object types",
     labels={"site_name": "site", "temp": "phase", "total": "Total"},
-    color_continuous_scale='Sunset',
-    template="plotly_white"
-)
+    color_discrete_sequence=custom_colors,
+    template="plotly_white")
 
-fig.update_layout(
+fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     legend=dict(
         #orientation="h",
         yanchor="middle",
         y=0.60,
         xanchor="center",
-        x=0.75,
+        x=1.10,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -63,11 +62,12 @@ fig.update_layout(
         #dtick=1),
     margin=dict(l=0, r=10, t=40, b=0),
     autosize=True,
-    title_font=dict(size=8)
+    title_font=dict(size=8),
+    showlegend=False
 )
 
-fig.update_traces(textposition='top right', textfont_size=6)
-fig.update_xaxes(title_text='', matches=None)
-fig.update_yaxes(title_text='', categoryorder='category descending')
+fig.update_traces(textposition='outside', textfont_size=6)
+fig.update_xaxes(title_text='')
+fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/EN_objects.png',scale=3, width=500, height=300)
+pio.write_image(fig, 'images/chapter5/EN_objects_MN.png',scale=3, width=550, height=200)

@@ -39,24 +39,24 @@ fig = px.bar(
 
 fig.update_layout(yaxis=dict(categoryorder='total descending', automargin=True, title_standoff=0), 
     legend=dict(
-        orientation="h",
+        #orientation="h",
         yanchor="bottom",
-        y=-0.22,
+        y=0.15,
         xanchor="center",
-        x=0.45,
+        x=1.10,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=6),
+        size=8),
     legend_title_text='',
     margin=dict(l=0, r=0, t=20, b=0),
     autosize=True,
-    title_font=dict(size=6)
+    title_font=dict(size=8)
 )
 
 fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25-EN_amulets_mat_faience.png',scale=4, width=550, height=230)
+pio.write_image(fig, 'images/chapter5/25-EN_amulets_mat_faience.png',scale=3, width=550, height=200)

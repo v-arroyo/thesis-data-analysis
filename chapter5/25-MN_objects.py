@@ -54,11 +54,12 @@ fig.update_layout(
     margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
     title_font=dict(size=8),
-    bargap=0.05
+    bargap=0.01
 )
 
 fig.update_traces(textposition='middle right', textfont_size=6)
 fig.update_xaxes(title_text='', categoryorder='category ascending')
 fig.update_yaxes(title_text='', categoryorder='category descending')
+fig.update_coloraxes(showscale=False)
 
-pio.write_image(fig, 'images/chapter5/25-MN_objects.png',scale=3, width=450, height=260)
+pio.write_image(fig, 'images/chapter5/25-MN_objects.png',scale=3, width=250, height=250)
