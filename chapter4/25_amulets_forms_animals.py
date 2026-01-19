@@ -2,8 +2,18 @@ import pandas as pd
 import plotly.express as px
 from sqlalchemy import create_engine
 import plotly.io as pio
+import os
+from dotenv import load_dotenv
 
-engine = create_engine(f'mysql+pymysql://{os.getenv"DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
+load_dotenv()
+
+db_user = os.getenv('DB_USER')
+db_password = os.getenv('DB_PASSWORD')
+db_host = os.getenv('DB_HOST', 'localhost')
+db_port = os.getenv('DB_PORT', '3306')
+db_name = os.getenv('DB_NAME')
+
+engine = create_engine(f'mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}')
 
 query = """
 WITH expanded_forms AS (
