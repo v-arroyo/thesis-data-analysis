@@ -83,5 +83,6 @@ fig.update_layout(
 fig.update_traces(textposition='top right', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', categoryorder='array', categoryarray=phase_order[::-1])
+fig.update_coloraxes(showscale=False)
 
 pio.write_image(fig, 'images/chapter5/elite_amulets_mat_temp.png',scale=4, width=450, height=230)

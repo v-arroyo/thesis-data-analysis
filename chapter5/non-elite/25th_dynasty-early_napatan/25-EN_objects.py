@@ -50,8 +50,8 @@ custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.scatter(
     df,
-    x="site_name",
-    y="artifact_type",
+    x="artifact_type",
+    y="site_name",
     color="total",
     text="total",
     title="25th Dynasty-Early Napatan non-elite object types",
@@ -81,8 +81,9 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='middle right', textfont_size=6)
+fig.update_traces(textposition='top center', textfont_size=6)
 fig.update_xaxes(title_text='', categoryorder='category ascending')
 fig.update_yaxes(title_text='', categoryorder='category descending')
+fig.update_coloraxes(showscale=False)
 
-pio.write_image(fig, 'images/chapter5/25-EN_objects.png',scale=3, width=550, height=450)
+pio.write_image(fig, 'images/chapter5/25-EN_objects.png',scale=3, width=550, height=280)

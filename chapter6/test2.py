@@ -30,14 +30,14 @@ custom_colors = ['#79ccb3','#e9724d', '#92cad1', '#d6d727', '#868686', '#be8a60'
 phase_order = ["pre-25th", "25th", "25th-EN", "EN", "25th-MN", "EN-MN", "EN-LN", "MN", "MN-LN", "LN"]
 
 # Convert 'phase' to ordered categorical for correct x-axis order
-df_grouped['phase'] = pd.Categorical(df_grouped['phase'], categories=phase_order, ordered=True)
+df['phase'] = pd.Categorical(df['phase'], categories=phase_order, ordered=True)
 
 # Sort by phase
-df_grouped = df_grouped.sort_values('phase')
+df = df.sort_values('phase')
 
 # Plot line chart with Plotly Express, one line per amulet type
 fig = px.line(
-    df_grouped,
+    df,
     x='phase',
     y='total',
     color='type',
