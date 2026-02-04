@@ -19,7 +19,10 @@ select
     count(amulet_id) as total
 from burials b
 join amulets a on a.burial_id = b.burial_id
-where dating = 'napatan' and b.site_id in (1,2,4,5,6,7,8,9,10) and type = 'deity'
+where dating = 'napatan' and b.site_id in (1,2,4,5,6,7,8,9,10) and form IN ("aker", "amun", "amun/isis/horus", "amun/khonsu/monthu", "amun/mut/khonsu",
+    "anubis", "bastet", "bes", "duamutef", "hapi", "hapi, nile god", "hathor", "heh", "horus", "horus child", "imsety", "isis", "isis and horus", "khonsu",
+    "maat", "min", "mut", "nefertum", "neith", "nephthys", "onuris", "osiris", "pataikos", "ptah", "qebehsenuef", "ra", "ra-horakhty", "sekhmet", "shu",
+    "taweret", "thoth") AND social_group = "royal"
 group by 1,2,3,4
 """
 
@@ -69,21 +72,18 @@ df_grouped = df_expanded.groupby(['phase', 'social_group', 'form'], as_index=Fal
 # put in correct order
 df_grouped['phase'] = pd.Categorical(df_grouped['phase'], categories=phase_order, ordered=True)
 
-# sort by phase and then type
-df_grouped = df_grouped.sort_values(['form'], ascending=False)
-
-df_grouped = df_grouped.sort_values(['phase', 'form'], ascending=[True, False])
+df_grouped = df_grouped.sort_values(['phase', 'form'], ascending=[True, True])
 
 fig = px.scatter(
     df_grouped,
-    x="phase",
-    y="form",
-    color="total",
+    x='phase',
+    y='form',
+    color='total',
+    text='total',
+    title="Distribution of amulets representing Egyptian deities<br>by social group and chronological phase",
     facet_col='social_group',
-    title="",
-    color_continuous_scale='Sunset',
     template="plotly_white",
-    labels={"social_group": "status"}
+    color_continuous_scale='Sunset'
 )
 
 fig.update_layout(
@@ -93,12 +93,12 @@ fig.update_layout(
         size=6),
     legend_title_text='',
     title_font=dict(size=6),
-    margin=dict(l=0, r=0, t=20, b=0),
-    autosize=True
+    margin=dict(l=0, r=10, t=50, b=0),
 )
 
 fig.update_traces(textposition='top right', textfont_size=5)
-fig.update_yaxes(title='')
-fig.update_xaxes(title='', matches=True)
+fig.update_yaxes(title='', categoryorder='category descending')
+fig.update_xaxes(title='')
+fig.update_coloraxes(showscale=False)
 
-pio.write_image(fig, 'images/chapter6/phase_motif_deity.png',scale=3, width=500, height=500)
+pio.write_image(fig, 'images/chapter6/forms_egyptian_deities_phase_royal.png',scale=4, width=250, height=300)

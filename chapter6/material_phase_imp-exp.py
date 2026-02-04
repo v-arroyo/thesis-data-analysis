@@ -15,10 +15,15 @@ select
 	temp_early,
     temp_late,
     social_group,
-    a.type,
-    count(amulet_id) as total
+    CASE 
+        WHEN m.material_local = 1 THEN 'local'
+        WHEN m.material_imported = 1 THEN 'imported'
+    END as material_type,
+    COUNT(*) as count,
+    ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (PARTITION BY social_group), 0) as percentage
 from burials b
 join amulets a on a.burial_id = b.burial_id
+JOIN materials m ON m.material_name = a.material
 where dating = 'napatan' and b.site_id in (1,2,4,5,6,7,8,9,10)
 group by 1,2,3,4
 """
@@ -42,46 +47,49 @@ for _, row in df.iterrows():
         expanded_rows.append({
             'phase': row['temp_early'],
             'social_group': row['social_group'],
-            'type': row['type'],
-            'total': row['total']
+            'material_type': row['material_type'],
+            'percentage': row['percentage']
         })
     else:
         # Multi-phase burial: count in BOTH phases
         expanded_rows.append({
             'phase': row['temp_early'],
             'social_group': row['social_group'],
-            'type': row['type'],
-            'total': row['total']
+            'material_type': row['material_type'],
+            'percentage': row['percentage']
         })
         expanded_rows.append({
             'phase': row['temp_late'],
             'social_group': row['social_group'],
-            'type': row['type'],
-            'total': row['total']
+            'material_type': row['material_type'],
+            'percentage': row['percentage']
         })
 
 # transform list into df
 df_expanded = pd.DataFrame(expanded_rows)
 
 # aggregation by phase and type
-df_grouped = df_expanded.groupby(['phase', 'social_group', 'type'], as_index=False)['total'].sum()
+df_grouped = df_expanded.groupby(['phase', 'social_group', 'material_type'], as_index=False)['percentage'].sum()
 
 # put in correct order
 df_grouped['phase'] = pd.Categorical(df_grouped['phase'], categories=phase_order, ordered=True)
 
 # sort by phase and then type
-df_grouped = df_grouped.sort_values(['phase', 'social_group', 'type'])
+df_grouped = df_grouped.sort_values(['phase', 'social_group', 'material_type'])
 
 fig = px.line(
     df_grouped,
     x='phase',
-    y='total',
+    y='percentage',
+    #text='percentage',
     color='social_group',
-    facet_col='type',
-    facet_col_wrap=2,
+    facet_row='material_type',
+    #facet_col_wrap=2,
+    markers=True,
     template="plotly_white",
-    title='Total Amulets per Type over Chronological Phases',
-    color_discrete_sequence=custom_colors
+    title='Distribution of local and imported amulet materials by social group and chronological phase',
+    color_discrete_sequence=custom_colors,
+    labels={"material_type" : "material"}
 )
 
 fig.update_layout(
@@ -95,8 +103,8 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='top right', textfont_size=5)
-fig.update_yaxes(title='', tickmode='linear', dtick=1000)
+fig.update_traces(textposition='bottom center', textfont_size=5)
+fig.update_yaxes(title='', dtick=20)
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/phase_type.png',scale=3, width=550, height=350)
+pio.write_image(fig, 'images/chapter6/material_type.png',scale=3, width=550, height=370)

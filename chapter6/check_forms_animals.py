@@ -11,6 +11,7 @@ engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_P
 
 query = """
 SELECT 
+    phase,
 	social_group,
     form,
     COUNT(amulet_id) AS total
