@@ -78,8 +78,7 @@ fig = px.line(
     facet_col_wrap=2,
     template="plotly_white",
     title='Distribution of amulet types by social group and chronological phase',
-    color_discrete_sequence=custom_colors,
-    category_orders={"phase": phase_order, "social_group": ["royal", "elite", "non-elite"]}
+    color_discrete_sequence=custom_colors
 )
 
 fig.update_layout(
@@ -97,4 +96,4 @@ fig.update_traces(textposition='top right', textfont_size=5)
 fig.update_yaxes(title='', tickmode='linear', dtick=1000)
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/phase_type.png',scale=3, width=550, height=350)
+pio.write_image(fig, 'images/chapter6/types_phase.png',scale=3, width=550, height=350)

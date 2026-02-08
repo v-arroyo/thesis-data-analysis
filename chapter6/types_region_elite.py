@@ -59,4 +59,4 @@ fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_yaxes(title='')
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/region_type_elite.png',scale=3, width=550, height=250)
+pio.write_image(fig, 'images/chapter6/types_region_elite.png',scale=3, width=550, height=250)

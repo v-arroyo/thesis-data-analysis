@@ -20,12 +20,11 @@ SELECT
             "anubis", "bastet", "bes", "duamutef", "hapi", "hapi, nile god", "hathor", "heh", "horus", "horus child", "imsety", "isis", "isis and horus", "khonsu",
             "maat", "min", "mut", "nefertum", "neith", "nephthys", "onuris", "osiris", "pataikos", "ptah", "qebehsenuef", "ra", "ra-horakhty", "sekhmet", "shu",
             "taweret", "thoth") THEN 'egyptian deities'
-        ELSE "local adaptations"
+        ELSE "local deities/adaptations"
     END AS form_source,
     COUNT(*) AS count
 FROM burials b
 JOIN amulets a ON a.burial_id = b.burial_id
-JOIN materials m ON m.material_name = a.material
 WHERE dating = 'napatan' AND b.site_id IN (1,2,4,5,6,7,8,9,10)
 GROUP BY 1,2,3,4
 """
@@ -112,4 +111,4 @@ fig.update_traces(textposition='inside', textfont_size=4)
 fig.update_yaxes(title='')
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/motifs_phase.png',scale=3, width=550, height=260)
+pio.write_image(fig, 'images/chapter6/motifs_phase_deities.png',scale=3, width=550, height=260)
