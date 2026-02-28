@@ -31,11 +31,11 @@ df = pd.read_sql(query, engine)
 
 fig = px.scatter(
     df,
-    x="form2",
-    y="form",
+    x="form",
+    y="form2",
     text='total',                 
     color_discrete_sequence=['#cccccc'],
-    title="25th Dynasty-Early Napatan amulets combining two motifs",
+    title="25th Dynasty-Early Napatan non-elite amulets combining two motifs",
     labels={"total": "Total"},
     size_max=20,
     template='plotly_white',

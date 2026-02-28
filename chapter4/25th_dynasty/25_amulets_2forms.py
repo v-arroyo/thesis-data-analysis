@@ -2,8 +2,6 @@ import pandas as pd
 import plotly.express as px
 from sqlalchemy import create_engine
 import plotly.io as pio
-import plotly.graph_objects as go
-import numpy as np
 import os
 from dotenv import load_dotenv
 
@@ -30,12 +28,13 @@ WHERE temp = '25th'
     AND dating = 'napatan' 
     AND form2 IS NOT NULL
     AND form3 IS NULL
-    AND b.site_id IN (4,5,6,7,8,9,10) 
-    AND social_group = 'non-elite'
+    AND b.site_id IN (1,2)
 GROUP BY 1,2,3
 """
 
 df = pd.read_sql(query, engine)
+
+custom_colors = ['#92cad1','#e9724d', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.scatter(
     df,
@@ -43,7 +42,7 @@ fig = px.scatter(
     y="form2",
     text='total',                 
     color_discrete_sequence=['#cccccc'],
-    title="25th Dynasty non-elite amulets combining two motifs",
+    title="25th Dynasty royal amulets combining two motifs",
     labels={"total": "Total"},
     size_max=20,
     template='plotly_white',
@@ -84,7 +83,7 @@ fig.update_coloraxes(
 )
 
 fig.update_traces(textposition='middle right', textfont_size=8)
-fig.update_xaxes(title_text='')
+fig.update_xaxes(title_text='', tickangle=45)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25_with_2forms.png',scale=4, width=450, height=180)
+pio.write_image(fig, 'images/chapter4/25_amulets_2forms.png',scale=3, width=550, height=250)
