@@ -70,4 +70,4 @@ fig.update_traces(textposition='bottom center', textfont_size=5)
 fig.update_yaxes(title='', dtick=20)
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/material_region_type.png',scale=3, width=550, height=370)
+pio.write_image(fig, 'images/chapter6/material_region_imp-exp.png',scale=3, width=550, height=370)
