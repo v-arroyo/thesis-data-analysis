@@ -12,19 +12,21 @@ engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_P
 
 query = """
 SELECT
-	temp_early,
-    temp_late,
-    social_group,
+    b.temp_early, 
+    b.temp_late,
+    b.social_group,
     CASE 
-        WHEN a.form IN ("aker", "amun", "amun/isis/horus", "amun/khonsu/monthu", "amun/mut/khonsu",
-            "anubis", "bastet", "bes", "duamutef", "hapi", "hapi, nile god", "hathor", "heh", "horus", "horus child", "imsety", "isis", "isis and horus", "khonsu",
-            "maat", "min", "mut", "nefertum", "neith", "nephthys", "onuris", "osiris", "pataikos", "ptah", "qebehsenuef", "ra", "ra-horakhty", "sekhmet", "shu",
-            "taweret", "thoth") THEN 'egyptian deities'
-        ELSE "local deities/adaptations"
+        WHEN a.form IN ('aker', 'amun', 'amun/isis/horus', 'amun/khonsu/monthu', 'amun/mut/khonsu',
+        'anubis', 'bastet', 'bes', 'duamutef', 'hapi', 'hapi, nile god', 'hathor', 'heh', 
+        'horus', 'horus child', 'imsety', 'isis', 'isis and horus', 'khonsu',
+        'maat', 'min', 'mut', 'nefertum', 'neith', 'nephthys', 'onuris', 'osiris', 
+        'pataikos', 'ptah', 'qebehsenuef', 'ra', 'ra-horakhty', 'sekhmet', 'shu',
+        'taweret', 'thoth') THEN 'deities with egyptian origin'
+    	ELSE 'local deities and/or adaptations'
     END AS form_source,
-    COUNT(*) AS count
-FROM burials b
-JOIN amulets a ON a.burial_id = b.burial_id
+    COUNT(a.amulet_id) as total
+FROM amulets a
+JOIN burials b ON b.burial_id = a.burial_id
 WHERE dating = 'napatan' AND b.site_id IN (1,2,4,5,6,7,8,9,10)
 GROUP BY 1,2,3,4
 """
@@ -48,7 +50,7 @@ for _, row in df.iterrows():
             'phase': row['temp_early'],
             'social_group': row['social_group'],
             'form_source': row['form_source'],
-            'count': row['count']  # same count
+            'total': row['total']  # same count
         })
     else:
         # multi-phase: split the percentage evenly
@@ -58,39 +60,42 @@ for _, row in df.iterrows():
                 'phase': phase,
                 'social_group': row['social_group'],
                 'form_source': row['form_source'],
-                'count': row['count'] / len(phases)  # splits count evenly
+                'total': row['total'] / len(phases)  # splits count evenly
             })
 
 # transform list into df
 df_expanded = pd.DataFrame(expanded_rows)
 
-# aggregate counts by phase, social_group, and form_source
-df_grouped = df_expanded.groupby(['phase', 'social_group', 'form_source'], as_index=False)['count'].sum()
+# calculate totals per (joined) phase AND social group
+phase_group_totals = df_expanded.groupby(['phase', 'social_group'])['total'].sum().reset_index()
+phase_group_totals.rename(columns={'total': 'phase_group_total'}, inplace=True)
 
-# calculate percentages within each phase and social_group
-df_grouped['percentage'] = df_grouped.groupby(['phase', 'social_group'])['count'].transform(
-    lambda x: round(x / x.sum() * 100, 0) if x.sum() > 0 else 0
-)
+# merge totals back to aggregate by form_source
+df_grouped = df_expanded.merge(phase_group_totals, on=['phase', 'social_group'])
+df_grouped = df_grouped.groupby(['phase', 'social_group', 'form_source', 'phase_group_total'], as_index=False)['total'].sum()
+
+# percentage based on phase
+df_grouped['percentage'] = round(df_grouped['total'] * 100.0 / df_grouped['phase_group_total'], 2)
+
+# drop unneeded columns
+df_grouped = df_grouped.drop(['total', 'phase_group_total'], axis=1)
 
 # order phases and group
 df_grouped['phase'] = pd.Categorical(df_grouped['phase'], categories=phase_order, ordered=True)
 
 df_grouped = df_grouped.sort_values(['phase', 'social_group', 'form_source'])
 
-# drop count column
-df_grouped = df_grouped.drop('count', axis=1)
-
 fig = px.bar(
     df_grouped,
     x='percentage',
     y='phase',
-    text='percentage',
+    text=df_grouped['percentage'].round(0),
     color='form_source',
     facet_row='social_group',
     template="plotly_white",
-    title='Distribution of amulet types by social group and chronological phase',
+    barmode='stack',
+    title='Distribution of amulet types by social group and chronological phase (in %)',
     color_discrete_sequence=custom_colors,
-    labels={"social_group": "social group"},
     category_orders={"phase": phase_order, "social_group": ["royal", "elite", "non-elite"]}
 )
 
@@ -104,8 +109,8 @@ fig.update_layout(
     margin=dict(l=0, r=10, t=20, b=0)
 )
 
-fig.update_traces(textposition='inside', textfont_size=4)
+fig.update_traces(textposition='auto', textfont_size=4)
 fig.update_yaxes(title='')
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/motifs_phase_deities.png',scale=3, width=550, height=260)
+pio.write_image(fig, 'images/chapter6/motifs_phase_deities.png',scale=3, width=550, height=250)

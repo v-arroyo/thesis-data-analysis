@@ -11,21 +11,20 @@ load_dotenv()
 engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 query = """
-select
+SELECT
 	temp_early,
     temp_late,
     social_group,
     CASE 
         WHEN m.material_local = 1 THEN 'local'
         WHEN m.material_imported = 1 THEN 'imported'
-    END as material_type,
-    COUNT(*) as count,
-    ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (PARTITION BY social_group), 0) as percentage
-from burials b
-join amulets a on a.burial_id = b.burial_id
+    END AS material_type,
+    COUNT(*) AS total
+FROM burials b
+JOIN amulets a ON a.burial_id = b.burial_id
 JOIN materials m ON m.material_name = a.material
-where dating = 'napatan' and b.site_id in (1,2,4,5,6,7,8,9,10)
-group by 1,2,3,4
+WHERE dating = 'napatan' AND b.site_id IN (1,2,4,5,6,7,8,9,10)
+GROUP BY 1,2,3,4
 """
 
 df = pd.read_sql(query, engine)
@@ -47,7 +46,7 @@ for _, row in df.iterrows():
             'phase': row['temp_early'],
             'social_group': row['social_group'],
             'material_type': row['material_type'],
-            'percentage': row['percentage']  # same count
+            'total': row['total']  # same count
         })
     else:
         # multi-phase: split the percentage evenly
@@ -57,14 +56,25 @@ for _, row in df.iterrows():
                 'phase': phase,
                 'social_group': row['social_group'],
                 'material_type': row['material_type'],
-                'percentage': row['percentage'] / len(phases)  # splits count evenly
+                'total': row['total'] / len(phases)  # splits count evenly
             })
 
 # transform list into df
 df_expanded = pd.DataFrame(expanded_rows)
 
-# aggregation by phase and type
-df_grouped = df_expanded.groupby(['phase', 'social_group', 'material_type'], as_index=False)['percentage'].sum()
+# calculate totals per (joined) phase and social group
+phase_group_totals = df_expanded.groupby(['phase', 'social_group'])['total'].sum().reset_index()
+phase_group_totals.rename(columns={'total': 'phase_group_total'}, inplace=True)
+
+# merge phase totals and aggregate per material_type
+df_grouped = df_expanded.merge(phase_group_totals, on=['phase', 'social_group'])
+df_grouped = df_grouped.groupby(['phase', 'social_group', 'material_type', 'phase_group_total'], as_index=False)['total'].sum()
+
+# percentages based on phase totals
+df_grouped['percentage'] = round(df_grouped['total'] * 100.0 / df_grouped['phase_group_total'], 0)
+
+# drop unneeded columns
+df_grouped = df_grouped.drop(['total', 'phase_group_total'], axis=1)
 
 # put in correct order
 df_grouped['phase'] = pd.Categorical(df_grouped['phase'], categories=phase_order, ordered=True)
@@ -76,10 +86,9 @@ fig = px.line(
     df_grouped,
     x='phase',
     y='percentage',
-    #text='percentage',
     color='social_group',
     facet_row='material_type',
-    #facet_col_wrap=2,
+    text='percentage',
     markers=True,
     template="plotly_white",
     title='Distribution of local and imported amulet materials by social group and chronological phase (in %)',
@@ -99,8 +108,8 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='bottom center', textfont_size=5)
-fig.update_yaxes(title='', dtick=20)
+fig.update_traces(textposition='middle left', textfont_size=6)
+fig.update_yaxes(title='')
 fig.update_xaxes(title='')
 
 pio.write_image(fig, 'images/chapter6/material_phase_imp-exp.png',scale=3, width=550, height=370)
