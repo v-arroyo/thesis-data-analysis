@@ -35,29 +35,24 @@ expanded_rows = []
 
 # iterate over rows to find same phases (one row) or two phases (one row for each)
 for _, row in df.iterrows():
-    # If single-phase burial (temp_early == temp_late)
     if row['temp_early'] == row['temp_late']:
-        # Count only once for that phase
+        # single phase
         expanded_rows.append({
             'phase': row['temp_early'],
             'social_group': row['social_group'],
             'material': row['material'],
-            'total': row['total']
+            'percentage': row['percentage']  # same count
         })
     else:
-        # Multi-phase burial: count in BOTH phases
-        expanded_rows.append({
-            'phase': row['temp_early'],
-            'social_group': row['social_group'],
-            'material': row['material'],
-            'total': row['total']
-        })
-        expanded_rows.append({
-            'phase': row['temp_late'],
-            'social_group': row['social_group'],
-            'material': row['material'],
-            'total': row['total']
-        })
+        # multi-phase: split the percentage evenly
+        phases = [row['temp_early'], row['temp_late']]
+        for phase in phases:
+            expanded_rows.append({
+                'phase': phase,
+                'social_group': row['social_group'],
+                'material': row['material'],
+                'percentage': row['percentage'] / len(phases)  # splits count evenly
+            })
 
 # transform list into df
 df_expanded = pd.DataFrame(expanded_rows)

@@ -38,22 +38,22 @@ expanded_rows = []
 # iterate over rows to find same phases (one row) or two phases (one row for each)
 for _, row in df.iterrows():
     if row['temp_early'] == row['temp_late']:
-        # Single phase
+        # single phase
         expanded_rows.append({
             'phase': row['temp_early'],
             'social_group': row['social_group'],
             'material': row['material'],
-            'percentage': row['percentage']  # Keep as is
+            'percentage': row['percentage']  # same count
         })
     else:
-        # Multi-phase: split the percentage evenly
+        # multi-phase: split the percentage evenly
         phases = [row['temp_early'], row['temp_late']]
         for phase in phases:
             expanded_rows.append({
                 'phase': phase,
                 'social_group': row['social_group'],
                 'material': row['material'],
-                'percentage': row['percentage'] / len(phases)  # Split evenly
+                'percentage': row['percentage'] / len(phases)  # splits count evenly
             })
 
 # transform list into df
@@ -65,8 +65,7 @@ df_grouped = df_expanded.groupby(['phase', 'social_group', 'material'], as_index
 # put in correct order
 df_grouped['phase'] = pd.Categorical(df_grouped['phase'], categories=phase_order, ordered=True)
 
-# sort by phase and then type
-df_grouped = df_grouped.sort_values(['phase', 'social_group', 'material'])
+df_grouped = df_grouped.sort_values('phase')
 
 fig = px.line(
     df_grouped,
@@ -78,6 +77,7 @@ fig = px.line(
     template="plotly_white",
     title='Distribution of faience amulets by social group and chronological phase (in %)',
     color_discrete_sequence=custom_colors,
+    category_orders={"phase": phase_order, "social_group": ["royal", "elite", "non-elite"]}
 )
 
 fig.update_layout(
@@ -91,8 +91,8 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='bottom left', textfont_size=5)
+fig.update_traces(textposition='top right', textfont_size=5)
 fig.update_yaxes(title='')
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/material_phase_faience.png',scale=3, width=550, height=250)
+pio.write_image(fig, 'images/chapter6/material_phase_faience.png',scale=3, width=550, height=300)

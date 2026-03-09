@@ -43,26 +43,23 @@ expanded_rows = []
 # iterate over rows to find same phases (one row) or two phases (one row for each)
 for _, row in df.iterrows():
     if row['temp_early'] == row['temp_late']:
-        # Count only once for that phase
+        # single phase
         expanded_rows.append({
             'phase': row['temp_early'],
             'social_group': row['social_group'],
             'form_source': row['form_source'],
-            'count': row['count']
+            'count': row['count']  # same count
         })
     else:
-        expanded_rows.append({
-            'phase': row['temp_early'],
-            'social_group': row['social_group'],
-            'form_source': row['form_source'],
-            'count': row['count']
-        })
-        expanded_rows.append({
-            'phase': row['temp_late'],
-            'social_group': row['social_group'],
-            'form_source': row['form_source'],
-            'count': row['count']
-        })
+        # multi-phase: split the percentage evenly
+        phases = [row['temp_early'], row['temp_late']]
+        for phase in phases:
+            expanded_rows.append({
+                'phase': phase,
+                'social_group': row['social_group'],
+                'form_source': row['form_source'],
+                'count': row['count'] / len(phases)  # splits count evenly
+            })
 
 # transform list into df
 df_expanded = pd.DataFrame(expanded_rows)

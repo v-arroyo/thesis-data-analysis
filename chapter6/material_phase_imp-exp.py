@@ -41,29 +41,24 @@ expanded_rows = []
 
 # iterate over rows to find same phases (one row) or two phases (one row for each)
 for _, row in df.iterrows():
-    # If single-phase burial (temp_early == temp_late)
     if row['temp_early'] == row['temp_late']:
-        # Count only once for that phase
+        # single phase
         expanded_rows.append({
             'phase': row['temp_early'],
             'social_group': row['social_group'],
             'material_type': row['material_type'],
-            'percentage': row['percentage']
+            'percentage': row['percentage']  # same count
         })
     else:
-        # Multi-phase burial: count in BOTH phases
-        expanded_rows.append({
-            'phase': row['temp_early'],
-            'social_group': row['social_group'],
-            'material_type': row['material_type'],
-            'percentage': row['percentage']
-        })
-        expanded_rows.append({
-            'phase': row['temp_late'],
-            'social_group': row['social_group'],
-            'material_type': row['material_type'],
-            'percentage': row['percentage']
-        })
+        # multi-phase: split the percentage evenly
+        phases = [row['temp_early'], row['temp_late']]
+        for phase in phases:
+            expanded_rows.append({
+                'phase': phase,
+                'social_group': row['social_group'],
+                'material_type': row['material_type'],
+                'percentage': row['percentage'] / len(phases)  # splits count evenly
+            })
 
 # transform list into df
 df_expanded = pd.DataFrame(expanded_rows)
@@ -87,9 +82,10 @@ fig = px.line(
     #facet_col_wrap=2,
     markers=True,
     template="plotly_white",
-    title='Distribution of local and imported amulet materials by social group and chronological phase',
+    title='Distribution of local and imported amulet materials by social group and chronological phase (in %)',
     color_discrete_sequence=custom_colors,
-    labels={"material_type" : "material"}
+    labels={"material_type" : "material"},
+    category_orders={"phase": phase_order, "social_group": ["royal", "elite", "non-elite"]}
 )
 
 fig.update_layout(

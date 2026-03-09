@@ -36,29 +36,24 @@ expanded_rows = []
 
 # iterate over rows to find same phases (one row) or two phases (one row for each)
 for _, row in df.iterrows():
-    # If single-phase burial (temp_early == temp_late)
     if row['temp_early'] == row['temp_late']:
-        # Count only once for that phase
+        # single phase
         expanded_rows.append({
             'phase': row['temp_early'],
             'social_group': row['social_group'],
             'type': row['type'],
-            'total': row['total']
+            'total': row['total']  # same count
         })
     else:
-        # Multi-phase burial: count in BOTH phases
-        expanded_rows.append({
-            'phase': row['temp_early'],
-            'social_group': row['social_group'],
-            'type': row['type'],
-            'total': row['total']
-        })
-        expanded_rows.append({
-            'phase': row['temp_late'],
-            'social_group': row['social_group'],
-            'type': row['type'],
-            'total': row['total']
-        })
+        # multi-phase: split the percentage evenly
+        phases = [row['temp_early'], row['temp_late']]
+        for phase in phases:
+            expanded_rows.append({
+                'phase': phase,
+                'social_group': row['social_group'],
+                'type': row['type'],
+                'total': row['total'] / len(phases)  # splits count evenly
+            })
 
 # transform list into df
 df_expanded = pd.DataFrame(expanded_rows)
@@ -69,6 +64,8 @@ df_grouped = df_expanded.groupby(['phase', 'social_group', 'type'], as_index=Fal
 # put in correct order
 df_grouped['phase'] = pd.Categorical(df_grouped['phase'], categories=phase_order, ordered=True)
 
+df_grouped = df_grouped.sort_values('phase')
+
 fig = px.line(
     df_grouped,
     x='phase',
@@ -77,8 +74,10 @@ fig = px.line(
     facet_col='type',
     facet_col_wrap=2,
     template="plotly_white",
+    markers=True,
     title='Distribution of amulet types by social group and chronological phase',
-    color_discrete_sequence=custom_colors
+    color_discrete_sequence=custom_colors,
+    category_orders={"social_group": ["royal", "elite", "non-elite"]}
 )
 
 fig.update_layout(
@@ -93,7 +92,7 @@ fig.update_layout(
 )
 
 fig.update_traces(textposition='top right', textfont_size=5)
-fig.update_yaxes(title='', tickmode='linear', dtick=1000)
+fig.update_yaxes(title='', tickmode='linear', dtick=500)
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/types_phase.png',scale=3, width=550, height=350)
+pio.write_image(fig, 'images/chapter6/types_phase.png',scale=3, width=550, height=550)
