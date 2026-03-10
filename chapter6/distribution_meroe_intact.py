@@ -16,24 +16,24 @@ WITH total_counts AS (
     	b.temp_early,
     	b.temp_late,
     	b.social_group,
-    	COUNT(amulet_id) as group_total
-    FROM amulets a
-	JOIN burials b ON b.burial_id = a.burial_id
-	WHERE dating = 'napatan' AND b.site_id IN (1,2,4,5,6,7,8,9,10)
+    	COUNT(burial_id) as intact_total
+    FROM burials b
+	WHERE dating = 'napatan' AND b.site_id IN (4,5) AND b.disturbed = 0
 	GROUP BY 1,2,3
 )
 SELECT
 	b.temp_early,
     b.temp_late,
     b.social_group,
-    a.type,
-    tc.group_total,
-    COUNT(*) as type_total
+    tc.intact_total,
+    COUNT(*) as intact_amulet_total
 FROM burials b
-JOIN amulets a ON a.burial_id = b.burial_id
 JOIN total_counts tc ON tc.social_group = b.social_group AND tc.temp_early = b.temp_early AND tc.temp_late = b.temp_late
-WHERE dating = 'napatan' AND b.site_id in (1,2,4,5,6,7,8,9,10)
-GROUP BY 1,2,3,4,5
+WHERE dating = 'napatan' 
+	AND b.site_id in (4,5)
+	AND b.disturbed = 0
+	AND b.contains_amulet = 1
+GROUP BY 1,2,3,4
 """
 
 df = pd.read_sql(query, engine)
@@ -54,9 +54,8 @@ for _, row in df.iterrows():
         expanded_rows.append({
             'phase': row['temp_early'],
             'social_group': row['social_group'],
-            'type': row['type'],
-            'group_total': row['group_total'],
-            'type_total': row['type_total']  # same count
+            'intact_amulet_total': row['intact_amulet_total'],
+            'intact_total': row['intact_total']  # same count
         })
     else:
         # multi-phase: split the percentage evenly
@@ -65,27 +64,18 @@ for _, row in df.iterrows():
             expanded_rows.append({
                 'phase': phase,
                 'social_group': row['social_group'],
-                'type': row['type'],
-                'group_total': row['group_total'] / len(phases),
-                'type_total': row['type_total'] / len(phases)  # splits count evenly
+                'intact_amulet_total': row['intact_amulet_total'] / len(phases),
+                'intact_total': row['intact_total'] / len(phases)  # splits count evenly
             })
 
 # transform list into df
 df_expanded = pd.DataFrame(expanded_rows)
 
-# calculate totals per (joined) phase AND social group
-phase_group_totals = df_expanded.groupby(['phase', 'social_group'])['type_total'].sum().reset_index()
-phase_group_totals.rename(columns={'type_total': 'phase_group_total'}, inplace=True)
-
-# merge totals back to aggregate by form_source
-df_grouped = df_expanded.merge(phase_group_totals, on=['phase', 'social_group'])
-df_grouped = df_grouped.groupby(['phase', 'social_group', 'type', 'phase_group_total'], as_index=False)['type_total'].sum()
-
-# percentage based on phase
-df_grouped['percentage'] = round(df_grouped['type_total'] * 100.0 / df_grouped['phase_group_total'], 2)
-
-# drop unneeded columns
-df_grouped = df_grouped.drop(['type_total', 'phase_group_total'], axis=1)
+# aggregate by phase and social group
+df_grouped = df_expanded.groupby(['phase', 'social_group'], as_index=False).agg({
+    'intact_total': 'sum',
+    'intact_amulet_total': 'sum'
+})
 
 # put in correct order
 df_grouped['phase'] = pd.Categorical(df_grouped['phase'], categories=phase_order, ordered=True)
@@ -94,17 +84,33 @@ df_grouped = df_grouped.sort_values('phase')
 
 fig = px.bar(
     df_grouped,
-    x='percentage',
+    x=['intact_amulet_total', 'intact_total'],
     y='phase',
-    color='type',
+    barmode='group',
     facet_row='social_group',
     template="plotly_white",
-    title='Distribution of amulet types by social group and chronological phase (in %)',
+    title='Intact tombs from Meroe West with amulets by social group and chronological phase',
     color_discrete_sequence=custom_colors,
-    category_orders={"phase": phase_order, "social_group": ["royal", "elite", "non-elite"]}
+    category_orders={"phase": phase_order, "social_group": ["elite", "non-elite"]}
 )
 
+fig.update_traces(
+    texttemplate='%{x:.0f}',
+    textposition='auto'
+)
+
+fig.update_traces(name='Intact tombs with amulets', selector={'name': 'intact_amulet_total'})
+fig.update_traces(name='Total intact tombs', selector={'name': 'intact_total'})
+
 fig.update_layout(
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=-0.22,
+        xanchor="center",
+        x=0.45,
+        traceorder='reversed',
+    ),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -115,7 +121,8 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
+fig.update_traces(textposition='outside', textfont_size=5)
 fig.update_yaxes(title='')
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/types_phase.png',scale=3, width=550, height=350)
+pio.write_image(fig, 'images/chapter6/distribution_meroe_intact.png',scale=3, width=550, height=250)

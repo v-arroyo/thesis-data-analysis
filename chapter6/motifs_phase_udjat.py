@@ -13,9 +13,9 @@ engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_P
 query = """
 WITH total_counts AS (
     SELECT 
+    	b.social_group, 
     	b.temp_early,
-    	b.temp_late,
-    	b.social_group,
+        b.temp_late,
     	COUNT(amulet_id) as group_total
     FROM amulets a
 	JOIN burials b ON b.burial_id = a.burial_id
@@ -23,17 +23,19 @@ WITH total_counts AS (
 	GROUP BY 1,2,3
 )
 SELECT
-	b.temp_early,
+    b.temp_early,
     b.temp_late,
     b.social_group,
-    a.type,
+    form,
     tc.group_total,
-    COUNT(*) as type_total
-FROM burials b
-JOIN amulets a ON a.burial_id = b.burial_id
+    COUNT(a.amulet_id) as total
+FROM amulets a
+JOIN burials b ON b.burial_id = a.burial_id
 JOIN total_counts tc ON tc.social_group = b.social_group AND tc.temp_early = b.temp_early AND tc.temp_late = b.temp_late
-WHERE dating = 'napatan' AND b.site_id in (1,2,4,5,6,7,8,9,10)
-GROUP BY 1,2,3,4,5
+WHERE dating = 'napatan' 
+    AND b.site_id IN (1,2,4,5,6,7,8,9,10)
+    AND a.form IN ('udjat', 'quadruple udjat')
+GROUP BY 1,2,3,4
 """
 
 df = pd.read_sql(query, engine)
@@ -54,9 +56,9 @@ for _, row in df.iterrows():
         expanded_rows.append({
             'phase': row['temp_early'],
             'social_group': row['social_group'],
-            'type': row['type'],
+            'form': row['form'],
             'group_total': row['group_total'],
-            'type_total': row['type_total']  # same count
+            'total': row['total']  # same count
         })
     else:
         # multi-phase: split the percentage evenly
@@ -65,42 +67,41 @@ for _, row in df.iterrows():
             expanded_rows.append({
                 'phase': phase,
                 'social_group': row['social_group'],
-                'type': row['type'],
+                'form': row['form'],
                 'group_total': row['group_total'] / len(phases),
-                'type_total': row['type_total'] / len(phases)  # splits count evenly
+                'total': row['total'] / len(phases)  # splits count evenly
             })
 
 # transform list into df
 df_expanded = pd.DataFrame(expanded_rows)
 
-# calculate totals per (joined) phase AND social group
-phase_group_totals = df_expanded.groupby(['phase', 'social_group'])['type_total'].sum().reset_index()
-phase_group_totals.rename(columns={'type_total': 'phase_group_total'}, inplace=True)
+# aggregate by phase and social group
+df_grouped = df_expanded.groupby(['phase', 'social_group', 'form'], as_index=False).agg({
+    'total': 'sum',
+    'group_total': 'sum'
+})
 
-# merge totals back to aggregate by form_source
-df_grouped = df_expanded.merge(phase_group_totals, on=['phase', 'social_group'])
-df_grouped = df_grouped.groupby(['phase', 'social_group', 'type', 'phase_group_total'], as_index=False)['type_total'].sum()
-
-# percentage based on phase
-df_grouped['percentage'] = round(df_grouped['type_total'] * 100.0 / df_grouped['phase_group_total'], 2)
-
-# drop unneeded columns
-df_grouped = df_grouped.drop(['type_total', 'phase_group_total'], axis=1)
+# percentage of faience amulets
+df_grouped['percentage'] = round(df_grouped['total'] * 100.0 / df_grouped['group_total'], 1)
 
 # put in correct order
 df_grouped['phase'] = pd.Categorical(df_grouped['phase'], categories=phase_order, ordered=True)
 
-df_grouped = df_grouped.sort_values('phase')
+# sort by phase and then type
+df_grouped = df_grouped.sort_values(['phase', 'social_group', 'form'])
 
-fig = px.bar(
+fig = px.line(
     df_grouped,
-    x='percentage',
-    y='phase',
-    color='type',
+    x='phase',
+    y='percentage',
+    color='form',
+    text=df_grouped['percentage'].round(0),
+    markers=True,
     facet_row='social_group',
     template="plotly_white",
-    title='Distribution of amulet types by social group and chronological phase (in %)',
+    title='Distribution of udjat and quadruple udjat amulets by social group and chronological phase',
     color_discrete_sequence=custom_colors,
+    labels={"social_group": "social group"},
     category_orders={"phase": phase_order, "social_group": ["royal", "elite", "non-elite"]}
 )
 
@@ -108,14 +109,14 @@ fig.update_layout(
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=8),
+        size=6),
     legend_title_text='',
-    margin=dict(l=0, r=10, t=20, b=0),
-    autosize=True,
-    title_font=dict(size=8)
+    title_font=dict(size=6),
+    margin=dict(l=0, r=10, t=40, b=0)
 )
 
-fig.update_yaxes(title='')
+fig.update_traces(textposition='top right', textfont_size=4)
+fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/types_phase.png',scale=3, width=550, height=350)
+pio.write_image(fig, 'images/chapter6/motifs_phase_udjat.png',scale=3, width=550, height=300)
