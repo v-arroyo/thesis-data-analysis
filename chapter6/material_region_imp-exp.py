@@ -57,8 +57,8 @@ fig = px.line(
     df,
     x='region',
     y='percentage',
-    color='social_group',
-    facet_row='material_type',
+    color='material_type',
+    facet_row='social_group',
     text=df['percentage'].round(0),
     markers=True,
     template="plotly_white",
@@ -74,13 +74,13 @@ fig.update_layout(
         color='black',
         size=8),
     legend_title_text='',
-    margin=dict(l=0, r=10, t=50, b=0),
+    margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='middle right', textfont_size=4)
-fig.update_yaxes(title='')
+fig.update_traces(textposition='bottom right', textfont_size=4)
+fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/material_region_imp-exp.png',scale=3, width=550, height=300)
+pio.write_image(fig, 'images/chapter6/material_region_imp-exp.png',scale=3, width=550, height=350)

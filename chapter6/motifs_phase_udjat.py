@@ -99,7 +99,7 @@ fig = px.line(
     markers=True,
     facet_row='social_group',
     template="plotly_white",
-    title='Distribution of udjat and quadruple udjat amulets by social group and chronological phase',
+    title='Distribution of udjat and quadruple udjat amulets by social group and chronological phase (in %)',
     color_discrete_sequence=custom_colors,
     labels={"social_group": "social group"},
     category_orders={"phase": phase_order, "social_group": ["royal", "elite", "non-elite"]}
@@ -115,8 +115,8 @@ fig.update_layout(
     margin=dict(l=0, r=10, t=40, b=0)
 )
 
-fig.update_traces(textposition='top right', textfont_size=4)
+fig.update_traces(textposition='bottom right', textfont_size=4)
 fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/motifs_phase_udjat.png',scale=3, width=550, height=300)
+pio.write_image(fig, 'images/chapter6/motifs_phase_udjat.png',scale=3, width=550, height=330)

@@ -92,7 +92,7 @@ fig = px.line(
     df_grouped,
     x='phase',
     y='percentage',
-    text=df_grouped['percentage'].round(1),
+    text=df_grouped['percentage'].round(0),
     color='social_group',
     facet_col='material',
     template="plotly_white",

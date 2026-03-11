@@ -79,6 +79,6 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
 )
 
 fig.update_xaxes(title_text='')
-fig.update_yaxes(title_text='')
+fig.update_yaxes(title_text='', matches=None)
 
 pio.write_image(fig, 'images/chapter6/material_region_special.png',scale=3, width=550, height=400)
