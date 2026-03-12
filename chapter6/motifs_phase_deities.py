@@ -11,24 +11,69 @@ load_dotenv()
 engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 query = """
-SELECT
-    b.temp_early, 
-    b.temp_late,
-    b.social_group,
+WITH expanded_forms AS (
+    SELECT
+        a.amulet_id,
+        b.temp_early, 
+        b.temp_late,
+        b.social_group,
+        a.form as form
+    FROM amulets a
+    JOIN burials b ON b.burial_id = a.burial_id
+    WHERE dating = 'napatan' 
+        AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
+        AND a.type = 'deity' 
+        AND a.form IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        a.amulet_id,
+        b.temp_early, 
+        b.temp_late,
+        b.social_group,
+        a.form2 as form
+    FROM amulets a
+    JOIN burials b ON b.burial_id = a.burial_id
+    WHERE dating = 'napatan' 
+        AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
+        AND a.type = 'deity' 
+        AND a.form2 IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        a.amulet_id,
+        b.temp_early, 
+        b.temp_late,
+        b.social_group,
+        a.form3 as form
+    FROM amulets a
+    JOIN burials b ON b.burial_id = a.burial_id
+    WHERE dating = 'napatan' 
+        AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
+        AND a.type = 'deity' 
+        AND a.form3 IS NOT NULL
+)
+
+SELECT 
+    temp_early, 
+    temp_late,
+    social_group,
     CASE 
-        WHEN a.form IN ('aker', 'amun', 'amun/isis/horus', 'amun/khonsu/monthu', 'amun/mut/khonsu',
+        WHEN form IN ('aker', 'amun', 'amun/isis/horus', 'amun/khonsu/monthu', 'amun/mut/khonsu',
         'anubis', 'bastet', 'bes', 'duamutef', 'hapi', 'hapi, nile god', 'hathor', 'heh', 
         'horus', 'horus child', 'imsety', 'isis', 'isis and horus', 'khonsu',
         'maat', 'min', 'mut', 'nefertum', 'neith', 'nephthys', 'onuris', 'osiris', 
         'pataikos', 'ptah', 'qebehsenuef', 'ra', 'ra-horakhty', 'sekhmet', 'shu',
         'taweret', 'thoth') THEN 'deities with egyptian origin'
     	ELSE 'local deities and/or adaptations'
-    END AS form_source,
-    COUNT(a.amulet_id) as total
-FROM amulets a
-JOIN burials b ON b.burial_id = a.burial_id
-WHERE dating = 'napatan' AND b.site_id IN (1,2,4,5,6,7,8,9,10)
-GROUP BY 1,2,3,4
+    END AS form,
+    COUNT(amulet_id) AS total
+FROM expanded_forms
+WHERE form NOT IN ('animals', 'ankh', 'ankh/sun disc/udjat', 'ape', 'child', 'crocodile', 'deities', 'deity', 'giraffe', 'jackal', 'lunar crescent', 'monkeys',
+    'nb sign', 'scorpion', 'tree', 'uraeus', 'winged scarab', 'winged uraeus')
+GROUP BY 1,2,3,4;
 """
 
 df = pd.read_sql(query, engine)
@@ -62,7 +107,7 @@ for _, row in df.iterrows():
         expanded_rows.append({
             'phase': row['temp_early'],
             'social_group': row['social_group'],
-            'form_source': row['form_source'],
+            'form': row['form'],
             'total': row['total']  # same count
         })
     else:
@@ -72,7 +117,7 @@ for _, row in df.iterrows():
             expanded_rows.append({
                 'phase': phase,
                 'social_group': row['social_group'],
-                'form_source': row['form_source'],
+                'form': row['form'],
                 'total': row['total'] / len(phases)  # splits count evenly
             })
 
@@ -85,7 +130,7 @@ phase_group_totals.rename(columns={'total': 'phase_group_total'}, inplace=True)
 
 # merge totals back to aggregate by form_source
 df_grouped = df_expanded.merge(phase_group_totals, on=['phase', 'social_group'])
-df_grouped = df_grouped.groupby(['phase', 'social_group', 'form_source', 'phase_group_total'], as_index=False)['total'].sum()
+df_grouped = df_grouped.groupby(['phase', 'social_group', 'form', 'phase_group_total'], as_index=False)['total'].sum()
 
 # percentage based on phase
 df_grouped['percentage'] = round(df_grouped['total'] * 100.0 / df_grouped['phase_group_total'], 2)
@@ -96,14 +141,14 @@ df_grouped = df_grouped.drop(['total', 'phase_group_total'], axis=1)
 # order phases and group
 df_grouped['phase'] = pd.Categorical(df_grouped['phase'], categories=phase_order, ordered=True)
 
-df_grouped = df_grouped.sort_values(['phase', 'social_group', 'form_source'])
+df_grouped = df_grouped.sort_values(['phase', 'social_group', 'form'])
 
 fig = px.bar(
     df_grouped,
     x='percentage',
     y='phase',
     text=df_grouped['percentage'].round(0),
-    color='form_source',
+    color='form',
     facet_row='social_group',
     template="plotly_white",
     barmode='stack',

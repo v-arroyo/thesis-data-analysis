@@ -11,23 +11,67 @@ load_dotenv()
 engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 query = """
-SELECT
-    b.temp_early, 
-    b.temp_late,
-    b.social_group,
+WITH expanded_forms AS (
+    SELECT
+        a.amulet_id,
+        b.temp_early, 
+        b.temp_late,
+        b.social_group,
+        a.form as form
+    FROM amulets a
+    JOIN burials b ON b.burial_id = a.burial_id
+    WHERE dating = 'napatan' 
+        AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
+        AND a.type = 'animal' 
+        AND a.form IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        a.amulet_id,
+        b.temp_early, 
+        b.temp_late,
+        b.social_group,
+        a.form2 as form
+    FROM amulets a
+    JOIN burials b ON b.burial_id = a.burial_id
+    WHERE dating = 'napatan' 
+        AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
+        AND a.type = 'animal' 
+        AND a.form2 IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        a.amulet_id,
+        b.temp_early, 
+        b.temp_late,
+        b.social_group,
+        a.form3 as form
+    FROM amulets a
+    JOIN burials b ON b.burial_id = a.burial_id
+    WHERE dating = 'napatan' 
+        AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
+        AND a.type = 'animal' 
+        AND a.form3 IS NOT NULL
+)
+
+SELECT 
+    temp_early, 
+    temp_late,
+    social_group,
     CASE 
-        WHEN a.form IN ('double frog', 'double ram') THEN 'double animals'
-        WHEN a.form IN ('hawk-headed crocodile', 'lion-headed fly', 'ram-headed scarab') THEN 'combination of animals'
-        WHEN a.form IN ('four apes', 'four-headed ram') THEN 'quadruple animals'
-        WHEN a.form IN ('cat', 'jackal', 'ibis', 'ape', 'crocodile', 'hippo', 'scarab', 
+        WHEN form IN ('double frog', 'double ram') THEN 'double animals'
+        WHEN form IN ('hawk-headed crocodile', 'lion-headed fly', 'ram-headed scarab') THEN 'combination of animals'
+        WHEN form IN ('four apes', 'four-headed ram') THEN 'quadruple animals'
+        WHEN form IN ('cat', 'jackal', 'ibis', 'ape', 'crocodile', 'hippo', 'scarab', 
             'vulture', 'hawk', 'bull', 'cow', 'lion', 'ram', 'snake', 'falcon') THEN 'animals associated with common egyptian deities'
         ELSE 'common animals'
     END AS form,
-    COUNT(a.amulet_id) as total
-FROM amulets a
-JOIN burials b ON b.burial_id = a.burial_id
-WHERE dating = 'napatan' AND b.site_id IN (1,2,4,5,6,7,8,9,10) AND a.type = 'animal'
-GROUP BY 1,2,3,4
+    COUNT(amulet_id) AS total
+FROM expanded_forms
+WHERE form NOT IN ('udjat', 'uraei', 'uraeus')
+GROUP BY 1,2,3,4;
 """
 
 df = pd.read_sql(query, engine)
