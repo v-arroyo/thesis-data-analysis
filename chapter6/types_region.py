@@ -39,8 +39,16 @@ GROUP BY s.region, b.social_group, a.type, tc.group_total
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3',
-                 '#cd5c5c', '#4682b4', '#98fb98', '#696969']
+custom_colors = ['#f27c8a',
+                 '#e6f598',
+                '#dcd8ff',
+                '#e0aa82',
+                '#65f3c6',
+                '#92cef3',
+                '#d3d3d3',
+                '#e59fe2',
+                '#aec6cf',
+                '#ffb347']
 
 region_order = ["lower nubia", "north upper nubia", "4th cataract", "meroe region"]
 

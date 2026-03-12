@@ -39,9 +39,14 @@ GROUP BY s.region, b.social_group, a.material, tc.group_total
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686',
-                 '#8b4513', '#2f4f4f', '#ff6b4a', '#20b2aa', '#daa520',
-                 '#cd5c5c', '#4682b4', '#e8ea7a', '#98fb98', '#696969']
+custom_colors = ['#f27c8a',
+                 '#e6f598',
+                '#dcd8ff',
+                '#e0aa82',
+                '#65f3c6',
+                '#92cef3',
+                '#d3d3d3',
+                '#e59fe2']
 
 region_order = ["lower nubia", "north upper nubia", "4th cataract", "meroe region"]
 
@@ -63,11 +68,6 @@ fig = px.line(
 )
 
 fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
-    legend=dict(
-        yanchor="middle",
-        y=0.50,
-        xanchor="right",
-        x=1.25),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -81,4 +81,4 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', matches=None)
 
-pio.write_image(fig, 'images/chapter6/material_region_special.png',scale=3, width=550, height=400)
+pio.write_image(fig, 'images/chapter6/material_region_special.png',scale=3, width=550, height=350)

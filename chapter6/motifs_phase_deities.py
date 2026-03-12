@@ -78,22 +78,16 @@ GROUP BY 1,2,3,4;
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', # coral
-                '#92cad1', # light sky blue
-                '#d6d727', # yellow lime
-                '#79ccb3', # mint green
-                '#daa520', # mustard
-                '#e8ea7a', # pale yellow
-                '#4682b4', # steel blue
-                '#c1d0d6', # blue grey
-                '#868686', # medium grey
-                '#8b4513', # brown
-                '#2f4f4f', # dark grey
-                '#20b2aa', # light sea green
-                '#cd5c5c', # brick red
-                '#e8ea7a', # pale yellow
-                '#98fb98', # pale green
-                '#696969'] # dim grey
+custom_colors = ['#f27c8a',
+                 '#e6f598',
+                '#dcd8ff',
+                '#e0aa82',
+                '#65f3c6',
+                '#92cef3',
+                '#d3d3d3',
+                '#e59fe2',
+                '#aec6cf',
+                '#ffb347']
 
 phase_order = ["pre-25th", "25th", "EN", "MN", "LN"]
 

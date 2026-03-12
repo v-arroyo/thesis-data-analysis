@@ -38,9 +38,14 @@ GROUP BY 1,2,3,4,5
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686',
-                 '#8b4513', '#2f4f4f', '#ff6b4a', '#20b2aa', '#daa520',
-                 '#cd5c5c', '#4682b4', '#e8ea7a', '#98fb98', '#696969']
+custom_colors = ['#f27c8a',
+                 '#e6f598',
+                '#dcd8ff',
+                '#e0aa82',
+                '#65f3c6',
+                '#92cef3',
+                '#d3d3d3',
+                '#e59fe2']
 
 phase_order = ["pre-25th", "25th", "EN", "MN", "LN"]
 
@@ -112,7 +117,7 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
         color='black',
         size=8),
     legend_title_text='',
-    margin=dict(l=0, r=10, t=30, b=0),
+    margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
     title_font=dict(size=8)
 )

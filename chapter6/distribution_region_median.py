@@ -103,7 +103,7 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='auto', textfont_size=6)
+fig.update_traces(textposition='auto', textfont_size=5)
 fig.update_yaxes(title='')
 fig.update_xaxes(title='')
 
