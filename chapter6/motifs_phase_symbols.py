@@ -10,47 +10,107 @@ load_dotenv()
 
 engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
-query = """
-SELECT
-    b.temp_early, 
-    b.temp_late,
-    b.social_group,
+symbols_query = """
+WITH expanded_forms AS (
+    SELECT
+        a.amulet_id,
+        b.temp_early, 
+        b.temp_late,
+        b.social_group,
+        a.form as form
+    FROM amulets a
+    JOIN burials b ON b.burial_id = a.burial_id
+    WHERE dating = 'napatan' 
+        AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
+        AND a.type = 'symbol' 
+        AND a.form IS NOT NULL
+        AND b.social_group IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        a.amulet_id,
+        b.temp_early, 
+        b.temp_late,
+        b.social_group,
+        a.form2 as form
+    FROM amulets a
+    JOIN burials b ON b.burial_id = a.burial_id
+    WHERE dating = 'napatan' 
+        AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
+        AND a.form2 IS NOT NULL
+        AND b.social_group IS NOT NULL
+
+    UNION ALL
+
+    SELECT
+        a.amulet_id,
+        b.temp_early, 
+        b.temp_late,
+        b.social_group,
+        a.form3 as form
+    FROM amulets a
+    JOIN burials b ON b.burial_id = a.burial_id
+    WHERE dating = 'napatan' 
+        AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
+        AND a.form3 IS NOT NULL
+        AND b.social_group IS NOT NULL
+)
+
+SELECT 
+    temp_early, 
+    temp_late,
+    social_group,
     CASE 
-        WHEN a.form IN ('horned lunar disc', 'lunar crescent') THEN 'moon-related symbols'
-        WHEN a.form IN ('ankh', 'nefer', 'sa sign', 'sema sign') THEN 'hieroglyphic signs'
-        WHEN a.form IN ('crook', 'was scepter', 'whip', 'uraeus') THEN 'royal symbols'
-        WHEN a.form IN ('akhet', 'sun boat', 'sun disc') THEN 'sun-related symbols'
-        WHEN a.form IN ('ba bird', 'double ba bird') THEN 'single/double ba bird'
-        WHEN a.form IN ('winged griffin', 'winged scarab', 'winged snake') THEN 'winged motifs'
-        WHEN a.form IN ('sphinx', 'ram-headed sphinx') THEN 'types of sphinx'
-        ELSE 'common symbols'
+        WHEN form IN ('horned lunar disc', 'lunar crescent') THEN 'moon-related symbols'
+        WHEN form IN ('ankh', 'nefer', 'sa sign', 'sema sign', 'nt sign', 'nb sign') THEN 'hieroglyphic signs'
+        WHEN form IN ('crook', 'was scepter', 'whip', 'uraeus', 'double uraeus', 'hmhm crown', 'double feather') THEN 'royal symbols'
+        WHEN form IN ('akhet', 'sun boat', 'sun disc', 'horned sun disc') THEN 'sun-related symbols'
+        WHEN form IN ('ba bird', 'double ba bird') THEN 'single/double ba bird'
+        WHEN form IN ('winged griffin', 'winged scarab', 'winged snake', 'winged uraeus') THEN 'winged motifs'
+        WHEN form IN ('sphinx') THEN 'sphinx'
+        WHEN form IN ('menat', 'heart', 'djed', 'isis knot', 'ankh/sun disc/udjat') THEN 'common symbols'
+        WHEN form IN ('lion-headed uraeus', 'ram-headed sphinx') THEN 'symbols with animal heads'
+        ELSE form
     END AS form,
-    COUNT(a.amulet_id) as total
-FROM amulets a
-JOIN burials b ON b.burial_id = a.burial_id
-WHERE dating = 'napatan' AND b.site_id IN (1,2,4,5,6,7,8,9,10) AND a.form NOT IN ('udjat', 'quadruple udjat')
+    COUNT(amulet_id) AS total
+FROM expanded_forms
 GROUP BY 1,2,3,4
 """
 
-df = pd.read_sql(query, engine)
+total_amulets_query = """
+SELECT 
+    b.temp_early, 
+    b.temp_late,
+    b.social_group,
+    COUNT(amulet_id) AS total_amulets
+FROM amulets a
+JOIN burials b ON b.burial_id = a.burial_id
+WHERE b.dating = 'napatan' AND b.site_id IN (1,2,4,5,6,7,8,9,10)
+GROUP BY 1,2,3
+"""
 
-custom_colors = ['#f27c8a',
-                 '#e6f598',
-                '#dcd8ff',
-                '#e0aa82',
-                '#65f3c6',
-                '#92cef3',
-                '#d3d3d3',
-                '#e59fe2']
+df_symbols = pd.read_sql(symbols_query, engine)
+df_total = pd.read_sql(total_amulets_query, engine)
 
+custom_colors = ['#8A9A5B', # sage green
+                '#7393B3', # blue grey
+                '#FFD700', # gold
+                '#A95C68', # puce (red)
+                '#4169E1', # royal blue
+                '#CCCCFF', # periwinkle (light purple)
+                '#F28C28', # cadmium orange
+                '#40E0D0', # turquoise
+                '#FF69B4', # hot pink
+                '#BF40BF', # bright purple
+]
 
 phase_order = ["pre-25th", "25th", "EN", "MN", "LN"]
 
-# empty list to store
 expanded_rows = []
 
-# iterate over rows to find same phases (one row) or two phases (one row for each)
-for _, row in df.iterrows():
+# iterate over rows to find same phases (one row) or two phases (one row for each) then split evenly -- symbols
+for _, row in df_symbols.iterrows():
     if row['temp_early'] == row['temp_late']:
         # single phase
         expanded_rows.append({
@@ -70,39 +130,65 @@ for _, row in df.iterrows():
                 'total': row['total'] / len(phases)
             })
 
-# transform list into df
 df_expanded = pd.DataFrame(expanded_rows)
 
-# calculate totals per (joined) phase AND social group
-phase_group_totals = df_expanded.groupby(['phase', 'social_group'])['total'].sum().reset_index()
-phase_group_totals.rename(columns={'total': 'phase_group_total'}, inplace=True)
+# iterate over all amulets
+total_expanded_rows = []
 
-# merge totals back to aggregate by form
-df_grouped = df_expanded.merge(phase_group_totals, on=['phase', 'social_group'])
-df_grouped = df_grouped.groupby(['phase', 'social_group', 'form', 'phase_group_total'], as_index=False)['total'].sum()
+for _, row in df_total.iterrows():
+    if row['temp_early'] == row['temp_late']:
+        total_expanded_rows.append({
+            'phase': row['temp_early'],
+            'social_group': row['social_group'],
+            'total_amulets': row['total_amulets']
+        })
+    else:
+        phases = [row['temp_early'], row['temp_late']]
+        for phase in phases:
+            total_expanded_rows.append({
+                'phase': phase,
+                'social_group': row['social_group'],
+                'total_amulets': row['total_amulets'] / len(phases)
+            })
 
-# percentage based on phase
-df_grouped['percentage'] = round(df_grouped['total'] * 100.0 / df_grouped['phase_group_total'], 2)
+df_total_expanded = pd.DataFrame(total_expanded_rows)
 
-# drop unneeded columns
-df_grouped = df_grouped.drop(['total', 'phase_group_total'], axis=1)
+# aggregate TOTAL amulets by phase and social group
+df_total_grouped = df_total_expanded.groupby(['phase', 'social_group'])['total_amulets'].sum().reset_index()
 
-# put in correct order
-df_grouped['phase'] = pd.Categorical(df_grouped['phase'], categories=phase_order, ordered=True)
+# aggregate SYMBOLS by phase, social group, and form
+df_symbols_grouped = df_expanded.groupby(['phase', 'social_group', 'form'], as_index=False)['total'].sum()
 
-# sort by phase and then type
-df_grouped = df_grouped.sort_values(['phase', 'social_group', 'form'])
+# merge both counts - symbols and total amulets
+df_final = df_symbols_grouped.merge(df_total_grouped, on=['phase', 'social_group'])
+
+# calculate percentage of symbols relative to ALL amulets
+df_final['percentage'] = round(df_final['total'] * 100.0 / df_final['total_amulets'], 2)
+
+form_name_mapping = {
+    'moon-related symbols': 'moon-related<br>symbols',
+    'hieroglyphic signs': 'hieroglyphic<br>signs',
+    'royal symbols': 'royal<br>symbols',
+    'sun-related symbols': 'sun-related<br>symbols',
+    'single/double ba bird': 'single/double<br>ba bird',
+    'winged motifs': 'winged<br>motifs',
+    'sphinx': 'sphinx',
+    'common symbols': 'common<br>symbols',
+    'symbols with animal heads': 'symbols with<br>animal heads',
+
+}
+
+df_final['form'] = df_final['form'].map(form_name_mapping)
 
 fig = px.bar(
-    df_grouped,
+    df_final,
     x='percentage',
     y='phase',
-    #text=df_grouped['percentage'].round(1),
     color='form',
     facet_row='social_group',
     template="plotly_white",
     barmode='stack',
-    title='Distribution of symbol amulets by social group and chronological phase (in %)',
+    title='Distribution of symbol amulets (excl. udjats) by social group and chronological phase (in %)',
     color_discrete_sequence=custom_colors,
     category_orders={"phase": phase_order, "social_group": ["royal", "elite", "non-elite"]}
 )
@@ -118,8 +204,7 @@ fig.update_layout(
     legend=dict(traceorder='grouped')
 )
 
-fig.update_traces(textposition='auto', textfont_size=3)
-fig.update_yaxes(title='')
+fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')
 
 pio.write_image(fig, 'images/chapter6/motifs_phase_symbols.png',scale=3, width=550, height=250)
