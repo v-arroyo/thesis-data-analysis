@@ -10,7 +10,7 @@ load_dotenv()
 
 engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
-animals_query = """
+rest_query = """
 WITH expanded_forms AS (
     SELECT
         a.amulet_id,
@@ -22,7 +22,7 @@ WITH expanded_forms AS (
     JOIN sites s ON s.site_id = a.site_id
     WHERE dating = 'napatan' 
         AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
-        AND a.type = 'animal' 
+        AND a.type NOT IN ('animal', 'deity', 'symbol') 
         AND a.form IS NOT NULL
         AND b.social_group IS NOT NULL
 
@@ -60,15 +60,11 @@ WITH expanded_forms AS (
 SELECT 
     region,
     social_group,
-    CASE 
-        WHEN form IN ('double frog', 'double ram') THEN 'double animals'
-        WHEN form IN ('hawk-headed crocodile', 'lion-headed fly', 'ram-headed scarab') THEN 'combination of animals'
-        WHEN form IN ('four apes', 'four-headed ram') THEN 'quadruple animals'
-        WHEN form IN ('cat', 'jackal', 'ibis', 'ape', 'crocodile', 'hippo', 'scarab', 
-            'vulture', 'hawk', 'bull', 'cow', 'lion', 'ram', 'snake', 'falcon') THEN 'animals associated with common egyptian deities'
-        WHEN form IN ('animals', 'bird', 'duck', 'fish', 'fly', 'frog', 'giraffe', 'goose', 'hare', 'hedgehog', 'lizard', 'monkey', 'monkeys', 
-            'pig', 'scorpion', 'sow', 'turtle') THEN 'common animals'
-        WHEN form IN ('feathers', 'vulture wings') THEN 'parts of animals'
+    CASE
+        WHEN form IN ('double eye', 'eye', 'face', 'hand', 'arms') THEN 'parts of the body'
+        WHEN form IN ('boy', 'twin boys', 'human figure', 'female', 'human with sun disc', 'man on horse', 'male with double crown') THEN 'human figures'
+        WHEN form IN ('papyrus', 'lotus', 'pomegranate') THEN 'symbolic plants'
+        WHEN form IN ('double leaf', 'flower', 'tree') THEN 'common plants'
         ELSE form
     END AS form,
     COUNT(amulet_id) AS total
@@ -88,7 +84,7 @@ WHERE b.dating = 'napatan' AND b.site_id IN (1,2,4,5,6,7,8,9,10)
 GROUP BY 1,2
 """
 
-df_animals = pd.read_sql(animals_query, engine)
+df_rest = pd.read_sql(rest_query, engine)
 df_total = pd.read_sql(total_amulets_query, engine)
 
 custom_colors = ['#8A9A5B', # sage green
@@ -107,21 +103,19 @@ custom_colors = ['#8A9A5B', # sage green
 df_total_grouped = df_total.groupby(['region', 'social_group'])['total_amulets'].sum().reset_index()
 
 # aggregate region by phase, social group, and form
-df_animals_grouped = df_animals.groupby(['region', 'social_group', 'form'], as_index=False)['total'].sum()
+df_rest_grouped = df_rest.groupby(['region', 'social_group', 'form'], as_index=False)['total'].sum()
 
 # merge both counts - region and total amulets
-df_final = df_animals_grouped.merge(df_total_grouped, on=['region', 'social_group'])
+df_final = df_rest_grouped.merge(df_total_grouped, on=['region', 'social_group'])
 
-# calculate percentage of animals relative to ALL amulets
+# calculate percentage of amulets relative to ALL amulets
 df_final['percentage'] = round(df_final['total'] * 100.0 / df_final['total_amulets'], 2)
 
 form_name_mapping = {
-    'animals associated with common egyptian deities': 'animals associated with<br>common egyptian deities',
-    'combination of animals': 'combination of elements<br>from different animals',
-    'double animals': 'double animals',
-    'quadruple animals': 'quadruple animals',
-    'common animals': 'common animals',
-    'parts of animals': 'parts of animals'
+    'parts of the body': 'parts of the body',
+    'human figures': 'human figures',
+    'symbolic plants': 'symbolic plants',
+    'common plants': 'common plants'
 }
 
 df_final['form'] = df_final['form'].map(form_name_mapping)
@@ -141,7 +135,7 @@ fig = px.bar(
     facet_row='social_group',
     template="plotly_white",
     barmode='stack',
-    title='Distribution of animal amulets by social group and region (in %)',
+    title='Distribution of nature and human amulets by social group and region (in %)',
     color_discrete_sequence=custom_colors,
     category_orders={"region": region_order, "social_group": ["royal", "elite", "non-elite"]}
 )
@@ -157,7 +151,7 @@ fig.update_layout(
 )
 
 fig.update_traces(textposition='auto', textfont_size=3)
-fig.update_yaxes(title='')
+fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/motifs_region_animals.png',scale=3, width=550, height=300)
+pio.write_image(fig, 'images/chapter6/motifs_region_nat-human.png',scale=3, width=550, height=250)

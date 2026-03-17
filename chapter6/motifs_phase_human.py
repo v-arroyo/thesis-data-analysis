@@ -165,6 +165,10 @@ form_name_mapping = {
 
 df_final['form'] = df_final['form'].map(form_name_mapping)
 
+df_final['phase'] = pd.Categorical(df_final['phase'], categories=phase_order, ordered=True)
+
+df_final = df_final.sort_values('phase')
+
 fig = px.bar(
     df_final,
     x='percentage',

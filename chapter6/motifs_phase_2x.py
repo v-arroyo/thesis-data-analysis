@@ -24,7 +24,6 @@ WHERE dating = 'napatan'
 	AND b.site_id IN (4,5,6,7,8,9,10)
 	AND a.form IS NOT NULL
     AND a.form2 IS NOT NULL
-    AND social_group = 'non-elite'
 GROUP BY 1,2,3,4,5
 """
 
@@ -71,23 +70,26 @@ for _, row in df.iterrows():
 
 df_expanded = pd.DataFrame(expanded_rows)
 
-# aggregate animals by phase, social group, and form
+# aggregate animals by phase, social group, and forms
 df_grouped = df_expanded.groupby(['phase', 'social_group', 'form', 'form2'], as_index=False)['total'].sum()
 
 df = df.sort_values('form', ascending=False)
+
+df_final['phase'] = pd.Categorical(df_final['phase'], categories=phase_order, ordered=True)
+
+df_final = df_final.sort_values('phase')
 
 fig = px.scatter(
     df_grouped,
     x='form2',
     y='form',
-    #text='total',
     size='total',
     color='phase',
     facet_row='social_group',
     template="plotly_white",
     title='Distribution of animal amulets by social group and chronological phase (in %)',
     color_discrete_sequence=custom_colors,
-    category_orders={"phase": phase_order, "social_group": ["non-elite"]}
+    category_orders={"phase": phase_order, "social_group": ["royal", "non-elite"]}
 )
 
 fig.update_layout(
@@ -100,8 +102,7 @@ fig.update_layout(
     margin=dict(l=0, r=10, t=20, b=0)
 )
 
-#fig.update_traces(textposition='auto', textfont_size=3)
-fig.update_yaxes(title='', matches=None)
+fig.update_yaxes(title='')
 fig.update_xaxes(title='')
 
 pio.write_image(fig, 'images/chapter6/motifs_phase_2x.png',scale=3, width=550, height=420)

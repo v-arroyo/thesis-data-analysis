@@ -22,7 +22,6 @@ WITH expanded_forms AS (
     JOIN burials b ON b.burial_id = a.burial_id
     WHERE dating = 'napatan' 
         AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
-        AND a.form IN ('udjat', 'quadruple udjat') 
         AND a.form IS NOT NULL
         AND b.social_group IS NOT NULL
 
@@ -37,8 +36,7 @@ WITH expanded_forms AS (
     FROM amulets a
     JOIN burials b ON b.burial_id = a.burial_id
     WHERE dating = 'napatan' 
-        AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
-        AND a.form2 IN ('udjat', 'quadruple udjat')
+        AND b.site_id IN (1,2,4,5,6,7,8,9,10)
         AND a.form2 IS NOT NULL
         AND b.social_group IS NOT NULL
 
@@ -63,7 +61,11 @@ SELECT
     temp_early, 
     temp_late,
     social_group,
-    form,
+    CASE
+        WHEN form = 'udjat' THEN 'udjat'
+        WHEN form = 'quadruple udjat' THEN 'quadruple udjat'
+        ELSE form
+    END AS form,
     COUNT(amulet_id) AS total
 FROM expanded_forms
 GROUP BY 1,2,3,4
@@ -100,7 +102,7 @@ phase_order = ["pre-25th", "25th", "EN", "MN", "LN"]
 
 expanded_rows = []
 
-# iterate over rows to find same phases (one row) or two phases (one row for each) then split evenly -- udjat
+# iterate over rows to find same phases (one row) or two phases (one row for each) then split evenly
 for _, row in df_udjat.iterrows():
     if row['temp_early'] == row['temp_late']:
         # single phase
@@ -155,6 +157,17 @@ df_final = df_udjat_grouped.merge(df_total_grouped, on=['phase', 'social_group']
 
 # calculate percentage of udjat relative to ALL amulets
 df_final['percentage'] = round(df_final['total'] * 100.0 / df_final['total_amulets'], 2)
+
+form_name_mapping = {
+    'udjat': 'udjat',
+    'quadruple udjat': 'quadruple udjat'
+}
+
+df_final['form'] = df_final['form'].map(form_name_mapping)
+
+df_final['phase'] = pd.Categorical(df_final['phase'], categories=phase_order, ordered=True)
+
+df_final = df_final.sort_values('phase')
 
 fig = px.bar(
     df_final,

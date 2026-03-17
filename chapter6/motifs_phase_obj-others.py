@@ -10,7 +10,7 @@ load_dotenv()
 
 engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
-symbols_query = """
+rest_query = """
 WITH expanded_forms AS (
     SELECT
         a.amulet_id,
@@ -22,7 +22,7 @@ WITH expanded_forms AS (
     JOIN burials b ON b.burial_id = a.burial_id
     WHERE dating = 'napatan' 
         AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
-        AND a.type = 'symbol' 
+        AND a.type NOT IN ('deity', 'symbol', 'animal', 'nature', 'human')
         AND a.form IS NOT NULL
         AND b.social_group IS NOT NULL
 
@@ -57,23 +57,20 @@ WITH expanded_forms AS (
         AND b.social_group IS NOT NULL
 )
 
-SELECT 
+SELECT
     temp_early, 
     temp_late,
     social_group,
-    CASE 
-        WHEN form IN ('horned lunar disc', 'lunar crescent') THEN 'moon-related symbols'
-        WHEN form IN ('ankh', 'nefer', 'sa sign', 'sema sign', 'nt sign', 'nb sign', 'basket') THEN 'hieroglyphic signs'
-        WHEN form IN ('crook', 'was scepter', 'whip', 'uraeus', 'double uraeus', 'hmhm crown', 'double feather') THEN 'royal symbols'
-        WHEN form IN ('akhet', 'sun boat', 'sun disc', 'horned sun disc') THEN 'sun-related symbols'
-        WHEN form IN ('ba bird', 'double ba bird') THEN 'single/double ba bird'
-        WHEN form IN ('winged griffin', 'winged scarab', 'winged snake', 'winged uraeus') THEN 'winged motifs'
-        WHEN form IN ('sphinx') THEN 'sphinx'
-        WHEN form IN ('menat', 'heart', 'djed', 'isis knot', 'ankh/sun disc/udjat') THEN 'common symbols'
-        WHEN form IN ('lion-headed uraeus', 'ram-headed sphinx') THEN 'symbols with animal heads'
+    CASE
+        WHEN form IN ('vase', 'libation bucket', 'jar') THEN 'vessels'
+        WHEN form IN ('headrest', 'offering table') THEN 'funerary objects'
+        WHEN form IN ('amulet case') THEN 'amulet cases'
+        WHEN form IN ('axe head', 'dovetail', 'sistrum', 'harpoon') THEN 'professional objects'
+        WHEN form IN ('cartouche') THEN 'written motifs'
+        WHEN form IN ('nugget', 'pillar', 'tablet', 'incised cylinder', 'pebble') THEN 'non-figurative motifs'
         ELSE form
     END AS form,
-    COUNT(amulet_id) AS total
+    COUNT(amulet_id) as total
 FROM expanded_forms
 GROUP BY 1,2,3,4
 """
@@ -90,27 +87,27 @@ WHERE b.dating = 'napatan' AND b.site_id IN (1,2,4,5,6,7,8,9,10)
 GROUP BY 1,2,3
 """
 
-df_symbols = pd.read_sql(symbols_query, engine)
+df_rest = pd.read_sql(rest_query, engine)
 df_total = pd.read_sql(total_amulets_query, engine)
 
 custom_colors = ['#8A9A5B', # sage green
                 '#7393B3', # blue grey
-                '#FFD700', # gold
                 '#A95C68', # puce (red)
+                '#40E0D0', # turquoise
                 '#4169E1', # royal blue
                 '#CCCCFF', # periwinkle (light purple)
                 '#F28C28', # cadmium orange
-                '#40E0D0', # turquoise
                 '#FF69B4', # hot pink
                 '#BF40BF', # bright purple
+                '#FFD700', # gold
 ]
 
 phase_order = ["pre-25th", "25th", "EN", "MN", "LN"]
 
 expanded_rows = []
 
-# iterate over rows to find same phases (one row) or two phases (one row for each) then split evenly -- symbols
-for _, row in df_symbols.iterrows():
+# iterate over rows to find same phases (one row) or two phases (one row for each) then split evenly -- rest
+for _, row in df_rest.iterrows():
     if row['temp_early'] == row['temp_late']:
         # single phase
         expanded_rows.append({
@@ -156,25 +153,22 @@ df_total_expanded = pd.DataFrame(total_expanded_rows)
 # aggregate TOTAL amulets by phase and social group
 df_total_grouped = df_total_expanded.groupby(['phase', 'social_group'])['total_amulets'].sum().reset_index()
 
-# aggregate SYMBOLS by phase, social group, and form
-df_symbols_grouped = df_expanded.groupby(['phase', 'social_group', 'form'], as_index=False)['total'].sum()
+# aggregate rest by phase, social group, and form
+df_rest_grouped = df_expanded.groupby(['phase', 'social_group', 'form'], as_index=False)['total'].sum()
 
-# merge both counts - symbols and total amulets
-df_final = df_symbols_grouped.merge(df_total_grouped, on=['phase', 'social_group'])
+# merge both counts - rest and total amulets
+df_final = df_rest_grouped.merge(df_total_grouped, on=['phase', 'social_group'])
 
-# calculate percentage of symbols relative to ALL amulets
-df_final['percentage'] = round(df_final['total'] * 100.0 / df_final['total_amulets'], 2)
+# calculate percentage of rest relative to ALL amulets
+df_final['percentage'] = round(df_final['total'] * 100.0 / df_final['total_amulets'], 3)
 
 form_name_mapping = {
-    'moon-related symbols': 'moon-related<br>symbols',
-    'hieroglyphic signs': 'hieroglyphic<br>signs',
-    'royal symbols': 'royal<br>symbols',
-    'sun-related symbols': 'sun-related<br>symbols',
-    'single/double ba bird': 'single/double<br>ba bird',
-    'winged motifs': 'winged<br>motifs',
-    'sphinx': 'sphinx',
-    'common symbols': 'common<br>symbols',
-    'symbols with animal heads': 'symbols with<br>animal heads'
+    'vessels': 'vessels',
+    'funerary objects': 'funerary objects',
+    'amulet cases': 'amulet cases',
+    'professional objects': 'professional objects',
+    'written motifs': 'written motifs',
+    'non-figurative motifs': 'non-figurative motifs',
 }
 
 df_final['form'] = df_final['form'].map(form_name_mapping)
@@ -188,10 +182,11 @@ fig = px.bar(
     x='percentage',
     y='phase',
     color='form',
+    #text=df_final['percentage'].round(2),
     facet_row='social_group',
     template="plotly_white",
     barmode='stack',
-    title='Distribution of symbol amulets (excl. udjats) by social group and chronological phase (in %)',
+    title='Distribution of object and miscellaneous amulets by social group and chronological phase (in %)',
     color_discrete_sequence=custom_colors,
     category_orders={"phase": phase_order, "social_group": ["royal", "elite", "non-elite"]}
 )
@@ -204,10 +199,12 @@ fig.update_layout(
     legend_title_text='',
     title_font=dict(size=6),
     margin=dict(l=0, r=10, t=20, b=0),
-    legend=dict(traceorder='grouped')
+    legend=dict(
+        traceorder='reversed')
 )
 
+fig.update_traces(textposition='outside', textfont_size=4)
 fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/motifs_phase_symbols.png',scale=3, width=550, height=250)
+pio.write_image(fig, 'images/chapter6/motifs_phase_obj-others.png',scale=3, width=550, height=250)
