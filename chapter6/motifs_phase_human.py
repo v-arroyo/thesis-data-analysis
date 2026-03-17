@@ -62,7 +62,7 @@ SELECT
     temp_late,
     social_group,
     CASE 
-        WHEN form IN ('double eye', 'eye', 'face', 'hand', 'arms') THEN 'parts of the body'
+        WHEN form IN ('double eye', 'eye', 'face', 'hand') THEN 'parts of the body'
         WHEN form IN ('boy', 'twin boys', 'human figure', 'female', 'human with sun disc', 'man on horse', 'male with double crown') THEN 'human figures'
         ELSE form
     END AS form,

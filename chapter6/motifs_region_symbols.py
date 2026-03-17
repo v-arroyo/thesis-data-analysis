@@ -62,7 +62,7 @@ SELECT
     social_group,
     CASE 
         WHEN form IN ('horned lunar disc', 'lunar crescent') THEN 'moon-related symbols'
-        WHEN form IN ('ankh', 'nefer', 'sa sign', 'sema sign', 'nt sign', 'nb sign', 'basket') THEN 'hieroglyphic signs'
+        WHEN form IN ('ankh', 'nefer', 'sa sign', 'sema sign', 'nt sign', 'nb sign', 'basket', 'arms') THEN 'hieroglyphic signs'
         WHEN form IN ('crook', 'was scepter', 'whip', 'uraeus', 'double uraeus', 'hmhm crown', 'double feather') THEN 'royal symbols'
         WHEN form IN ('akhet', 'sun boat', 'sun disc', 'horned sun disc') THEN 'sun-related symbols'
         WHEN form IN ('ba bird', 'double ba bird') THEN 'single/double ba bird'

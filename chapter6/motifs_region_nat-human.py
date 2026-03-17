@@ -61,7 +61,7 @@ SELECT
     region,
     social_group,
     CASE
-        WHEN form IN ('double eye', 'eye', 'face', 'hand', 'arms') THEN 'parts of the body'
+        WHEN form IN ('double eye', 'eye', 'face', 'hand') THEN 'parts of the body'
         WHEN form IN ('boy', 'twin boys', 'human figure', 'female', 'human with sun disc', 'man on horse', 'male with double crown') THEN 'human figures'
         WHEN form IN ('papyrus', 'lotus', 'pomegranate') THEN 'symbolic plants'
         WHEN form IN ('double leaf', 'flower', 'tree') THEN 'common plants'
