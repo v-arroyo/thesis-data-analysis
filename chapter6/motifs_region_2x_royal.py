@@ -57,9 +57,9 @@ fig.update_layout(xaxis=dict(automargin=True, title_standoff=0),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=4),
+        size=6),
     legend_title_text='',
-    title_font=dict(size=4),
+    title_font=dict(size=6),
     autosize=True,
     margin=dict(l=0, r=0, t=20, b=0),
     showlegend=False
@@ -67,6 +67,6 @@ fig.update_layout(xaxis=dict(automargin=True, title_standoff=0),
 
 fig.update_traces(textposition='middle right', textfont_size=4)
 fig.update_yaxes(title='', nticks=20)
-fig.update_xaxes(title='', matches=None, tickangle=45)
+fig.update_xaxes(title='', matches=None)
 
-pio.write_image(fig, 'images/chapter6/motifs_region_2x-royal.png',scale=3, width=350, height=170)
+pio.write_image(fig, 'images/chapter6/motifs_region_2x-royal.png',scale=3, width=550, height=200)

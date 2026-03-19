@@ -157,7 +157,7 @@ fig.update_layout(
 )
 
 fig.update_traces(textposition='auto', textfont_size=3)
-fig.update_yaxes(title='')
+fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')
 
 pio.write_image(fig, 'images/chapter6/motifs_region_animals.png',scale=3, width=550, height=300)

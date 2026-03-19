@@ -127,7 +127,7 @@ fig.update_layout(
 )
 
 fig.update_traces(textposition='outside', textfont_size=5)
-fig.update_yaxes(title='')
+fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')
 
 pio.write_image(fig, 'images/chapter6/distribution_meroe_intact.png',scale=3, width=550, height=250)

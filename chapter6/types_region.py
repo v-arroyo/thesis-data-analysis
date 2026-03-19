@@ -79,7 +79,7 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
-fig.update_yaxes(title='')
+fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')
 
 pio.write_image(fig, 'images/chapter6/types_region.png',scale=3, width=550, height=320)
