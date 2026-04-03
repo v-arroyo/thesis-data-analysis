@@ -49,7 +49,7 @@ fig = px.scatter(
     facet_col='temp',
     facet_row='social_group',
     template="plotly_white",
-    title='Distribution of amulets combining two deities by social group and chronological phase',
+    title='Distribution of amulets combining two or more deities by social group and chronological phase',
     color_discrete_sequence=custom_colors,
     category_orders={"temp": temp_order, "social_group": ["royal"]}
 )

@@ -175,6 +175,7 @@ fig = px.bar(
     y='phase',
     color='form',
     facet_row='social_group',
+    text='percentage',
     template="plotly_white",
     title='Distribution of udjat and quadruple udjat amulets by social group and chronological phase (in %)',
     color_discrete_sequence=custom_colors,

@@ -48,7 +48,7 @@ fig = px.scatter(
     facet_col='region',
     facet_row='social_group',
     template="plotly_white",
-    title='Distribution of amulets combining two deities by social group and region',
+    title='Distribution of amulets combining two or more deities by social group and region',
     color_discrete_sequence=custom_colors,
     category_orders={"region": region_order, "social_group": ["royal"]}
 )
