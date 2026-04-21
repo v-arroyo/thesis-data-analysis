@@ -99,6 +99,8 @@ df_grouped['phase'] = pd.Categorical(df_grouped['phase'], categories=phase_order
 
 df_grouped = df_grouped.sort_values('phase')
 
+print(df_grouped)
+
 fig = px.bar(
     df_grouped,
     x='percentage',

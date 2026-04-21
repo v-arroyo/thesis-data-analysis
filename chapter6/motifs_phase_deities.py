@@ -180,6 +180,7 @@ fig = px.bar(
     x='percentage',
     y='phase',
     color='form',
+    text='percentage',
     facet_row='social_group',
     template="plotly_white",
     barmode='stack',

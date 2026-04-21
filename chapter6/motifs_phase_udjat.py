@@ -173,6 +173,7 @@ fig = px.bar(
     df_final,
     x='percentage',
     y='phase',
+    text='percentage',
     color='form',
     facet_row='social_group',
     text='percentage',

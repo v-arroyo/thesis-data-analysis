@@ -69,7 +69,7 @@ SELECT
         WHEN form IN ('ba bird', 'double ba bird') THEN 'single/double ba bird'
         WHEN form IN ('winged griffin', 'winged scarab', 'winged snake', 'winged uraeus') THEN 'winged motifs'
         WHEN form IN ('sphinx') THEN 'sphinx'
-        WHEN form IN ('menat', 'heart', 'djed', 'isis knot', 'ankh/sun disc/udjat') THEN 'common symbols'
+        WHEN form IN ('menat', 'heart', 'djed', 'isis knot') THEN 'common symbols'
         WHEN form IN ('lion-headed uraeus', 'ram-headed sphinx') THEN 'symbols with animal heads'
         ELSE form
     END AS form,
@@ -187,6 +187,7 @@ fig = px.bar(
     df_final,
     x='percentage',
     y='phase',
+    text='percentage',
     color='form',
     facet_row='social_group',
     template="plotly_white",
