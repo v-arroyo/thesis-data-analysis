@@ -57,9 +57,9 @@ fig.update_layout(xaxis=dict(automargin=True, title_standoff=0),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=6),
+        size=8),
     legend_title_text='',
-    title_font=dict(size=6),
+    title_font=dict(size=8),
     autosize=True,
     margin=dict(l=0, r=0, t=10, b=0),
     showlegend=False

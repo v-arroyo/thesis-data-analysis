@@ -76,9 +76,9 @@ fig = px.line(
     df_final,
     x='region',
     y='percentage',
-    color='material_type',
-    facet_row='social_group',
-    text=df_final['percentage'].round(0),
+    color='social_group',
+    facet_row='material_type',
+    #text=df_final['percentage'].round(0),
     markers=True,
     template="plotly_white",
     title='Distribution of local and imported amulet materials by social group and region (in %)',
@@ -102,4 +102,4 @@ fig.update_traces(textposition='bottom right', textfont_size=4)
 fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/material_region_imp-exp2.png',scale=3, width=550, height=350)
+pio.write_image(fig, 'images/chapter6/material_region_imp-exp2.png',scale=3, width=550, height=250)

@@ -24,7 +24,7 @@ JOIN burials b ON b.burial_id = a.burial_id
 WHERE dating = 'napatan' 
 	AND b.site_id IN (1,2)
 	AND a.form IS NOT NULL
-    AND a.form2 IS NOT NULL
+    AND a.form2 NOT IN ('ape', 'ankh/sun disc/udjat', 'winged uraeus', 'giraffe')
     AND a.type = 'deity'
 GROUP BY 1,2,3,4,5,6
 """
@@ -58,16 +58,16 @@ fig.update_layout(xaxis=dict(automargin=True, title_standoff=0),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=6),
+        size=8),
     legend_title_text='',
-    title_font=dict(size=6),
+    title_font=dict(size=8),
     autosize=True,
-    margin=dict(l=0, r=0, t=30, b=0),
+    margin=dict(l=0, r=0, t=40, b=0),
     showlegend=False
 )
 
-fig.update_traces(textposition='top right', textfont_size=4)
+fig.update_traces(textposition='middle right', textfont_size=6)
 fig.update_yaxes(title='', nticks=20)
 fig.update_xaxes(title='', matches=None)
 
-pio.write_image(fig, 'images/chapter6/motifs_phase_2x-royal.png',scale=3, width=550, height=200)
+pio.write_image(fig, 'images/chapter6/motifs_phase_2x-royal.png',scale=3, width=550, height=220)
