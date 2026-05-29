@@ -121,7 +121,7 @@ fig = px.line(
     y="percentage",
     facet_row="social_group",
     color='material',
-    #text=df_final['percentage'].round(1),
+    text=df_final['percentage'].round(1),
     markers=True,
     title="Distribution of selected materials by social group and chronological phase (in %)",
     color_discrete_sequence=custom_colors,
@@ -135,7 +135,7 @@ fig.update_layout(
         color='black',
         size=8),
     legend_title_text='',
-    margin=dict(l=0, r=10, t=20, b=0),
+    margin=dict(l=0, r=10, t=40, b=0),
     title_font=dict(size=8)
 )
 
@@ -143,4 +143,4 @@ fig.update_layout(
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', matches=None)
 
-pio.write_image(fig, 'images/chapter6/material_phase_special.png',scale=3, width=550, height=350)
+pio.write_image(fig, 'images/chapter6/material_phase_special.png',scale=3, width=550, height=450)

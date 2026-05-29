@@ -12,14 +12,13 @@ engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_P
 
 query = """
 SELECT 
-    b.temp_early,
-    b.temp_late,
-    b.social_group,
-    COUNT(DISTINCT b.burial_id) as total_graves,
-    SUM(CASE WHEN a.amulet_id IS NULL THEN 1 ELSE 0 END) as zero_amulet_graves
-FROM burials b
-LEFT JOIN amulets a ON b.burial_id = a.burial_id
-WHERE b.dating = 'napatan' AND b.site_id IN (1,2,4,5,6,7,8,9,10)
+    temp_early,
+    temp_late,
+    social_group,
+    COUNT(DISTINCT burial_id) as total_graves,
+    COUNT(CASE WHEN contains_amulet = 1 THEN 1 END) as graves_with_amulets
+FROM burials
+WHERE dating = 'napatan' AND site_id IN (1,2,4,5,6,7,8,9,10)
 GROUP BY 1,2,3
 """
 
@@ -40,7 +39,7 @@ for _, row in df.iterrows():
             'phase': row['temp_early'],
             'social_group': row['social_group'],
             'total_graves': row['total_graves'],
-            'zero_amulet_graves': row['zero_amulet_graves']
+            'graves_with_amulets': row['graves_with_amulets']
         })
     else:
         # multi-phase: split the percentage evenly
@@ -50,7 +49,7 @@ for _, row in df.iterrows():
                 'phase': phase,
                 'social_group': row['social_group'],
                 'total_graves': row['total_graves'] / len(phases),
-                'zero_amulet_graves': row['zero_amulet_graves'] / len(phases)
+                'graves_with_amulets': row['graves_with_amulets'] / len(phases)
             })
 
 # transform list into df
@@ -58,11 +57,11 @@ df_expanded = pd.DataFrame(expanded_rows)
 
 df_grouped = df_expanded.groupby(['phase', 'social_group'], as_index=False).agg({
     'total_graves': 'sum',
-    'zero_amulet_graves': 'sum'
+    'graves_with_amulets': 'sum'
 })
 
 # percentage of faience amulets
-df_grouped['percentage'] = round(df_grouped['zero_amulet_graves'] * 100.0 / df_grouped['total_graves'], 1)
+df_grouped['percentage'] = round(df_grouped['graves_with_amulets'] * 100.0 / df_grouped['total_graves'], 1)
 
 # put in correct order
 df_grouped['phase'] = pd.Categorical(df_grouped['phase'], categories=phase_order, ordered=True)
@@ -78,7 +77,7 @@ fig = px.bar(
     barmode='group',
     facet_col='social_group',
     template="plotly_white",
-    title='Percentage of tombs without amulets by social group and chronological phase (in %)',
+    title='Percentage of tombs with amulets by social group and chronological phase',
     color_discrete_sequence=custom_colors,
     category_orders={"phase": phase_order, "social_group": ["royal", "elite", "non-elite"]}
 )
@@ -97,4 +96,4 @@ fig.update_traces(textposition='outside', textfont_size=5)
 fig.update_yaxes(title='')
 fig.update_xaxes(title='', matches=None)
 
-pio.write_image(fig, 'images/chapter6/distribution_median_phase.png',scale=3, width=550, height=250)
+pio.write_image(fig, 'images/chapter6/distribution_median_phase2.png',scale=3, width=550, height=250)
