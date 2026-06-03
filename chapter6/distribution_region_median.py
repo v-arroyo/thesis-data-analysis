@@ -107,4 +107,4 @@ fig.update_traces(textposition='auto', textfont_size=5)
 fig.update_yaxes(title='')
 fig.update_xaxes(title='', matches=None)
 
-pio.write_image(fig, 'images/chapter6/distribution_median_region.png',scale=3, width=550, height=250)
+pio.write_image(fig, 'images/chapter6/distribution_median_region2.png',scale=3, width=550, height=250)

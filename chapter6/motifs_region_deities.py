@@ -115,8 +115,8 @@ df_final = df_deities_grouped.merge(df_total_grouped, on=['region', 'social_grou
 df_final['percentage'] = round(df_final['total'] * 100.0 / df_final['total_amulets'], 2)
 
 form_name_mapping = {
-    'local deities and/or adaptations': 'local deities and/or<br>adaptations',
-    'deities from the egyptian pantheon': 'deities from the<br>egyptian pantheon'
+    'deities from the egyptian pantheon': 'deities from the<br>egyptian pantheon',
+    'local deities and/or adaptations': 'local deities and/or<br>adaptations'
 }
 
 df_final['form'] = df_final['form'].map(form_name_mapping)
@@ -131,7 +131,7 @@ fig = px.bar(
     df_final,
     x='percentage',
     y='region',
-    #text=df_grouped['percentage'].round(1),
+    text=df_final['percentage'].round(1),
     color='form',
     facet_row='social_group',
     template="plotly_white",

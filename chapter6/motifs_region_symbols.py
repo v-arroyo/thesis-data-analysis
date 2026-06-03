@@ -140,7 +140,7 @@ fig = px.bar(
     df_final,
     x='percentage',
     y='region',
-    #text=df_grouped['percentage'].round(1),
+    text=df_final['percentage'].round(1),
     color='form',
     facet_row='social_group',
     template="plotly_white",

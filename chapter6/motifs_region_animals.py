@@ -62,7 +62,7 @@ SELECT
     social_group,
     CASE 
         WHEN form IN ('double frog', 'double ram') THEN 'double animals'
-        WHEN form IN ('hawk-headed crocodile', 'lion-headed fly', 'ram-headed scarab') THEN 'combination of animals'
+        WHEN form IN ('hawk-headed crocodile', 'lion-headed fly', 'ram-headed scarab') THEN 'hybrid animals'
         WHEN form IN ('four apes', 'four-headed ram') THEN 'quadruple animals'
         WHEN form IN ('cat', 'jackal', 'ibis', 'ape', 'crocodile', 'hippo', 'scarab', 
             'vulture', 'hawk', 'bull', 'cow', 'lion', 'ram', 'snake', 'falcon') THEN 'animals associated with common egyptian deities'
@@ -117,7 +117,7 @@ df_final['percentage'] = round(df_final['total'] * 100.0 / df_final['total_amule
 
 form_name_mapping = {
     'animals associated with common egyptian deities': 'animals associated with<br>common egyptian deities',
-    'combination of animals': 'combination of elements<br>from different animals',
+    'hybrid animals': 'hybrid animals',
     'double animals': 'double animals',
     'quadruple animals': 'quadruple animals',
     'common animals': 'common animals',
