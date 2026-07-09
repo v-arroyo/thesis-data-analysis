@@ -68,7 +68,9 @@ GROUP BY 1,2,3
 
 df = pd.read_sql(query, engine)
 
-custom_colors = [ '#92cad1','#e9724d', '#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#e9724d', '#92cad1', '#d6d727']
+
+owner_order = ["king", "queen", "minor wife"]
 
 fig = px.bar(
     df,
@@ -81,7 +83,8 @@ fig = px.bar(
     title="Middle Napatan royal amulet motifs",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
-    template="plotly_white"
+    template="plotly_white",
+    category_orders={"owner": owner_order}
 )
 
 fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
@@ -90,8 +93,8 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
         yanchor="top",
         y=0.80,
         xanchor="right",
-        x=0.93,
-        traceorder='reversed'),
+        x=0.93),
+        #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',

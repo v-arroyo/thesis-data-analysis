@@ -92,7 +92,8 @@ GROUP BY 1,2,3
 df_deities = pd.read_sql(deities_query, engine)
 df_total = pd.read_sql(total_amulets_query, engine)
 
-custom_colors = ['#8A9A5B', # sage green
+custom_colors = [ '#F28C28', # cadmium orange,
+                '#8A9A5B', # sage green
                 '#7393B3', # blue grey
                 '#FFD700', # gold
                 '#A95C68', # puce (red)
@@ -180,7 +181,7 @@ fig = px.bar(
     x='percentage',
     y='phase',
     color='form',
-    text='percentage',
+    #text='percentage',
     facet_row='social_group',
     template="plotly_white",
     barmode='stack',

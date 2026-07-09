@@ -29,12 +29,14 @@ GROUP BY 1,2,3
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#e9724d', '#92cad1', '#d6d727']
+
+owner_order = ["king", "queen", "minor wife"]
 
 fig = px.bar(
     df,
-    x="count",
-    y="material",
+    x="material",
+    y="count",
     color="owner",
     facet_col="site_name",
     text='count',
@@ -42,16 +44,17 @@ fig = px.bar(
     title="25th Dynasty royal faience amulets",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
-    template="plotly_white"
+    template="plotly_white",
+    category_orders={"owner": owner_order}
 )
 
 fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
     legend=dict(
-        #orientation="h",
+        orientation="h",
         yanchor="bottom",
-        y=0.30,
+        y=-0.22,
         xanchor="center",
-        x=1.10),
+        x=0.40),
         #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -70,4 +73,4 @@ fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter4/25_amulets_mat_faience.png',scale=3, width=500, height=250)
+pio.write_image(fig, 'images/chapter4/25_amulets_mat_faience.png',scale=3, width=500, height=270)

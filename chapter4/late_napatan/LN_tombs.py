@@ -25,7 +25,7 @@ GROUP BY 1,2,3,4
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#92cad1','#e9724d', '#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#e9724d', '#92cad1', '#d6d727']
 
 fig = px.bar(
     df,
@@ -43,12 +43,12 @@ fig = px.bar(
 
 fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
     legend=dict(
-        #orientation="h",
+        orientation="h",
         yanchor="bottom",
-        y=0.30,
+        y=-0.35,
         xanchor="center",
-        x=1.10,
-        traceorder='reversed'),
+        x=0.40),
+        #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',

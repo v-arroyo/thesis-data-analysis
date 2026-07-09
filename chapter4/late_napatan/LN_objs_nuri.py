@@ -26,7 +26,7 @@ GROUP BY 1,2,3
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#92cad1','#e9724d', '#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#e9724d', '#92cad1', '#d6d727']
 
 fig = px.scatter(
     df,
@@ -35,7 +35,7 @@ fig = px.scatter(
     color="count",
     text="count",
     facet_col="site_name",
-    title="Late Napatan royal object types",
+    #title="Late Napatan royal object types",
     labels={"count": "Total", "site_name": "Site"},
     color_continuous_scale='Sunset',
     template="plotly_white"

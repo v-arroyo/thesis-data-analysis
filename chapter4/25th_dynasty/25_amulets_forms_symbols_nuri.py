@@ -72,7 +72,9 @@ GROUP BY 1,2,3,4
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d','#92cad1','#d6d727','#92cad1','#e9724d']
+custom_colors = ['#e9724d', '#92cad1', '#d6d727']
+
+owner_order = ["king", "queen", "minor wife"]
 
 fig = px.bar(
     df,
@@ -82,20 +84,21 @@ fig = px.bar(
     facet_col="site_name",
     text='total',
     barmode='stack',
-    title="25th Dynasty royal symbol amulets",
+    #title="25th Dynasty royal symbol amulets",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
-    template="plotly_white"
+    template="plotly_white",
+    category_orders={"owner": owner_order}
 )
 
 fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
     legend=dict(
-        #orientation="h",
-        yanchor="top",
-        y=0.65,
-        xanchor="right",
-        x=1.50,
-        traceorder='reversed'),
+        orientation="h",
+        yanchor="bottom",
+        y=-0.30,
+        xanchor="center",
+        x=0.40),
+        #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -109,8 +112,8 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='auto', textfont_size=6)
+fig.update_traces(textposition='auto', textfont_size=5)
 fig.update_xaxes(title_text='', matches=None)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter4/25_amulets_forms_symbols_nuri.png',scale=3, width=300, height=250)
+pio.write_image(fig, 'images/chapter4/25_amulets_forms_symbols_nuri.png',scale=3, width=500, height=220)

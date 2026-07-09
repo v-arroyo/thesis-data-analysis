@@ -26,7 +26,7 @@ GROUP BY 1,2,3
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#92cad1', '#e9724d','#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#92cad1', '#e9724d','#d6d727']
 
 fig = px.scatter(
     df,
@@ -59,7 +59,8 @@ fig.update_layout(
         #dtick=1),
     margin=dict(l=0, r=10, t=40, b=0),
     autosize=True,
-    title_font=dict(size=8)
+    title_font=dict(size=8),
+    bargap=0.1
 )
 
 fig.update_traces(textposition='middle right', textfont_size=6)
@@ -67,4 +68,4 @@ fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', categoryorder='category descending')
 fig.update_coloraxes(showscale=False)
 
-pio.write_image(fig, 'images/chapter4/early_objs_kurru.png',scale=3, width=250, height=350)
+pio.write_image(fig, 'images/chapter4/early_objs_kurru.png',scale=3, width=200, height=350)

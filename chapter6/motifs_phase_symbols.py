@@ -187,7 +187,7 @@ fig = px.bar(
     df_final,
     x='percentage',
     y='phase',
-    text='percentage',
+    #text='percentage',
     color='form',
     facet_row='social_group',
     template="plotly_white",

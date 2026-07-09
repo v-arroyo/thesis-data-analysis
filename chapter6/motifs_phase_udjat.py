@@ -86,13 +86,14 @@ GROUP BY 1,2,3
 df_udjat = pd.read_sql(udjat_query, engine)
 df_total = pd.read_sql(total_amulets_query, engine)
 
-custom_colors = ['#8A9A5B', # sage green
+custom_colors = [
                 '#7393B3', # blue grey
+                '#8A9A5B', # sage green
                 '#FFD700', # gold
                 '#A95C68', # puce (red)
                 '#4169E1', # royal blue
-                '#CCCCFF', # periwinkle (light purple)
                 '#F28C28', # cadmium orange
+                '#CCCCFF', # periwinkle (light purple)
                 '#40E0D0', # turquoise
                 '#FF69B4', # hot pink
                 '#BF40BF', # bright purple
@@ -176,7 +177,6 @@ fig = px.bar(
     text='percentage',
     color='form',
     facet_row='social_group',
-    text='percentage',
     template="plotly_white",
     title='Distribution of udjat and quadruple udjat amulets by social group and chronological phase (in %)',
     color_discrete_sequence=custom_colors,

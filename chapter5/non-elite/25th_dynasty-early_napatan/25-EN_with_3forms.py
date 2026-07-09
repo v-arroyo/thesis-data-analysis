@@ -66,3 +66,5 @@ fig.update_traces(marker=dict(cornerradius=5))
 fig.update_traces(textposition='top left', textfont_size=6)
 
 pio.write_image(fig, 'images/chapter5/25-EN_with_3forms.png',scale=4, width=450, height=300)
+
+print(df)

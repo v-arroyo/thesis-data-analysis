@@ -53,12 +53,12 @@ fig.update_layout(
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=6
+        size=12
     ),
     legend_title_text='',
     margin=dict(l=0, r=10, t=20, b=0),
     autosize=True,
-    title_font=dict(size=8),
+    title_font=dict(size=10),
     treemapcolorway=px.colors.qualitative.Pastel1
 )
 
@@ -66,3 +66,5 @@ fig.update_traces(marker=dict(cornerradius=5))
 fig.update_traces(textposition='top left', textfont_size=6)
 
 pio.write_image(fig, 'images/chapter5/25_with_3forms.png',scale=4, width=450, height=300)
+
+print(df)

@@ -102,4 +102,4 @@ fig.update_traces(textposition='bottom right', textfont_size=4)
 fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/material_region_imp-exp2.png',scale=3, width=550, height=250)
+pio.write_image(fig, 'images/chapter6/material_region_imp-exp.png',scale=3, width=550, height=250)

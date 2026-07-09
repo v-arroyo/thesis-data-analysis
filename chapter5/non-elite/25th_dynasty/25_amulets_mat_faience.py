@@ -52,14 +52,14 @@ fig.update_layout(yaxis=dict(categoryorder='total descending', automargin=True, 
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=6),
+        size=8),
     legend_title_text='',
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
     margin=dict(l=0, r=0, t=15, b=0),
     autosize=True,
-    title_font=dict(size=6)
+    title_font=dict(size=8)
 )
 
 fig.update_traces(textposition='outside', textfont_size=6, width=0.2)

@@ -26,7 +26,7 @@ GROUP BY 1,2,3
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#92cad1', '#e9724d','#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#e9724d', '#92cad1', '#d6d727']
 
 fig = px.bar(
     df,
@@ -36,7 +36,7 @@ fig = px.bar(
     facet_col="site_name",
     text='count',
     barmode='stack',
-    title="25th Dynasty royal amulet materials",
+    #title="25th Dynasty royal amulet materials",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
     template="plotly_white"
@@ -46,7 +46,7 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     legend=dict(
         orientation="h",
         yanchor="bottom",
-        y=-0.21,
+        y=-0.30,
         xanchor="center",
         x=0.40),
         #traceorder='reversed'),
@@ -60,11 +60,10 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
         #dtick=1),
     margin=dict(l=0, r=10, t=50, b=0),
     autosize=True,
-    title_font=dict(size=8),
-    showlegend=False
+    title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='outside', textfont_size=8)
+fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 

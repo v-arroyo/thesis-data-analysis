@@ -25,7 +25,9 @@ GROUP BY 1,2,3,4
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
+custom_colors = ['#e9724d', '#92cad1', '#d6d727']
+
+owner_order = ["king", "queen", "minor wife"]
 
 fig = px.bar(
     df,
@@ -38,17 +40,18 @@ fig = px.bar(
     title="25th Dynasty royal tomb structure",
     labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
     color_discrete_sequence=custom_colors,
-    template="plotly_white"
+    template="plotly_white",
+    category_orders={"owner": owner_order}
 )
 
 fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
     legend=dict(
-        #orientation="h",
+        orientation="h",
         yanchor="bottom",
-        y=0.40,
+        y=-0.18,
         xanchor="center",
-        x=1.10,
-        traceorder='reversed'),
+        x=0.40),
+        #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',

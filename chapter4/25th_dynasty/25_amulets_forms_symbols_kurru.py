@@ -72,7 +72,9 @@ GROUP BY 1,2,3,4
 
 df = pd.read_sql(query, engine)
 
-custom_colors = ['#e9724d','#92cad1','#d6d727','#92cad1','#e9724d']
+custom_colors = ['#e9724d', '#92cad1', '#d6d727']
+
+owner_order = ["king", "queen", "minor wife"]
 
 fig = px.bar(
     df,
@@ -85,7 +87,8 @@ fig = px.bar(
     title="25th Dynasty royal symbol amulets",
     labels={"owner": "owner", "artifact_type": "obj. type", "site_name": "site"},
     color_discrete_sequence=custom_colors,
-    template="plotly_white"
+    template="plotly_white",
+    category_orders={"owner": owner_order}
 )
 
 fig.update_layout(yaxis={'categoryorder': 'total ascending'}, 
@@ -114,4 +117,4 @@ fig.update_traces(textposition='auto', textfont_size=6)
 fig.update_xaxes(title_text='', matches=None)
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter4/25_amulets_forms_symbols_kurru.png',scale=3, width=300, height=250)
+pio.write_image(fig, 'images/chapter4/25_amulets_forms_symbols_kurru.png',scale=3, width=500, height=200)

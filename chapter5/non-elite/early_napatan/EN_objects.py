@@ -43,18 +43,18 @@ fig = px.bar(
     color="site_name",
     text="total",
     facet_col='temp',
-    title="Early Napatan and Early-Middle Napatan non-elite object types",
+    #title="Early Napatan and Early-Middle Napatan non-elite object types",
     labels={"site_name": "site", "temp": "phase", "total": "Total"},
     color_discrete_sequence=custom_colors,
     template="plotly_white")
 
 fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     legend=dict(
-        #orientation="h",
-        yanchor="middle",
-        y=0.60,
+        orientation="h",
+        yanchor="bottom",
+        y=-0.50,
         xanchor="center",
-        x=1.10,
+        x=0.35,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -66,12 +66,11 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
         #dtick=1),
     margin=dict(l=0, r=10, t=40, b=0),
     autosize=True,
-    title_font=dict(size=8),
-    showlegend=False
+    title_font=dict(size=8)
 )
 
 fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/EN_objects_MN.png',scale=3, width=550, height=200)
+pio.write_image(fig, 'images/chapter5/EN_objects_MN.png',scale=3, width=550, height=160)
