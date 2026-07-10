@@ -63,8 +63,8 @@ fig.update_layout(
 )
 
 fig.update_traces(textposition='middle right', textfont_size=6)
-fig.update_xaxes(title_text='', categoryorder='category ascending')
+fig.update_xaxes(title_text='', categoryorder='category ascending', range=[-0.2, len(df['owner'].unique())-0.1],)
 fig.update_yaxes(title_text='', categoryorder='category descending')
 fig.update_coloraxes(showscale=False)
 
-pio.write_image(fig, 'images/chapter4/middle_objs.png',scale=3, width=500, height=350)
+pio.write_image(fig, 'images/chapter4/middle_objs.png',scale=3, width=350, height=350)
