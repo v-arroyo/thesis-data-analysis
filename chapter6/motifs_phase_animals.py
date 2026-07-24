@@ -11,49 +11,18 @@ load_dotenv()
 engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 animals_query = """
-WITH expanded_forms AS (
+WITH forms AS (
     SELECT
         a.amulet_id,
         b.temp_early, 
         b.temp_late,
         b.social_group,
-        a.form as form
+        COALESCE(a.form2, a.form) AS form
     FROM amulets a
     JOIN burials b ON b.burial_id = a.burial_id
     WHERE dating = 'napatan' 
         AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
         AND a.type = 'animal' 
-        AND a.form IS NOT NULL
-        AND b.social_group IS NOT NULL
-
-    UNION ALL
-
-    SELECT
-        a.amulet_id,
-        b.temp_early, 
-        b.temp_late,
-        b.social_group,
-        a.form2 as form
-    FROM amulets a
-    JOIN burials b ON b.burial_id = a.burial_id
-    WHERE dating = 'napatan' 
-        AND b.site_id IN (1,2,4,5,6,7,8,9,10)
-        AND a.form2 IS NOT NULL
-        AND b.social_group IS NOT NULL
-
-    UNION ALL
-
-    SELECT
-        a.amulet_id,
-        b.temp_early, 
-        b.temp_late,
-        b.social_group,
-        a.form3 as form
-    FROM amulets a
-    JOIN burials b ON b.burial_id = a.burial_id
-    WHERE dating = 'napatan' 
-        AND b.site_id IN (1,2,4,5,6,7,8,9,10)  
-        AND a.form3 IS NOT NULL
         AND b.social_group IS NOT NULL
 )
 
@@ -73,7 +42,7 @@ SELECT
         ELSE form
     END AS form_category,
     COUNT(amulet_id) AS total
-FROM expanded_forms
+FROM forms
 GROUP BY 1,2,3,4
 """
 
@@ -165,12 +134,12 @@ df_final = df_animals_grouped.merge(df_total_grouped, on=['phase', 'social_group
 df_final['percentage'] = round(df_final['total'] * 100.0 / df_final['total_amulets'], 2)
 
 form_name_mapping = {
-    'animals associated with common egyptian deities': 'animals associated with<br>common egyptian deities',
+    'animals associated with common egyptian deities': 'animals associated with common egyptian deities',
     'hybrid animals': 'hybrid animals',
     'double animals': 'double animals',
     'quadruple animals': 'quadruple animals',
     'common animals': 'common animals',
-    'parts of animals': 'parts of<br>animals'
+    'parts of animals': 'parts of animals'
 }
 
 df_final['form_category'] = df_final['form_category'].map(form_name_mapping)
@@ -194,14 +163,24 @@ fig = px.bar(
 )
 
 fig.update_layout(
+    legend=dict(
+        orientation='h',
+        yanchor="middle",
+        y=-0.30,
+        xanchor="center",
+        x=0.40),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=6),
+        size=8),
     legend_title_text='',
-    title_font=dict(size=6),
+    title_font=dict(size=8),
     margin=dict(l=0, r=10, t=20, b=0)
 )
+
+for annotation in fig.layout.annotations:
+    if annotation.text.startswith("social_group="):
+        annotation.text = annotation.text.replace("social_group=", "")
 
 fig.update_traces(textposition='auto', textfont_size=3)
 fig.update_yaxes(title='', matches=None)

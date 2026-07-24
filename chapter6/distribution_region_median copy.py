@@ -56,6 +56,12 @@ fig = px.bar(
 )
 
 fig.update_layout(
+    legend=dict(
+        orientation='h',
+        yanchor="middle",
+        y=-0.13,
+        xanchor="center",
+        x=0.40),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -64,6 +70,10 @@ fig.update_layout(
     margin=dict(l=0, r=10, t=40, b=0),
     title_font=dict(size=8)
 )
+
+for annotation in fig.layout.annotations:
+    if annotation.text.startswith("social_group="):
+        annotation.text = annotation.text.replace("social_group=", "")
 
 fig.update_traces(textposition='auto', textfont_size=5)
 fig.update_yaxes(title='')

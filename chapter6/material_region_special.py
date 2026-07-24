@@ -82,7 +82,13 @@ fig = px.line(
     category_orders={"region": region_order, "social_group": ["royal", "elite", "non-elite"]}
 )
 
-fig.update_layout( 
+fig.update_layout(
+    legend=dict(
+        orientation='h',
+        yanchor="middle",
+        y=-0.10,
+        xanchor="center",
+        x=0.45), 
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -92,6 +98,10 @@ fig.update_layout(
     autosize=True,
     title_font=dict(size=8)
 )
+
+for annotation in fig.layout.annotations:
+    if annotation.text.startswith("social_group="):
+        annotation.text = annotation.text.replace("social_group=", "")
 
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', matches=None)

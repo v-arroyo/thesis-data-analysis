@@ -11,49 +11,18 @@ load_dotenv()
 engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 symbols_query = """
-WITH expanded_forms AS (
+WITH forms AS (
     SELECT
         a.amulet_id,
         s.region,
         b.social_group,
-        a.form as form
+        COALESCE(a.form2, a.form) AS form
     FROM amulets a
     JOIN burials b ON b.burial_id = a.burial_id
     JOIN sites s ON s.site_id = a.site_id
     WHERE dating = 'napatan' 
         AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
         AND a.type = 'symbol' 
-        AND a.form IS NOT NULL
-        AND b.social_group IS NOT NULL
-
-    UNION ALL
-
-    SELECT
-        a.amulet_id,
-        s.region,
-        b.social_group,
-        a.form2 as form
-    FROM amulets a
-    JOIN burials b ON b.burial_id = a.burial_id
-    JOIN sites s ON s.site_id = a.site_id
-    WHERE dating = 'napatan' 
-        AND b.site_id IN (1,2,4,5,6,7,8,9,10)
-        AND a.form2 IS NOT NULL
-        AND b.social_group IS NOT NULL
-
-    UNION ALL
-
-    SELECT
-        a.amulet_id,
-        s.region,
-        b.social_group,
-        a.form3 as form
-    FROM amulets a
-    JOIN burials b ON b.burial_id = a.burial_id
-    JOIN sites s ON s.site_id = a.site_id
-    WHERE dating = 'napatan' 
-        AND b.site_id IN (1,2,4,5,6,7,8,9,10)  
-        AND a.form3 IS NOT NULL
         AND b.social_group IS NOT NULL
 )
 
@@ -73,7 +42,7 @@ SELECT
         ELSE form
     END AS form,
     COUNT(amulet_id) AS total
-FROM expanded_forms
+FROM forms
 GROUP BY 1,2,3
 """
 
@@ -117,15 +86,15 @@ df_final = df_symbols_grouped.merge(df_total_grouped, on=['region', 'social_grou
 df_final['percentage'] = round(df_final['total'] * 100.0 / df_final['total_amulets'], 2)
 
 form_name_mapping = {
-    'moon-related symbols': 'moon-related<br>symbols',
-    'hieroglyphic signs': 'hieroglyphic<br>signs',
-    'royal symbols': 'royal<br>symbols',
-    'sun-related symbols': 'sun-related<br>symbols',
-    'single/double ba bird': 'single/double<br>ba bird',
-    'winged motifs': 'winged<br>motifs',
+    'moon-related symbols': 'moon-related symbols',
+    'hieroglyphic signs': 'hieroglyphic signs',
+    'royal symbols': 'royal symbols',
+    'sun-related symbols': 'sun-related symbols',
+    'single/double ba bird': 'single/double ba bird',
+    'winged motifs': 'winged motifs',
     'sphinx': 'sphinx',
-    'common symbols': 'common<br>symbols',
-    'symbols with animal heads': 'symbols with<br>animal heads'
+    'common symbols': 'common symbols',
+    'symbols with animal heads': 'symbols with animal heads'
 }
 
 df_final['form'] = df_final['form'].map(form_name_mapping)
@@ -135,6 +104,8 @@ region_order = ["lower nubia", "north upper nubia", "4th cataract", "meroe regio
 df_final['region'] = pd.Categorical(df_final['region'], categories=region_order, ordered=True)
 
 df_final = df_final.sort_values('region')
+
+print(df_final)
 
 fig = px.bar(
     df_final,
@@ -151,17 +122,27 @@ fig = px.bar(
 )
 
 fig.update_layout(
+    legend=dict(
+        orientation='h',
+        yanchor="middle",
+        y=-0.20,
+        xanchor="center",
+        x=0.40),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=6),
+        size=8),
     legend_title_text='',
-    title_font=dict(size=6),
+    title_font=dict(size=8),
     margin=dict(l=0, r=10, t=20, b=0)
 )
+
+for annotation in fig.layout.annotations:
+    if annotation.text.startswith("social_group="):
+        annotation.text = annotation.text.replace("social_group=", "")
 
 fig.update_traces(textposition='auto', textfont_size=3)
 fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/motifs_region_symbols.png',scale=3, width=550, height=250)
+pio.write_image(fig, 'images/chapter6/motifs_region_symbols.png',scale=3, width=550, height=350)

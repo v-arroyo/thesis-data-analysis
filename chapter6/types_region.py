@@ -69,7 +69,17 @@ fig = px.bar(
     category_orders={"region": region_order, "social_group": ["royal", "elite", "non-elite"]}
 )
 
+for annotation in fig.layout.annotations:
+    if annotation.text.startswith("social_group="):
+        annotation.text = annotation.text.replace("social_group=", "")
+
 fig.update_layout(
+    legend=dict(
+        orientation='h',
+        yanchor="middle",
+        y=-0.15,
+        xanchor="center",
+        x=0.40),
     font=dict(
         family="Verdana, sans-serif",
         color='black',

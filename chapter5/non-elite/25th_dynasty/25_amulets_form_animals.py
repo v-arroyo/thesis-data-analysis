@@ -51,7 +51,7 @@ fig.update_layout(yaxis=dict(categoryorder='total ascending', automargin=True, t
         yanchor="bottom",
         y=0.40,
         xanchor="center",
-        x=1.10,
+        x=0.80,
         #traceorder='reversed'),
     ),
     font=dict(
@@ -62,7 +62,7 @@ fig.update_layout(yaxis=dict(categoryorder='total ascending', automargin=True, t
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
-    margin=dict(l=0, r=0, t=15, b=0),
+    margin=dict(l=0, r=0, t=20, b=0),
     autosize=True,
     title_font=dict(size=8)
 )

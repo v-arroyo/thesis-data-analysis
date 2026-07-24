@@ -103,6 +103,10 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
+for annotation in fig.layout.annotations:
+    if annotation.text.startswith("social_group="):
+        annotation.text = annotation.text.replace("social_group=", "")
+
 fig.update_traces(textposition='auto', textfont_size=5)
 fig.update_yaxes(title='')
 fig.update_xaxes(title='', matches=None)

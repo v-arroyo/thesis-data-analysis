@@ -63,7 +63,6 @@ fig.update_layout(
 )
 
 fig.update_traces(textposition='middle right', textfont_size=6)
-fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', categoryorder='category descending')
 fig.update_xaxes(
     title_text='',

@@ -24,38 +24,39 @@ WITH expanded_forms AS (
         AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
         AND a.type = 'deity' 
         AND a.form IS NOT NULL
-        AND b.social_group IS NOT NULL
-
-    UNION ALL
-
-    SELECT
-        a.amulet_id,
-        b.temp_early, 
-        b.temp_late,
-        b.social_group,
-        a.form2 as form
-    FROM amulets a
-    JOIN burials b ON b.burial_id = a.burial_id
-    WHERE dating = 'napatan' 
-        AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
         AND a.form2 IS NOT NULL
         AND b.social_group IS NOT NULL
 
-    UNION ALL
+#     UNION ALL
 
-    SELECT
-        a.amulet_id,
-        b.temp_early, 
-        b.temp_late,
-        b.social_group,
-        a.form3 as form
-    FROM amulets a
-    JOIN burials b ON b.burial_id = a.burial_id
-    WHERE dating = 'napatan' 
-        AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
-        AND a.form3 IS NOT NULL
-        AND b.social_group IS NOT NULL
-)
+#     SELECT
+#         a.amulet_id,
+#         b.temp_early, 
+#         b.temp_late,
+#         b.social_group,
+#         a.form2 as form
+#     FROM amulets a
+#     JOIN burials b ON b.burial_id = a.burial_id
+#     WHERE dating = 'napatan' 
+#         AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
+#         AND a.form2 IS NOT NULL
+#         AND b.social_group IS NOT NULL
+
+#     UNION ALL
+
+#     SELECT
+#         a.amulet_id,
+#         b.temp_early, 
+#         b.temp_late,
+#         b.social_group,
+#         a.form3 as form
+#     FROM amulets a
+#     JOIN burials b ON b.burial_id = a.burial_id
+#     WHERE dating = 'napatan' 
+#         AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
+#         AND a.form3 IS NOT NULL
+#         AND b.social_group IS NOT NULL
+# )
 
 SELECT 
     temp_early, 
@@ -166,8 +167,8 @@ df_final = df_deities_grouped.merge(df_total_grouped, on=['phase', 'social_group
 df_final['percentage'] = round(df_final['total'] * 100.0 / df_final['total_amulets'], 2)
 
 form_name_mapping = {
-    'local deities and/or adaptations': 'local deities and/or<br>adaptations',
-    'deities from the egyptian pantheon': 'deities from the<br>egyptian pantheon'
+    'local deities and/or adaptations': 'local deities and/or adaptations',
+    'deities from the egyptian pantheon': 'deities from the egyptian pantheon'
 }
 
 df_final['form'] = df_final['form'].map(form_name_mapping)
@@ -191,14 +192,25 @@ fig = px.bar(
 )
 
 fig.update_layout(
+    legend=dict(
+        orientation='h',
+        yanchor="middle",
+        y=-0.15,
+        xanchor="center",
+        x=0.40),
+        #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=6),
+        size=8),
     legend_title_text='',
-    title_font=dict(size=6),
+    title_font=dict(size=8),
     margin=dict(l=0, r=10, t=20, b=0)
 )
+
+for annotation in fig.layout.annotations:
+    if annotation.text.startswith("social_group="):
+        annotation.text = annotation.text.replace("social_group=", "")
 
 fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')

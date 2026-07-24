@@ -112,6 +112,12 @@ fig = px.bar(
 )
 
 fig.update_layout(
+    legend=dict(
+        orientation='h',
+        yanchor="middle",
+        y=-0.15,
+        xanchor="center",
+        x=0.40),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -122,7 +128,11 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
+for annotation in fig.layout.annotations:
+    if annotation.text.startswith("social_group="):
+        annotation.text = annotation.text.replace("social_group=", "")
+
 fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/types_phase.png',scale=3, width=550, height=350)
+pio.write_image(fig, 'images/chapter6/types_phase.png',scale=3, width=550, height=300)

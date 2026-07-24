@@ -55,7 +55,7 @@ fig.update_layout(yaxis={'categoryorder': 'total ascending'},
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='middle right', textfont_size=5)
+fig.update_traces(textposition='middle right', textfont_size=7)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='', categoryorder='category descending')
 fig.update_coloraxes(showscale=False)

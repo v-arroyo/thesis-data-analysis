@@ -53,12 +53,13 @@ fig = px.bar(
 
 fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
     legend=dict(
-        #orientation="h",
-        yanchor="bottom",
-        y=0.30,
+        orientation="h",
+        yanchor="middle",
+        y=-0.15,
         xanchor="center",
-        x=1.10),
-        #traceorder='reversed'),
+        x=0.45,
+        #traceorder='reversed')
+    ),
     font=dict(
         family="Verdana, sans-serif",
         color='black',

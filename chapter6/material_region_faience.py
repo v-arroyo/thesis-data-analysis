@@ -73,7 +73,7 @@ fig = px.line(
     df_final,
     x='region',
     y='percentage',
-    #text=df_final['percentage'].round(0),
+    text=df_final['percentage'].round(0),
     color='social_group',
     markers=True,
     facet_row='material',
@@ -84,6 +84,12 @@ fig = px.line(
 )
 
 fig.update_layout(
+    legend=dict(
+        orientation='h',
+        yanchor="middle",
+        y=-0.15,
+        xanchor="center",
+        x=0.45),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -94,7 +100,11 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='top right', textfont_size=4)
+for annotation in fig.layout.annotations:
+    if annotation.text.startswith("material=faience"):
+        annotation.text = annotation.text.replace("material=faience", "")
+
+fig.update_traces(textposition='top right', textfont_size=5)
 fig.update_yaxes(title='')
 fig.update_xaxes(title='')
 

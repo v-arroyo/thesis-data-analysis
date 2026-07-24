@@ -56,10 +56,11 @@ fig = px.bar(
 
 fig.update_layout(
     legend=dict(
-        yanchor="bottom",
-        y=0.30,
+        orientation='h',
+        yanchor="middle",
+        y=-0.25,
         xanchor="center",
-        x=1.10,
+        x=0.40,
         traceorder='reversed'), 
     font=dict(
         family="Verdana, sans-serif",

@@ -122,12 +122,19 @@ fig = px.line(
     color='social_group',
     facet_row='material',
     template="plotly_white",
+    markers=True,
     title='Distribution of faience amulets by social group and chronological phase (in %)',
     color_discrete_sequence=custom_colors,
     category_orders={"phase": phase_order, "social_group": ["royal", "elite", "non-elite"]}
 )
 
 fig.update_layout(
+    legend=dict(
+        orientation='h',
+        yanchor="middle",
+        y=-0.13,
+        xanchor="center",
+        x=0.40),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -138,7 +145,11 @@ fig.update_layout(
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='bottom center', textfont_size=4)
+for annotation in fig.layout.annotations:
+    if annotation.text.startswith("material=faience"):
+        annotation.text = annotation.text.replace("material=faience", "")
+
+fig.update_traces(textposition='bottom center', textfont_size=6)
 fig.update_yaxes(title='')
 fig.update_xaxes(title='')
 

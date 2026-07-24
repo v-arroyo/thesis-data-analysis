@@ -65,6 +65,14 @@ fig.update_layout(xaxis=dict(automargin=True, title_standoff=0),
     showlegend=False
 )
 
+for annotation in fig.layout.annotations:
+    if annotation.text.startswith("social_group="):
+        annotation.text = annotation.text.replace("social_group=", "")
+
+for annotation in fig.layout.annotations:
+    if annotation.text.startswith("region="):
+        annotation.text = annotation.text.replace("region=", "")
+
 fig.update_traces(textposition='middle right', textfont_size=6)
 fig.update_yaxes(title='', nticks=20)
 fig.update_xaxes(title='', matches=None, tickangle=45)

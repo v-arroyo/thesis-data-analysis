@@ -42,7 +42,7 @@ WITH expanded_forms AS (
         AND s.site_id IN (1)
         AND a.form2 IS NOT NULL
         AND a.type = 'deity'
-        AND a.form2 != 'giraffe'
+        AND a.form2 NOT IN ('giraffe', 'ape', 'ankh/sun disc/udjat')
 
     UNION ALL
 

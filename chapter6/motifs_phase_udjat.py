@@ -11,49 +11,18 @@ load_dotenv()
 engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 udjat_query = """
-WITH expanded_forms AS (
+WITH forms AS (
     SELECT
         a.amulet_id,
         b.temp_early, 
         b.temp_late,
         b.social_group,
-        a.form as form
+        COALESCE(a.form2, a.form) AS form
     FROM amulets a
     JOIN burials b ON b.burial_id = a.burial_id
     WHERE dating = 'napatan' 
         AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
-        AND a.form IS NOT NULL
-        AND b.social_group IS NOT NULL
-
-    UNION ALL
-
-    SELECT
-        a.amulet_id,
-        b.temp_early, 
-        b.temp_late,
-        b.social_group,
-        a.form2 as form
-    FROM amulets a
-    JOIN burials b ON b.burial_id = a.burial_id
-    WHERE dating = 'napatan' 
-        AND b.site_id IN (1,2,4,5,6,7,8,9,10)
-        AND a.form2 IS NOT NULL
-        AND b.social_group IS NOT NULL
-
-    UNION ALL
-
-    SELECT
-        a.amulet_id,
-        b.temp_early, 
-        b.temp_late,
-        b.social_group,
-        a.form3 as form
-    FROM amulets a
-    JOIN burials b ON b.burial_id = a.burial_id
-    WHERE dating = 'napatan' 
-        AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
-        AND a.form3 IN ('udjat', 'quadruple udjat') 
-        AND a.form3 IS NOT NULL
+        AND a.form IN ('udjat', 'quadruple udjat') 
         AND b.social_group IS NOT NULL
 )
 
@@ -67,7 +36,7 @@ SELECT
         ELSE form
     END AS form,
     COUNT(amulet_id) AS total
-FROM expanded_forms
+FROM forms
 GROUP BY 1,2,3,4
 """
 
@@ -174,25 +143,34 @@ fig = px.bar(
     df_final,
     x='percentage',
     y='phase',
-    text='percentage',
+    #text='percentage',
     color='form',
     facet_row='social_group',
     template="plotly_white",
     title='Distribution of udjat and quadruple udjat amulets by social group and chronological phase (in %)',
     color_discrete_sequence=custom_colors,
-    labels={"social_group": "social group"},
     category_orders={"phase": phase_order, "social_group": ["royal", "elite", "non-elite"]}
 )
 
 fig.update_layout(
+    legend=dict(
+        orientation='h',
+        yanchor="middle",
+        y=-0.12,
+        xanchor="center",
+        x=0.40),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=6),
+        size=8),
     legend_title_text='',
-    title_font=dict(size=6),
+    title_font=dict(size=8),
     margin=dict(l=0, r=10, t=20, b=0)
 )
+
+for annotation in fig.layout.annotations:
+    if annotation.text.startswith("social_group="):
+        annotation.text = annotation.text.replace("social_group=", "")
 
 fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')

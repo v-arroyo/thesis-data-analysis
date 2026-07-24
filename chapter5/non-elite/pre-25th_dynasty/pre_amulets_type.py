@@ -30,11 +30,11 @@ custom_colors = ['#e9724d', '#92cad1', '#d6d727', '#79ccb3', '#868686']
 
 fig = px.bar(
     df,
-    x="type",
-    y="total",
+    x="total",
+    y="type",
     color="site_name",
     text="total",
-    barmode='group',
+    barmode='stack',
     title="Pre-25th Dynasty non-elite amulet types",
     labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
     color_discrete_sequence=custom_colors,
@@ -43,12 +43,12 @@ fig = px.bar(
 
 fig.update_layout(xaxis={'categoryorder': 'total descending'}, 
     legend=dict(
-        #orientation="h",
-        yanchor="bottom",
-        y=0.30,
+        orientation="h",
+        yanchor="middle",
+        y=-0.50,
         xanchor="center",
-        x=1.10,
-        traceorder='reversed'),
+        x=0.40),
+        #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -66,4 +66,4 @@ fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/pre_amulets_type.png',scale=3, width=550, height=250)
+pio.write_image(fig, 'images/chapter5/pre_amulets_type.png',scale=3, width=550, height=150)

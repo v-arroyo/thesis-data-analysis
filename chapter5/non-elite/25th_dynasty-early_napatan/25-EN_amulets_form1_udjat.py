@@ -43,7 +43,7 @@ fig = px.bar(
     y="form",
     color="site_name",
     text="total",
-    barmode='stack',
+    barmode='group',
     title="25th Dynasty-Early Napatan non-elite udjat and quadruple udjat amulets",
     labels={"super": "superstructure", "sub": "substructure", "site_name": "site"},
     color_discrete_sequence=custom_colors,
@@ -52,12 +52,12 @@ fig = px.bar(
 
 fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, title_standoff=0), 
     legend=dict(
-        #orientation="h",
-        yanchor="bottom",
-        y=0.20,
+        orientation="h",
+        yanchor="middle",
+        y=-0.20,
         xanchor="center",
-        x=1.10),
-        #traceorder='reversed'),
+        x=0.40,
+        traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -75,4 +75,4 @@ fig.update_traces(textposition='outside', textfont_size=5)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25-EN_amulets_form_udjat.png',scale=3, width=550, height=200)
+pio.write_image(fig, 'images/chapter5/25-EN_amulets_form_udjat.png',scale=3, width=650, height=200)

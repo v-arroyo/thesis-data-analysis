@@ -48,7 +48,7 @@ fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, 
         yanchor="bottom",
         y=0.40,
         xanchor="center",
-        x=1.10,
+        x=0.80,
         traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
@@ -58,7 +58,7 @@ fig.update_layout(xaxis=dict(categoryorder='total descending', automargin=True, 
     #yaxis=dict(
         #tickmode='linear',
         #dtick=1),
-    margin=dict(l=0, r=0, t=15, b=0),
+    margin=dict(l=0, r=0, t=20, b=0),
     autosize=True,
     title_font=dict(size=8)
 )
