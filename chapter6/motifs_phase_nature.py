@@ -138,6 +138,8 @@ df_final['phase'] = pd.Categorical(df_final['phase'], categories=phase_order, or
 
 df_final = df_final.sort_values('phase')
 
+print(df_final)
+
 fig = px.bar(
     df_final,
     x='percentage',

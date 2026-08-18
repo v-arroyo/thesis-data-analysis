@@ -15,15 +15,12 @@ SELECT
 	temp_early,
     temp_late,
     social_group,
-    CASE 
-        WHEN m.material_local = 1 THEN 'local'
-        WHEN m.material_imported = 1 THEN 'imported'
-    END AS material_type,
+    m.material_source1 AS source,
     COUNT(*) AS total
 FROM burials b
 JOIN amulets a ON a.burial_id = b.burial_id
 JOIN materials m ON m.material_name = a.material
-WHERE dating = 'napatan' AND b.site_id IN (1,2,4,5,6,7,8,9,10) AND (temp_early = '25th' OR temp_late = 'EN') AND social_group = 'non-elite'
+WHERE dating = 'napatan' AND b.site_id IN (1,2,4,5,6,7,8,9,10) AND social_group = 'non-elite' AND material != 'faience'
 GROUP BY 1,2,3,4
 """
 

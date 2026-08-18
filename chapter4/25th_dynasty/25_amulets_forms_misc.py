@@ -112,7 +112,7 @@ fig.update_layout(xaxis={'categoryorder': 'total descending'},
     title_font=dict(size=8)
 )
 
-fig.update_traces(textposition='inside', textfont_size=6)
+fig.update_traces(textposition='auto', textfont_size=6)
 fig.update_xaxes(title_text='', matches=None)
 fig.update_yaxes(title_text='')
 
