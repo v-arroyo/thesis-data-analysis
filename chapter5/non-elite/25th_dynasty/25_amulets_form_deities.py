@@ -27,8 +27,6 @@ WHERE
     AND s.site_id IN (4,5,6,7,8,9,10)
     and social_group = 'non-elite'
     and type = 'deity'
-    and form2 is null
-    and form3 is null
 GROUP BY 1,2
 """
 

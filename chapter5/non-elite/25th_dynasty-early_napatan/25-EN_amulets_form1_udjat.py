@@ -26,8 +26,6 @@ WHERE
     AND temp = '25th-EN'
     AND s.site_id IN (4,5,6,7,8,9,10)
     AND a.form IS NOT NULL
-    AND a.form2 IS NULL
-    AND a.form3 IS NULL
     AND social_group = 'non-elite'
     AND form IN ('udjat', 'quadruple udjat')
 GROUP BY 1,2

@@ -26,8 +26,6 @@ WHERE
     AND temp = '25th-EN'
     AND s.site_id IN (4,5,6,7,8,9,10)
     AND a.form IS NOT NULL
-    AND a.form2 IS NULL
-    AND a.form3 IS NULL
     AND social_group = 'non-elite'
     AND type IN ('deity')
 GROUP BY 1,2
@@ -75,4 +73,4 @@ fig.update_traces(textposition='outside', textfont_size=5)
 fig.update_xaxes(title_text='')
 fig.update_yaxes(title_text='')
 
-pio.write_image(fig, 'images/chapter5/25-EN_amulets_form_deity.png',scale=3, width=550, height=350)
+pio.write_image(fig, 'images/chapter5/25-EN_amulets_form_deity.png',scale=3, width=550, height=400)

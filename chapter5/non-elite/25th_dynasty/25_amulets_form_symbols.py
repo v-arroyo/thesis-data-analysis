@@ -24,8 +24,6 @@ WHERE
     AND a.form != 'udjat'
     and social_group = 'non-elite'
     and type = 'symbol'
-    and form2 is null
-    and form3 is null
 GROUP BY 1,2
 """
 

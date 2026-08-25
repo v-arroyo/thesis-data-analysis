@@ -41,7 +41,18 @@ GROUP BY 1,2
 df_mat = pd.read_sql(mat_query, engine)
 df_total = pd.read_sql(total_amulets_query, engine)
 
-custom_colors = ['#C0C0C0']
+custom_colors = [ '#F28C28', # cadmium orange
+                '#8A9A5B', # sage green
+                '#7393B3', # blue grey
+                '#FFD700', # gold
+                '#A95C68', # puce (red)
+                '#40E0D0', # turquoise
+                '#FF69B4', # hot pink
+                '#4169E1', # royal blue
+                '#CCCCFF', # periwinkle (light purple)
+                '#F28C28', # cadmium orange
+                '#BF40BF', # bright purple
+]
 
 region_order = ["lower nubia", "north upper nubia", "4th cataract", "meroe region"]
 
@@ -57,7 +68,7 @@ df_mat_grouped = df_mat.groupby(['region', 'social_group', 'source'], as_index=F
 df_final = df_mat_grouped.merge(df_total_grouped, on=['region', 'social_group'])
 
 # calculate percentage of materials relative to ALL amulets
-df_final['percentage'] = round(df_final['total'] * 100.0 / df_final['total_amulets'], 2)
+df_final['percentage'] = round(df_final['total'] * 100.0 / df_final['total_amulets'], 1)
 
 df_final['region'] = pd.Categorical(df_final['region'], categories=region_order, ordered=True)
 
@@ -69,8 +80,9 @@ fig = px.scatter(
     df_final,
     x='source',
     y='region',
+    color='social_group',
     facet_row='social_group',
-    text=df_final['percentage'].round(2),
+    text=df_final['percentage'],
     template="plotly_white",
     title='Distribution of local and imported amulet materials by social group and region (in %)',
     color_discrete_sequence=custom_colors,
@@ -81,7 +93,7 @@ fig.update_layout(
     legend=dict(
         orientation='h',
         yanchor="middle",
-        y=-0.15,
+        y=-0.28,
         xanchor="center",
         x=0.45),
     font=dict(
@@ -98,8 +110,8 @@ for annotation in fig.layout.annotations:
     if annotation.text.startswith("social_group="):
         annotation.text = annotation.text.replace("social_group=", "")
 
-fig.update_traces(textposition='middle right', textfont_size=5)
+fig.update_traces(textposition='middle right', textfont_size=7, marker_size=10)
 fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'images/chapter6/material_region_imp-exp.png',scale=3, width=550, height=300)
+pio.write_image(fig, 'images/chapter6/material_region_imp-exp.png',scale=3, width=550, height=280)

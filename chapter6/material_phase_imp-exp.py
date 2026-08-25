@@ -43,7 +43,18 @@ GROUP BY 1,2,3
 df_mat = pd.read_sql(mat_query, engine)
 df_total = pd.read_sql(total_amulets_query, engine)
 
-custom_colors = ['#C0C0C0']
+custom_colors = [ '#F28C28', # cadmium orange
+                '#8A9A5B', # sage green
+                '#7393B3', # blue grey
+                '#FFD700', # gold
+                '#A95C68', # puce (red)
+                '#40E0D0', # turquoise
+                '#FF69B4', # hot pink
+                '#4169E1', # royal blue
+                '#CCCCFF', # periwinkle (light purple)
+                '#F28C28', # cadmium orange
+                '#BF40BF', # bright purple
+]
 
 phase_order = ["pre-25th", "25th", "EN", "MN", "LN"]
 
@@ -118,8 +129,9 @@ fig = px.scatter(
     df_final,
     x='source',
     y='phase',
+    color='social_group',
     facet_row='social_group',
-    text=df_final['percentage'].round(2),
+    text=df_final['percentage'],
     template="plotly_white",
     title='Distribution of local and imported amulet materials by social group and chronological phase (in %)',
     color_discrete_sequence=custom_colors,
@@ -130,7 +142,7 @@ fig.update_layout(
     legend=dict(
         orientation='h',
         yanchor="middle",
-        y=-0.08,
+        y=-0.22,
         xanchor="center",
         x=0.40),
     font=dict(
@@ -147,7 +159,7 @@ for annotation in fig.layout.annotations:
     if annotation.text.startswith("social_group="):
         annotation.text = annotation.text.replace("social_group=", "")
 
-fig.update_traces(textposition='middle right', textfont_size=5)
+fig.update_traces(textposition='middle right', textfont_size=7, marker_size=10)
 fig.update_yaxes(title='', matches=None)
 fig.update_xaxes(title='')
 
