@@ -11,19 +11,20 @@ load_dotenv()
 engine = create_engine(f'mysql+pymysql://{os.getenv("DB_USER")}:{os.getenv("DB_PASSWORD")}@localhost/{os.getenv("DB_NAME")}')
 
 query = """
-WITH total_deities AS (
+WITH forms AS (
     SELECT 
-        COUNT(amulet_id) AS total_count
+        a.amulet_id,
+        b.social_group,
+        a.form
     FROM amulets a
     JOIN burials b ON b.burial_id = a.burial_id
     WHERE dating = 'napatan' 
         AND b.site_id IN (1,2,4,5,6,7,8,9,10)
         AND a.type = 'deity'
-        AND a.form NOT IN ('deity', 'deities')
-        AND social_group = 'non-elite'
+        AND a.form NOT IN ('deity', 'deities', 'goddess')
 )
 SELECT
-    b.social_group,
+    social_group,
     CASE 
         WHEN form IN ('aker', 'amun', 'amun/isis/horus', 'amun/khonsu/monthu', 'amun/mut/khonsu', 'anubis', 'bastet', 'bes', 'duamutef', 'hapi', 
         'hapi, nile god', 'hathor', 'heh', 'horus', 'horus child', 'imsety', 'isis', 'isis and horus', 'khonsu', 'maat', 'min', 'mut', 'nefertum', 'neith', 
@@ -34,14 +35,8 @@ SELECT
         'winged lion-headed goddess', 'winged pataikos', 'winged ram-headed dwarf', 'hawk-headed dwarf') THEN 'local deities and/or adaptations'
         ELSE form
     END AS form,
-    COUNT(amulet_id) AS deity_count,
-    (SELECT total_count FROM total_deities) AS total_deities
-FROM amulets a
-JOIN burials b ON b.burial_id = a.burial_id
-WHERE dating = 'napatan' 
-    AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
-    AND a.type = 'deity'
-    AND social_group = 'non-elite'
+    COUNT(amulet_id) AS form_count
+FROM forms
 GROUP BY 1,2
 """
 
@@ -60,24 +55,15 @@ custom_colors = [ '#F28C28', # cadmium orange,
                 '#BF40BF', # bright purple
 ]
 
-# calculate percentage of deities relative to ALL amulets
-df['percentage'] = round(df['deity_count'] * 100.0 / df['total_deities'], 2)
-
-form_name_mapping = {
-    'local deities and/or adaptations': 'local deities and/or<br>adaptations',
-    'deities from the egyptian pantheon': 'deities from the<br>egyptian pantheon'
-}
-
-df['form'] = df['form'].map(form_name_mapping)
-
-print(df)
+df['percentage'] = df.groupby('social_group')['form_count'].transform(lambda x: (x / x.sum() * 100).round(1))
 
 fig = px.bar(
     df,
-    x='form',
+    x='social_group',
     y='percentage',
     color='form',
-    text=df['percentage'].round(1),
+    barmode='group',
+    text=df['percentage'],
     template="plotly_white",
     title='Distribution of deity amulets (in %)',
     color_discrete_sequence=custom_colors
@@ -87,15 +73,14 @@ fig.update_layout(xaxis={'categoryorder': 'total descending'},
     font=dict(
         family="Verdana, sans-serif",
         color='black',
-        size=10),
+        size=8),
     legend_title_text='',
-    title_font=dict(size=10),
-    margin=dict(l=0, r=10, t=20, b=0),
-    showlegend=False
+    title_font=dict(size=8),
+    margin=dict(l=0, r=10, t=20, b=0)
 )
 
-fig.update_traces(textposition='outside', textfont_size=8)
+fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_yaxes(title='')
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'talks/diversenile/images/deities1.png',scale=3, width=280, height=350)
+pio.write_image(fig, 'talks/comparisons/images/deities.png',scale=3, width=550, height=550)
