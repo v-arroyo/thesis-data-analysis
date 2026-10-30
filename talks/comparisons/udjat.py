@@ -30,7 +30,7 @@ SELECT
     form_count AS udjat_count,
     total_amulets
 FROM all_amulets
-WHERE form = 'udjat'
+WHERE form IN ('udjat', 'quadruple udjat')
 """
 
 df = pd.read_sql(query, engine)
@@ -50,6 +50,8 @@ custom_colors = [ '#F28C28', # cadmium orange,
 
 df['percentage'] = round(df['udjat_count'] / df['total_amulets'] * 100, 1)
 
+social_order = ['royal', 'elite', 'non-elite']
+
 fig = px.bar(
     df,
     x='social_group',
@@ -58,11 +60,18 @@ fig = px.bar(
     barmode='group',
     text=df['percentage'],
     template="plotly_white",
-    title='Distribution of human amulets (in %)',
-    color_discrete_sequence=custom_colors
+    title='Distribution of udjat and quadruple udjat amulets (in %)',
+    color_discrete_sequence=custom_colors,
+    category_orders={'social_group': social_order}
 )
 
-fig.update_layout(xaxis={'categoryorder': 'total descending'},
+fig.update_layout(
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=-0.13,
+        xanchor="center",
+        x=0.40),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -76,4 +85,4 @@ fig.update_traces(textposition='outside', textfont_size=8)
 fig.update_yaxes(title='')
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'talks/comparisons/images/udjat.png',scale=3, width=550, height=550)
+pio.write_image(fig, 'talks/comparisons/images/udjat.png',scale=3, width=300, height=400)

@@ -57,6 +57,8 @@ custom_colors = [ '#F28C28', # cadmium orange,
 
 df['percentage'] = df.groupby('social_group')['form_count'].transform(lambda x: (x / x.sum() * 100).round(1))
 
+social_order = ['royal', 'elite', 'non-elite']
+
 fig = px.bar(
     df,
     x='social_group',
@@ -66,10 +68,17 @@ fig = px.bar(
     text=df['percentage'],
     template="plotly_white",
     title='Distribution of deity amulets (in %)',
-    color_discrete_sequence=custom_colors
+    color_discrete_sequence=custom_colors,
+    category_orders={'social_group': social_order}
 )
 
-fig.update_layout(xaxis={'categoryorder': 'total descending'},
+fig.update_layout(
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=-0.2,
+        xanchor="center",
+        x=0.40),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
@@ -83,4 +92,4 @@ fig.update_traces(textposition='outside', textfont_size=6)
 fig.update_yaxes(title='')
 fig.update_xaxes(title='')
 
-pio.write_image(fig, 'talks/comparisons/images/deities.png',scale=3, width=550, height=550)
+pio.write_image(fig, 'talks/comparisons/images/deities.png',scale=3, width=300, height=400)

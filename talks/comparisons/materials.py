@@ -32,7 +32,7 @@ JOIN materials m ON m.material_name = a.material
 JOIN total_amulets t ON t.social_group = b.social_group
 WHERE dating = 'napatan' 
     AND b.site_id IN (1,2,4,5,6,7,8,9,10) 
-    AND a.material != 'faience' 
+    AND a.material NOT IN ('faience', 'glass')
 GROUP BY 1,2
 """
 
@@ -56,21 +56,28 @@ df['percentage'] = round(df['materials_count'] * 100.0 / df['total_amulets'], 1)
 
 source_order = ["upper egypt", "eastern desert", "nile valley", "lower nubia", "eastern sudan", "red sea", "sub-saharan africa", "asia", "manufacturing"]
 
+social_order = ['royal', 'elite', 'non-elite']
+
 fig = px.bar(
     df,
-    x='social_group',
+    x='source',
     y='percentage',
     text=df['percentage'],
-    color='source',
+    color='social_group',
     barmode='group',
     template="plotly_white",
     title='Distribution of materials by source (excl. faience) (in %)',
-    subtitle='n=660',
     color_discrete_sequence=custom_colors,
-    category_orders={"source": source_order}
+    category_orders={"source": source_order, 'social_group': social_order}
 )
 
 fig.update_layout(
+     legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=-0.18,
+        xanchor="center",
+        x=0.40),
     font=dict(
         family="Verdana, sans-serif",
         color='black',

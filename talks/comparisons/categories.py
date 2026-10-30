@@ -38,19 +38,29 @@ custom_colors = ['#f27c8a',
 
 df['percentage'] = df.groupby('social_group')['type_count'].transform(lambda x: (x / x.sum() * 100).round(1))
 
+social_order = ['royal', 'elite', 'non-elite']
+
 fig = px.bar(
     df,
-    x='social_group',
+    x='type',
     y='percentage',
     text=df['percentage'],
-    color='type',
+    color='social_group',
     barmode='group',
     template="plotly_white",
     title='Distribution of amulet categories (in %)',
     color_discrete_sequence=custom_colors,
+    category_orders={'social_group': social_order}
 )
 
-fig.update_layout(xaxis={'categoryorder': 'total descending'},
+fig.update_layout(
+      legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=-0.12,
+        xanchor="center",
+        x=0.40),
+        #traceorder='reversed'),
     font=dict(
         family="Verdana, sans-serif",
         color='black',

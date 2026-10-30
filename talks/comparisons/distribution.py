@@ -50,17 +50,26 @@ custom_colors = [ '#F28C28', # cadmium orange,
 # calculate percentage of faience relative to ALL amulets
 df['percentage'] = round(df['count'] * 100.0 / df['total_burials'], 1)
 
+social_order = ['royal', 'elite', 'non-elite']
+
 fig = px.bar(
     df,
     x='social_group',
     y='percentage',
     text=df['percentage'],
     template="plotly_white",
-    title='Distribution of amulets (in %)',
-    color_discrete_sequence=custom_colors
+    title='Distribution of tombs containing amulets (in %)',
+    color_discrete_sequence=custom_colors,
+    category_orders={'social_group': social_order}
 )
 
-fig.update_layout(xaxis={'categoryorder': 'total descending'},
+fig.update_layout(
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=-0.12,
+        xanchor="center",
+        x=0.40),
     font=dict(
         family="Verdana, sans-serif",
         color='black',

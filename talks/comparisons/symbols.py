@@ -38,6 +38,7 @@ SELECT
     END AS form,
     COUNT(amulet_id) AS form_count
 FROM forms
+WHERE form NOT IN ('udjat', 'quadruple udjat')
 GROUP BY 1,2
 """
 
@@ -58,6 +59,8 @@ custom_colors = [ '#F28C28', # cadmium orange,
 
 df['percentage'] = df.groupby('social_group')['form_count'].transform(lambda x: (x / x.sum() * 100).round(1))
 
+social_order = ['royal', 'elite', 'non-elite']
+
 fig = px.bar(
     df,
     x='social_group',
@@ -66,11 +69,18 @@ fig = px.bar(
     barmode='group',
     text=df['percentage'],
     template="plotly_white",
-    title='Distribution of human amulets (in %)',
-    color_discrete_sequence=custom_colors
+    title='Distribution of symbol amulets (in %)',
+    color_discrete_sequence=custom_colors,
+    category_orders={'social_group': social_order}
 )
 
-fig.update_layout(xaxis={'categoryorder': 'total descending'},
+fig.update_layout(
+    legend=dict(
+        orientation="h",
+        yanchor="bottom",
+        y=-0.18,
+        xanchor="center",
+        x=0.40),
     font=dict(
         family="Verdana, sans-serif",
         color='black',
